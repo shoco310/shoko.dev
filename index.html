@@ -1,0 +1,302 @@
+<style>
+  .shoko-site {
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    color: #222;
+    line-height: 1.8;
+  }
+
+  .shoko-site * {
+    box-sizing: border-box;
+  }
+
+  .hero {
+    background: #111;
+    color: #fff;
+    padding: 72px 20px;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+    margin: 0 0 16px;
+    letter-spacing: 0.08em;
+  }
+
+  .hero .copy {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 28px;
+  }
+
+  .hero p {
+    max-width: 720px;
+    margin: 0 auto 32px;
+    font-size: 16px;
+  }
+
+  .btn-area {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .btn-main {
+    background: #f4c542;
+    color: #111;
+  }
+
+  .btn-sub {
+    border: 1px solid #fff;
+    color: #fff;
+  }
+
+  .section {
+    padding: 64px 20px;
+  }
+
+  .section-inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .section h2 {
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .message {
+    background: #f7f7f7;
+  }
+
+  .lead {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .policy-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+
+  .policy-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 24px;
+    border-radius: 16px;
+  }
+
+  .policy-card h3 {
+    font-size: 20px;
+    margin-top: 0;
+  }
+
+  .profile-box {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .profile-photo {
+    background: #ddd;
+    aspect-ratio: 3 / 4;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+  }
+
+  .support {
+    background: #111;
+    color: #fff;
+    text-align: center;
+  }
+
+  .support .btn-sub {
+    border-color: #f4c542;
+    color: #f4c542;
+  }
+
+  .info-list {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .info-list dl {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    border-bottom: 1px solid #ddd;
+    padding: 14px 0;
+  }
+
+  .info-list dt {
+    font-weight: bold;
+  }
+
+  .footer {
+    background: #f7f7f7;
+    text-align: center;
+    padding: 32px 20px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 32px;
+    }
+
+    .hero .copy {
+      font-size: 20px;
+    }
+
+    .policy-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .profile-box {
+      grid-template-columns: 1fr;
+    }
+
+    .info-list dl {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="shoko-site">
+
+  <section class="hero">
+    <h1>さとうしょうこ</h1>
+    <div class="copy">誰もが挑戦できる宇部へ。</div>
+    <p>
+      さとうしょうこ後援会は、宇部で暮らす一人ひとりが、自分らしく学び、働き、子育てし、挑戦できるまちを目指して活動しています。
+    </p>
+    <div class="btn-area">
+      <a class="btn btn-main" href="LINE公式URLをここに入れる">LINE公式に登録する</a>
+      <a class="btn btn-sub" href="後援会入会フォームURLをここに入れる">後援会に入会する</a>
+    </div>
+  </section>
+
+  <section class="section message">
+    <div class="section-inner">
+      <h2>ごあいさつ</h2>
+      <p class="lead">
+        宇部で、挑戦する人を増やしたい。
+      </p>
+      <p>
+        私はこれまで、エンジニア、技術広報、コミュニティ運営、そして起業を通じて、多くの人が一歩踏み出す瞬間に関わってきました。
+      </p>
+      <p>
+        挑戦には、年齢も、性別も、立場も関係ありません。子どもたちが未来に希望を持てること。働く人が自分らしく力を発揮できること。子育てや介護をしながらでも、地域とつながり、前に進めること。
+      </p>
+      <p>
+        そんな宇部をつくるために、地域の声を聞き、未来につながる選択肢を増やしていきます。
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <h2>4つの政策</h2>
+      <div class="policy-grid">
+        <div class="policy-card">
+          <h3>教育・人材育成</h3>
+          <p>子どもたちが自分の可能性を広げられる学びの環境づくりを進めます。</p>
+        </div>
+        <div class="policy-card">
+          <h3>仕事・産業振興</h3>
+          <p>地域産業と新しい働き方をつなぎ、宇部で挑戦できる仕事を増やします。</p>
+        </div>
+        <div class="policy-card">
+          <h3>女性・子育て支援</h3>
+          <p>子育て、仕事、暮らしを一人で抱え込まない地域づくりを目指します。</p>
+        </div>
+        <div class="policy-card">
+          <h3>市民参加・行政改革</h3>
+          <p>市民の声が届きやすく、わかりやすく開かれた市政を目指します。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section message">
+    <div class="section-inner">
+      <h2>プロフィール</h2>
+      <div class="profile-box">
+        <div class="profile-photo">
+          写真をここに配置
+        </div>
+        <div>
+          <h3>さとうしょうこ</h3>
+          <p>
+            宇部にゆかりを持ち、IT業界でエンジニア、技術広報、コミュニティ運営に携わる。2024年に自身の会社を設立。
+          </p>
+          <p>
+            技術コミュニティやイベント運営を通じて、人と人がつながり、新しい挑戦が生まれる場づくりに取り組んできました。
+          </p>
+          <p>
+            これまでの経験を地域に還元し、宇部で暮らす人たちが自分らしく挑戦できるまちづくりを進めていきます。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section support">
+    <div class="section-inner">
+      <h2>後援会のご案内</h2>
+      <p>
+        さとうしょうこ後援会では、活動を応援してくださる方を募集しています。
+        LINE公式アカウントでは、活動報告やイベント情報をお届けします。
+      </p>
+      <div class="btn-area">
+        <a class="btn btn-main" href="LINE公式URLをここに入れる">LINE公式に登録する</a>
+        <a class="btn btn-sub" href="後援会入会フォームURLをここに入れる">入会フォームへ</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <h2>お問い合わせ</h2>
+      <div class="info-list">
+        <dl>
+          <dt>団体名</dt>
+          <dd>さとうしょうこ後援会</dd>
+        </dl>
+        <dl>
+          <dt>所在地</dt>
+          <dd>山口県宇部市</dd>
+        </dl>
+        <dl>
+          <dt>メール</dt>
+          <dd>メールアドレスをここに入れる</dd>
+        </dl>
+        <dl>
+          <dt>SNS</dt>
+          <dd>
+            Facebook / Instagram / YouTube / note / LINE公式
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    © さとうしょうこ後援会
+  </div>
+
+</div>
