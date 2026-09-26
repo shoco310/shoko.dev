@@ -34,7 +34,7 @@ export default function ProfileSection() {
                 loading="lazy"
                 decoding="async"
                 width={684}
-                height={900}
+                height={674}
               />
             </motion.div>
 
