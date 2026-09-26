@@ -12,7 +12,7 @@ const stagger = {
 
 export default function ProfileSection() {
   return (
-    <section id="profile" className="section section--mint">
+    <section id="profile" className="section section--roomy">
       <div className="container">
         <motion.div
           initial="hidden"
@@ -28,11 +28,19 @@ export default function ProfileSection() {
 
           <div className="profile-box">
             <motion.div className="profile-photo" variants={fadeUp}>
-              <img src="/images/profile.png" alt="さとうしょうこ" loading="lazy" />
+              <img
+                src="/images/profile-900.png"
+                alt="さとうしょうこ"
+                loading="lazy"
+                decoding="async"
+                width={684}
+                height={900}
+              />
             </motion.div>
 
             <motion.div className="profile-content" variants={stagger}>
               <motion.h3 variants={fadeUp}>さとうしょうこ</motion.h3>
+              <motion.div className="profile-content__rule" variants={fadeUp} aria-hidden="true" />
 
               <motion.p variants={fadeUp}>
                 宇部にゆかりを持ち、IT業界でエンジニアとして活躍。

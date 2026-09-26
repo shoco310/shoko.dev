@@ -52,7 +52,7 @@ function Block({
 
 export default function Greeting() {
   return (
-    <section id="message" className="section section--mint">
+    <section id="message" className="section section--tint">
       <div className="container">
 
         <Block variants={fadeUp}>

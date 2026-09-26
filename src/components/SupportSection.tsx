@@ -12,7 +12,7 @@ const stagger = {
 
 export default function SupportSection() {
   return (
-    <section id="support" className="section section--green">
+    <section id="support" className="section section--pink section--roomy">
       <div className="container">
         <motion.div
           initial="hidden"

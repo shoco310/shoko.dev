@@ -83,7 +83,7 @@ function ActivityCard({ item }: { item: Activity }) {
 
 export default function ActivitySection() {
   return (
-    <section id="activity" className="section section--beige">
+    <section id="activity" className="section section--tint">
       <div className="container">
         <motion.div
           initial="hidden"

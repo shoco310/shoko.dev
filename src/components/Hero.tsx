@@ -2,17 +2,19 @@ import { motion } from 'framer-motion'
 
 const container = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.14, delayChildren: 0.35 } },
+  show: { transition: { staggerChildren: 0.12, delayChildren: 0.25 } },
 }
 
 const item = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] } },
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
 }
 
 export default function Hero() {
   return (
     <section className="hero" id="top" aria-label="ファーストビュー">
+      <div className="hero__media" role="img" aria-label="さとうしょうこ" />
+
       <div className="hero__inner">
         <motion.div
           className="hero__content"
@@ -24,13 +26,14 @@ export default function Hero() {
             宇部から、新しい挑戦を。
           </motion.div>
 
-          <motion.h1 className="hero__title" variants={item}>
-            さとうしょうこ
-          </motion.h1>
-
-          <motion.p className="hero__copy" variants={item}>
+          <motion.p className="hero__catch" variants={item}>
             誰もが挑戦できる宇部へ。
           </motion.p>
+
+          <motion.h1 className="hero__title" variants={item}>
+            さとうしょうこ
+            <span className="hero__title-en" aria-hidden="true">SHOKO SATO</span>
+          </motion.h1>
 
           <motion.p className="hero__desc" variants={item}>
             宇部で暮らす一人ひとりが、自分らしく学び、働き、
@@ -103,7 +106,7 @@ export default function Hero() {
         aria-label="下にスクロール"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.8, duration: 0.6 }}
+        transition={{ delay: 1.6, duration: 0.6 }}
       >
         <span className="hero__scroll-text">SCROLL</span>
         <span className="hero__scroll-arrow">↓</span>

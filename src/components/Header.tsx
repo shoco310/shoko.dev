@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const navLinks = [
+export const navLinks = [
   { href: '#message', label: 'ごあいさつ' },
   { href: '#policy', label: '政策' },
   { href: '#activity', label: '活動報告' },
