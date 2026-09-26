@@ -4,8 +4,6 @@
   --pink: #ff1680;
   --pink-dark: #d3005f;
   --pink-deep: #a3004a;
-  --pink-light: #fff0f6;
-  --pink-mid: #ffd9e9;
   --white: #ffffff;
   --ink: #181818;
   --gray: #666666;
@@ -101,7 +99,9 @@ button {
   position: relative;
 }
 .section--tint {
-  background: var(--pink-light);
+  background: var(--white);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
 .section--pink {
   background: radial-gradient(circle, rgba(255, 255, 255, 0.14) 1.5px, transparent 1.5px)
@@ -406,11 +406,11 @@ button {
   color: var(--ink);
   padding: 15px 14px;
   border-radius: var(--radius-sm);
-  border-bottom: 1px solid var(--pink-light);
+  border-bottom: 1px solid var(--line);
   transition: background-color 0.2s, color 0.2s;
 }
 .mobile-menu__link:hover {
-  background: var(--pink-light);
+  background: rgba(24, 24, 24, 0.05);
   color: var(--pink-dark);
 }
 .mobile-menu__cta {
@@ -433,7 +433,7 @@ button {
   display: flex;
   align-items: center;
   overflow: hidden;
-  background-color: var(--pink-light);
+  background-color: var(--white);
   background-image: url('/images/hero-main.jpg');
   background-repeat: no-repeat;
   background-size: cover;
@@ -446,11 +446,11 @@ button {
   z-index: 0;
   background: linear-gradient(
     100deg,
-    rgba(255, 240, 246, 0.97) 0%,
-    rgba(255, 240, 246, 0.94) 30%,
-    rgba(255, 240, 246, 0.72) 46%,
-    rgba(255, 240, 246, 0.2) 60%,
-    rgba(255, 240, 246, 0) 74%
+    rgba(255, 255, 255, 0.97) 0%,
+    rgba(255, 255, 255, 0.94) 30%,
+    rgba(255, 255, 255, 0.72) 46%,
+    rgba(255, 255, 255, 0.2) 60%,
+    rgba(255, 255, 255, 0) 74%
   );
   pointer-events: none;
 }
@@ -563,8 +563,8 @@ button {
   padding: 5px;
   box-sizing: border-box;
   border-radius: 50%;
-  background: var(--pink-light);
-  color: var(--pink-dark);
+  background: var(--pink);
+  color: var(--white);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 .hero__sns-link:hover {
@@ -588,7 +588,7 @@ button {
   font-weight: 800;
   color: var(--pink-dark);
   background: var(--white);
-  border: 1.5px solid var(--pink-mid);
+  border: 1.5px solid var(--pink);
   padding: 8px 16px;
   border-radius: var(--radius-full);
   transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease,
@@ -648,7 +648,7 @@ button {
 .greeting__body strong {
   color: var(--pink-dark);
   font-weight: 800;
-  background: linear-gradient(transparent 62%, var(--pink-mid) 62%);
+  box-shadow: inset 0 -3px 0 var(--pink);
 }
 
 .greeting__lead {
@@ -761,7 +761,7 @@ button {
   gap: 18px;
   margin-top: 48px;
   padding: 22px 26px;
-  border: 2px solid var(--pink-mid);
+  border: 2px solid var(--pink);
   border-radius: var(--radius-md);
   background: var(--white);
   transition: transform 0.25s ease, box-shadow 0.25s ease,
@@ -771,14 +771,14 @@ button {
 }
 .note-card:hover {
   box-shadow: var(--shadow-md);
-  border-color: var(--pink);
+  border-color: var(--pink-dark);
 }
 .note-card__icon {
   font-size: 1.6rem;
   flex-shrink: 0;
   width: 54px;
   height: 54px;
-  background: var(--pink-light);
+  background: var(--pink);
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -845,7 +845,7 @@ button {
   background: var(--white);
 }
 .policy-row--reverse .policy-row__body {
-  background: var(--pink-light);
+  background: var(--ink);
 }
 
 .policy-row__media {
@@ -898,6 +898,9 @@ button {
   margin: 0 0 14px;
   line-height: 1.4;
 }
+.policy-row--reverse .policy-row__name {
+  color: var(--white);
+}
 .policy-row__emoji {
   font-size: 1.4rem;
   flex-shrink: 0;
@@ -909,11 +912,17 @@ button {
   line-height: 1.6;
   margin: 0 0 20px;
 }
+.policy-row--reverse .policy-row__tagline {
+  color: var(--pink);
+}
 .policy-row__desc {
   font-size: 1rem;
   color: var(--gray);
   line-height: 1.95;
   margin: 0 0 32px;
+}
+.policy-row--reverse .policy-row__desc {
+  color: rgba(255, 255, 255, 0.72);
 }
 .policy-row__inner .btn span {
   transition: transform 0.2s ease;
@@ -1069,9 +1078,9 @@ button {
 
 .policy-detail__note {
   padding: 26px 28px;
-  background: var(--pink-light);
+  background: var(--white);
   border-radius: var(--radius-md);
-  border: 1px solid var(--pink-mid);
+  border: 1.5px solid var(--ink);
 }
 .policy-detail__note p {
   font-size: 0.95rem;
@@ -1089,13 +1098,13 @@ button {
 }
 
 .policy-detail__others {
-  background: var(--pink-light);
+  background: var(--ink);
   padding-block: clamp(56px, 7vw, 80px);
 }
 .policy-detail__others-heading {
   font-size: clamp(1.2rem, 2vw, 1.4rem);
   font-weight: 900;
-  color: var(--ink);
+  color: var(--white);
   margin: 0 0 32px;
   text-align: center;
 }
@@ -1165,7 +1174,7 @@ button {
 
 .activity-card__thumb {
   aspect-ratio: 4 / 3;
-  background: var(--pink-light);
+  background: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1216,9 +1225,9 @@ button {
   border-radius: var(--radius-full);
 }
 .badge--note {
-  background: var(--pink-light);
+  background: var(--white);
   color: var(--pink-dark);
-  border: 1px solid var(--pink-mid);
+  border: 1.5px solid var(--pink);
 }
 .badge--instagram {
   background: var(--pink);
@@ -1229,8 +1238,9 @@ button {
   color: var(--white);
 }
 .badge--report {
-  background: var(--pink-mid);
-  color: var(--pink-deep);
+  background: var(--white);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
 }
 
 .activity-card__title {
@@ -1298,7 +1308,7 @@ button {
 .profile-photo {
   position: relative;
   border-radius: var(--radius-lg);
-  background: linear-gradient(170deg, var(--pink-mid) 0%, var(--pink-light) 70%);
+  background: var(--pink);
   padding-top: 26px;
   display: flex;
   align-items: flex-end;
@@ -1315,7 +1325,7 @@ button {
   width: 118%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: rgba(255, 22, 128, 0.12);
+  background: rgba(255, 255, 255, 0.14);
 }
 /* softens the hard bottom edge of the cut-out portrait */
 .profile-photo::after {
@@ -1326,7 +1336,7 @@ button {
   bottom: 0;
   height: 74px;
   z-index: 2;
-  background: linear-gradient(to top, var(--pink-light), rgba(255, 240, 246, 0));
+  background: linear-gradient(to top, var(--pink), rgba(255, 22, 128, 0));
   pointer-events: none;
 }
 .profile-photo img {
@@ -1375,7 +1385,7 @@ button {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: var(--pink-light);
+  background: var(--pink);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1459,7 +1469,7 @@ button {
   font-weight: 800;
   color: var(--pink-dark);
   background: var(--white);
-  border: 1.5px solid var(--pink-mid);
+  border: 1.5px solid var(--pink);
   padding: 8px 18px 8px 8px;
   border-radius: var(--radius-full);
   transition: background-color 0.2s, color 0.2s, border-color 0.2s,
@@ -1471,8 +1481,8 @@ button {
   padding: 5px;
   box-sizing: border-box;
   border-radius: 50%;
-  background: var(--pink-light);
-  color: var(--pink-dark);
+  background: var(--pink);
+  color: var(--white);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 .contact-sns-btn:hover {
@@ -1628,9 +1638,9 @@ button {
     pointer-events: none;
     background: linear-gradient(
       180deg,
-      rgba(255, 240, 246, 0.3) 0%,
-      rgba(255, 240, 246, 0) 30%,
-      rgba(255, 240, 246, 0) 60%,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 255, 255, 0) 30%,
+      rgba(255, 255, 255, 0) 60%,
       rgba(255, 255, 255, 0.95) 100%
     );
   }
