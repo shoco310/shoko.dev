@@ -37,7 +37,9 @@ export default function PolicySection() {
           viewport={{ once: true, amount: 0.4 }}
           variants={fadeUp}
         >
-          年齢や立場に関わらず、誰もが挑戦できる宇部を目指して。4つのテーマで取り組みを進めます。
+          年齢や立場に関わらず、誰もが挑戦できる宇部を目指して。
+          <br />
+          4つのテーマで取り組みを進めます。
         </motion.p>
       </div>
 

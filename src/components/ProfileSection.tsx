@@ -43,7 +43,7 @@ export default function ProfileSection() {
               <motion.div className="profile-content__rule" variants={fadeUp} aria-hidden="true" />
 
               <motion.p variants={fadeUp}>
-                宇部にゆかりを持ち、IT業界でエンジニアとして活躍。
+                宇部市東岐波出身。13年前に東京へ移住し、ITエンジニアとしてキャリアを築く。
                 LINE（現LINEヤフー）の技術広報をはじめ、技術コミュニティ運営に長年携わる。
                 2024年に自身の会社を設立。
               </motion.p>
