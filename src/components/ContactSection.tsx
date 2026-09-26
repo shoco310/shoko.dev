@@ -64,6 +64,15 @@ export default function ContactSection() {
                   Instagram
                 </a>
                 <a
+                  href="https://www.youtube.com/@satoshoco"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-sns-btn"
+                >
+                  <IconYouTube />
+                  YouTube
+                </a>
+                <a
                   href="https://www.facebook.com/profile.php?id=61590433598518"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -118,6 +127,14 @@ function IconNote() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M14.4 1H5.41C4.08 1 3 2.08 3 3.41v17.18C3 21.92 4.08 23 5.41 23H18.6c1.32 0 2.4-1.08 2.4-2.41V8.02L14.4 1zM13.8 9V2.5L20.1 9H13.8z" />
+    </svg>
+  )
+}
+
+function IconYouTube() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M23.498 6.186a2.994 2.994 0 0 0-2.107-2.117C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.391.524A2.994 2.994 0 0 0 .502 6.186 31.26 31.26 0 0 0 0 12a31.26 31.26 0 0 0 .502 5.814 2.994 2.994 0 0 0 2.107 2.117c1.886.524 9.391.524 9.391.524s7.505 0 9.391-.524a2.994 2.994 0 0 0 2.107-2.117A31.26 31.26 0 0 0 24 12a31.26 31.26 0 0 0-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
     </svg>
   )
 }
