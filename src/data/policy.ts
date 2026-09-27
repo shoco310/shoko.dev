@@ -1,8 +1,18 @@
 /**
- * Evidence status for an ACTION item:
- * - 'existing'     : an existing municipal system/program was confirmed in research
- * - 'unconfirmed'  : whether an existing system exists has not been fully
- *                    investigated — NOT the same as "no existing system"
+ * Whether a related municipal system/program was confirmed for this ACTION
+ * item — NOT a statement of policy approach:
+ * - 'existing'     : a related existing system/program was confirmed against
+ *                    a primary source (statusNote names it). The badge this
+ *                    produces ("関連する既存制度あり") only says that system
+ *                    exists and relates to this item — it does not promise
+ *                    that the item means expanding it, coordinating it with
+ *                    others, or building something new alongside it. Which
+ *                    of those this initiative actually pursues is an
+ *                    unmade policy decision, not implied by this flag.
+ * - 'unconfirmed'  : whether a related existing system exists has not been
+ *                    fully investigated — NOT the same as "no existing
+ *                    system" or "new system". No badge is shown; never
+ *                    render this as "新規制度" or "制度なし".
  */
 export type ActionStatus = 'existing' | 'unconfirmed'
 
@@ -10,24 +20,64 @@ export interface PolicyInitiative {
   title: string
   desc: string
   status: ActionStatus
-  /** Named existing program(s), shown only when status === 'existing' */
+  /** Named related program(s)/system(s), shown only when status === 'existing' */
   statusNote?: string
+  /** Official page for the program named in statusNote — only when a single, verified match exists */
+  statusUrl?: string
 }
 
 export interface DataBreakdown {
   label: string
   value: string
+  /** 0-100. Only set when this row is safe to visualize as a simple bar (see DataPoint.chartable). */
+  barPct?: number
+}
+
+export interface DataStat {
+  /** Short qualifier for this specific number (e.g. "小学校", "令和8年度採択件数") */
+  label: string
+  /** The number itself, exactly as confirmed against the primary source */
+  value: string
+  /**
+   * 0-100. Only set when this stat is a percentage on a confirmed, stated
+   * base that is safe to show as a bar alongside the other `stats` entries
+   * of the same DataPoint (i.e. they all answer the same question).
+   */
+  barPct?: number
 }
 
 export interface DataPoint {
   label: string
+  /**
+   * The primary hero number(s) for this card, rendered large and in pink.
+   * Use more than one entry only when the numbers share the same
+   * question/context and are being intentionally grouped (e.g. a funnel, or
+   * a 小学校／中学校 split of the same measure) — never group numbers from
+   * different questions or denominators here.
+   */
+  stats?: DataStat[]
+  /** Fallback single hero value/phrase when `stats` isn't used. */
   value: string
+  /**
+   * True when `value` is a qualitative finding (e.g. "most common answer"),
+   * not a number — rendered as a bold highlighted statement rather than a
+   * giant hero figure.
+   */
+  highlight?: boolean
+  /** Short, already-confirmed plain-language explanation of what the number means. */
+  description?: string
   /** 調査年・対象（例："令和6年7月／市内高校生"） */
   survey: string
   /** 出典表記（例："宇部市人口ビジョン【改訂版】p.31"） */
   source: string
   sourceUrl?: string
   breakdown?: DataBreakdown[]
+  /**
+   * Only true when every breakdown row answers the same question with a
+   * confirmed, shared base — safe to render as comparable bars. Rows from
+   * different questions or denominators must NOT be charted together.
+   */
+  chartable?: boolean
   /** Extra caveat shown directly under this one card */
   note?: string
 }
@@ -131,30 +181,42 @@ export const policies: Policy[] = [
         value: '388人',
         survey: '令和5年度／市立小中学校',
         source: '宇部市こども計画（令和7年3月）p.29',
+        sourceUrl: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/023/097/ubeshikodomokeikaku.pdf',
         note: '令和元年度から増加傾向にあり、令和5年度は過去最高の人数',
       },
       {
         label: '就学援助認定率',
-        value: '小17.84% ／ 中19.75%',
-        survey: '令和5年／市立小中学校',
-        source: '宇部市こども計画（令和7年3月）p.22',
-        breakdown: [
-          { label: '小学校 認定者数', value: '1,376人' },
-          { label: '中学校 認定者数', value: '801人' },
+        value: '',
+        stats: [
+          { label: '小学校', value: '17.84%', barPct: 17.84 },
+          { label: '中学校', value: '19.75%', barPct: 19.75 },
         ],
-        note: '経済的に就学が困難な世帯の割合を示す指標であり、体験・学習機会の格差そのものを直接測定した数値ではありません。',
+        survey: '令和5年／市立小中学校の児童生徒',
+        source: '宇部市こども計画（令和7年3月）p.22',
+        sourceUrl: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/023/097/ubeshikodomokeikaku.pdf',
+        breakdown: [
+          { label: '小学校 認定者数（児童数に対する率）', value: '1,376人' },
+          { label: '中学校 認定者数（生徒数に対する率）', value: '801人' },
+        ],
+        note: '就学援助を受けている児童生徒の認定率です。体験・学習機会の格差そのものを直接測定した数値ではありません。',
       },
       {
         label: 'うべシニア大学 修了者数',
-        value: '35人（目標40人）',
-        survey: '令和5年度実績／令和8年度目標',
+        value: '',
+        stats: [
+          { label: '令和5年度実績（見込）', value: '35人' },
+          { label: '令和8年度目標（値）', value: '40人' },
+        ],
+        survey: '第9期宇部市高齢者福祉計画',
         source: '第9期宇部市高齢者福祉計画【概要版】（令和6年3月）',
+        sourceUrl: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/005/423/9gaiyou.pdf',
+        note: '実績（見込）と目標は年度が異なります。混同しないでください。',
       },
     ],
     issuesEvidence: {
       confirmed: [
         '不登校児童生徒数は令和元年度から増加傾向にあり、令和5年度は過去最高の388人となっている。',
-        '就学援助認定率は小学校17.84%・中学校19.75%で、経済的な支援を要する世帯が一定割合存在する。',
+        '就学援助認定率は小学校17.84%・中学校19.75%である（児童生徒に占める認定者の割合）。',
       ],
       considerations: [
         '不登校支援（校内ふれあい教室）は中学校を中心に整備されており、小学校への展開は今後の課題である可能性がある（出典：地元紙報道）。',
@@ -188,6 +250,7 @@ export const policies: Policy[] = [
         desc: '地元の中小企業がデジタル技術やAIを取り入れやすくなるよう、情報提供や相談の機会を増やし、生産性向上や新しい挑戦を後押しします。',
         status: 'existing',
         statusNote: '宇部市中小企業等DX推進事業費補助金',
+        statusUrl: 'https://www.city.ube.yamaguchi.jp/shisei/hojyojyosei/1010994/1028886.html',
       },
       {
         title: 'リモートワーク、副業、短時間勤務の普及',
@@ -199,6 +262,7 @@ export const policies: Policy[] = [
         desc: '定年後も働きたい、社会とつながっていたいという方が、経験や技術を活かして再び活躍できる機会を増やします。',
         status: 'existing',
         statusNote: '宇部市シルバー人材センター',
+        statusUrl: 'https://webc.sjc.ne.jp/ubesc/index',
       },
       {
         title: '年齢を問わないリスキリング',
@@ -208,8 +272,7 @@ export const policies: Policy[] = [
       {
         title: '起業支援と地域企業の事業承継',
         desc: 'これから挑戦する人への起業支援と、後継者不足に悩む地域企業の事業承継、両方の課題に向き合う仕組みづくりを検討します。',
-        status: 'existing',
-        statusNote: '創業支援（UBE STARTUP等の拠点）について確認済み。事業承継支援は関係を確認中',
+        status: 'unconfirmed',
       },
     ],
     challenges: [
@@ -221,53 +284,68 @@ export const policies: Policy[] = [
     ],
     dataPoints: [
       {
-        label: '高校生の市外進学希望',
-        value: '進学希望者の7割超',
+        label: '高校生の進学・進学先希望',
+        value: '',
+        stats: [
+          { label: '回答者のうち進学を希望する割合', value: '8割' },
+          { label: 'そのうち市外への進学希望', value: '7割超' },
+        ],
+        description: '進学希望者の多くが、市外への進学を希望している。',
         survey: '令和6年7月／市内高校生',
         source: '宇部市人口ビジョン【改訂版】p.31',
+        sourceUrl: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/007/034/vision202503.pdf',
+        note: '「7割超」は全回答者ではなく、進学希望者（回答者の8割）のうちの割合です。異なる母数のため、この2つを同じグラフでは示していません。',
       },
       {
         label: '宇部市を選ばない理由（高校生・大学生共通）',
         value: '「希望する就職先がないから」が最多',
+        highlight: true,
         survey: '令和6年7月／市内高校生・大学生等',
         source: '宇部市人口ビジョン【改訂版】p.33, 42-43',
+        sourceUrl: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/007/034/vision202503.pdf',
       },
       {
         label: '市内企業の正社員不足感',
-        value: '「不足」＋「やや不足」6割超',
+        value: '',
+        stats: [{ label: '正社員が「不足」＋「やや不足」', value: '6割超' }],
         survey: '令和6年7月／市内立地企業（n=223）',
         source: '宇部市人口ビジョン【改訂版】p.46',
+        sourceUrl: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/007/034/vision202503.pdf',
       },
       {
         label: '中小企業等DX推進事業費補助金',
-        value: '補助率2/3・上限100万円',
-        survey: '令和8年度',
-        source: '宇部市公式ウェブサイト',
-        breakdown: [{ label: '令和8年度採択件数', value: '5事業者' }],
+        value: '',
+        stats: [{ label: '令和8年度採択件数', value: '5者' }],
+        description: '補助率2/3・上限100万円（募集は終了）',
+        survey: '令和8年度（募集は終了）',
+        source: '宇部市公式ウェブサイト（2026年8月26日更新）',
+        sourceUrl: 'https://www.city.ube.yamaguchi.jp/shisei/hojyojyosei/1010994/1028886.html',
+        note: '原文：「審査を行った結果、5者を補助対象事業者として採択しました」',
       },
       {
         label: '企業の働き方に関する取組（3つの異なる設問）',
         value: '',
-        survey: '令和6年7月／市内立地企業',
-        source: '宇部市人口ビジョン【改訂版】p.51-52',
-        breakdown: [
+        stats: [
           { label: '女性社員活躍推進：勤務形態の多様化(テレワーク等)', value: '3割超' },
           { label: 'ワークライフバランス推進：有給休暇の取得促進', value: '約7割' },
           { label: '子育て支援：短時間勤務制度', value: '約5割' },
         ],
-        note: '3つは選択肢構成が異なる別々の設問です。パーセンテージを横並びで比較しないでください。',
+        survey: '令和6年7月／市内立地企業',
+        source: '宇部市人口ビジョン【改訂版】p.51-52',
+        sourceUrl: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/007/034/vision202503.pdf',
+        note: '3つは選択肢構成が異なる別々の設問です。パーセンテージを横並びで比較しないでください（グラフ化していません）。',
       },
     ],
     issuesEvidence: {
       confirmed: [
-        '若者（高校生・大学生）が宇部市を就職先に選ばない最大の理由は「希望する就職先がないから」である。',
-        '市内企業の6割超が正社員「不足」「やや不足」と回答している。',
+        '若者（高校生・大学生）が宇部市を就職先に選ばない最大の理由は「希望する就職先がないから」である（別々の設問への回答）。',
+        '市内企業の6割超が正社員「不足」「やや不足」と回答している（別の設問への回答）。',
       ],
       considerations: [
-        '若者の「就職先がない」という声と、企業の「人材がいない」という声が同時に存在しており、需要と供給の間に何らかのミスマッチが起きている可能性がある。',
+        '両者は同じ調査の異なる設問への回答であり、求職者が希望する職種・待遇と、企業が募集する職種・待遇を直接突き合わせたものではない。',
       ],
       analysisGaps: [
-        '職種・待遇（給与水準）・勤務地等を突き合わせた詳細なマッチング分析は今回実施していない。ミスマッチの具体的な原因を、このデータだけで断定することはできない。',
+        '職種・待遇（給与水準）・勤務地等を対応させた分析は実施していない。そのため、両者を「需給のミスマッチ」と断定することはできない。',
       ],
     },
     sourceList: [
@@ -330,36 +408,45 @@ export const policies: Policy[] = [
         value: '6割',
         survey: '令和6年7〜8月／15〜39歳市民',
         source: '宇部市人口ビジョン【改訂版】p.56',
+        sourceUrl: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/007/034/vision202503.pdf',
+        note: '「既にこどもがいる場合も含む」という設問での回答です（すでに子どものいる人も含んだ数値）。',
       },
       {
         label: '子どもを持ちたいと思わない理由',
         value: '',
-        survey: '同上',
-        source: '宇部市人口ビジョン【改訂版】p.56',
-        breakdown: [
-          { label: '育児の心理的・肉体的負担が増えるから', value: '6割台半ば' },
-          { label: '子育てや教育にお金がかかるから', value: '5割' },
+        stats: [
+          { label: '育児の心理的・肉体的負担が増えるから', value: '6割台半ば', barPct: 65 },
+          { label: '子育てや教育にお金がかかるから', value: '5割', barPct: 50 },
         ],
+        survey: '同上（単一設問・複数回答）',
+        source: '宇部市人口ビジョン【改訂版】p.56',
+        sourceUrl: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/007/034/vision202503.pdf',
       },
       {
         label: '合計特殊出生率',
         value: '1.43',
         survey: '令和5年（2023年）／宇部市',
         source: '宇部市人口ビジョン【改訂版】p.9',
+        sourceUrl: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/007/034/vision202503.pdf',
         note: '平成25年（2013年）の1.57をピークに低下。人口維持水準の目安は2.07。',
       },
       {
         label: '学童保育クラブ利用者アンケート',
-        value: '総合満足度74%',
-        survey: '令和6年度／回答1,116件・回答率47.1%',
+        value: '',
+        stats: [
+          { label: '設問10「総合的な満足度」（満足＋やや満足）', value: '74%' },
+          { label: '設問12「クラブは楽しいか」（児童本人の回答）', value: '77%' },
+        ],
+        survey: '令和6年度／市内30クラブ・回答1,116件（回答率47.1%）',
         source: '学童保育クラブ利用者アンケート結果（全体集計）',
-        breakdown: [{ label: '児童本人「クラブは楽しい」', value: '77%' }],
+        sourceUrl: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/023/525/2024-zenntai.pdf',
+        note: '設問10（保護者経由の総合的な満足度）と設問12（児童本人の回答）は別の設問です。回答者数はいずれも1,116人（未回答0件）で、同じグラフでは比較していません。',
       },
     ],
     issuesEvidence: {
       confirmed: [
-        '15〜39歳市民の6割が「子どもを持ちたい」と考えているが、「持ちたいと思わない」理由では心理的・肉体的負担、経済的負担が上位を占める。',
-        '学童保育クラブの利用者満足度は総じて高い（満足＋やや満足で74%）。',
+        '15〜39歳市民の6割が「子どもを持ちたい」と考えている（既に子どもがいる回答者を含む）。「持ちたいと思わない」理由では心理的・肉体的負担、経済的負担が上位を占める。',
+        '学童保育クラブの利用者アンケート（回答1,116人）では、総合的な満足度（満足＋やや満足）が74%だった。',
       ],
       considerations: [
         '負担感（心理的・経済的）の軽減が、子どもを持つ意向の実現を後押しする可能性がある。',
@@ -417,6 +504,7 @@ export const policies: Policy[] = [
         desc: '市民から寄せられた意見や要望が、その後どのように検討・対応されたのかを分かりやすく共有する仕組みをつくります。',
         status: 'existing',
         statusNote: 'パブリックコメント制度（A〜D区分での回答を公表）',
+        statusUrl: 'https://www.city.ube.yamaguchi.jp/shisei/kouhou/ikenchoushuu/1007973/index.html',
       },
     ],
     challenges: [
@@ -432,12 +520,14 @@ export const policies: Policy[] = [
         value: '意見提出0件',
         survey: '令和6年12月〜令和7年1月',
         source: '宇部市公式ウェブサイト（パブリックコメント実施結果）',
+        sourceUrl: 'https://www.city.ube.yamaguchi.jp/shisei/kouhou/ikenchoushuu/1007973/1022091/1024261.html',
       },
       {
         label: '総合戦略改訂パブリックコメント',
         value: '意見提出1件',
         survey: '同上',
         source: '宇部市公式ウェブサイト（パブリックコメント実施結果）',
+        sourceUrl: 'https://www.city.ube.yamaguchi.jp/shisei/kouhou/ikenchoushuu/1007973/1022091/1024261.html',
       },
     ],
     dataNote:
@@ -452,12 +542,10 @@ export const policies: Policy[] = [
       },
     ],
     issuesEvidence: {
-      confirmed: [
-        '確認した2つの計画改訂のパブリックコメントでは、意見提出が0件・1件と少なかった。',
-      ],
+      confirmed: [],
       considerations: [],
       analysisGaps: [
-        'この2件のみから、宇部市のパブリックコメント制度や市民参加の取り組み全体が機能していないと断定することはできない。他の案件（都市計画道路見直し等）の応募状況は今回確認していない。',
+        '今回確認したのは2つの案件のみである。他の案件（都市計画道路見直し等、複数の実施結果が公開されている）の応募状況は確認しておらず、横断的な件数比較は行っていない。',
       ],
     },
     sourceList: [

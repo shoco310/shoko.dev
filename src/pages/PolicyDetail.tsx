@@ -76,33 +76,194 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
           </section>
         </Block>
 
+        <Block>
+          <section className="policy-detail__section">
+            <h2 className="policy-detail__heading">具体的な取り組み</h2>
+            <ol className="policy-detail__initiatives">
+              {policy.initiatives.map((item, i) => (
+                <li key={item.title}>
+                  <div className="policy-detail__initiative-left">
+                    <span className="policy-detail__initiative-num">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <h3>{item.title}</h3>
+                    {item.status === 'existing' && item.statusNote && (
+                      <span className="status-badge status-badge--existing">関連する既存制度あり</span>
+                    )}
+                  </div>
+                  <div className="policy-detail__initiative-right">
+                    <p>{item.desc}</p>
+                    {item.status === 'existing' && item.statusNote && (
+                      <p className="policy-detail__status-note">
+                        関連制度：{item.statusNote}
+                        {item.statusUrl && (
+                          <>
+                            {' '}
+                            <a href={item.statusUrl} target="_blank" rel="noopener noreferrer">
+                              公式ページ →
+                            </a>
+                          </>
+                        )}
+                      </p>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        </Block>
+
+        <Block>
+          <section className="policy-detail__section">
+            <h2 className="policy-detail__heading">なぜ、この政策が必要なのか</h2>
+            {policy.challenges.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+            {policy.existingSystems.map((p, i) => (
+              <p key={`es-${i}`}>{p}</p>
+            ))}
+          </section>
+        </Block>
+
         {hasData && (
           <Block>
             <section className="policy-detail__section">
-              <h2 className="policy-detail__heading">数字で見る宇部</h2>
+              <h2 className="policy-detail__heading">数字で見る宇部の現状</h2>
+              <p className="policy-detail__data-source-note">
+                宇部市の公式計画・アンケート等をもとにした確認済みデータです。
+              </p>
               {policy.dataNote && <p className="policy-detail__data-note">⚠️ {policy.dataNote}</p>}
-              <div className="policy-detail__data-grid">
-                {policy.dataPoints!.map((d, i) => (
-                  <div className="data-card" key={i}>
-                    <p className="data-card__label">{d.label}</p>
-                    {d.value && <p className="data-card__value">{d.value}</p>}
-                    {d.breakdown && (
-                      <ul className="data-card__breakdown">
-                        {d.breakdown.map((b, j) => (
-                          <li key={j}>
-                            <span>{b.label}</span>
-                            <strong>{b.value}</strong>
-                          </li>
+              <div className="policy-detail__data-list">
+                {policy.dataPoints!.map((d, i) => {
+                  const isMultiStat = !!d.stats && d.stats.length > 1
+                  const isSingleStat = !d.highlight && !isMultiStat && (!!d.value || (!!d.stats && d.stats.length === 1))
+                  const singleStat = d.stats && d.stats.length === 1 ? d.stats[0] : undefined
+                  return (
+                    <div className={`data-card ${isSingleStat ? '' : 'data-card--stacked'}`} key={i}>
+                      {isSingleStat && (
+                        <div className="data-card__figure">
+                          {singleStat ? (
+                            <>
+                              <p className="data-card__value">{singleStat.value}</p>
+                              {typeof singleStat.barPct === 'number' && (
+                                <div className="data-card__bar">
+                                  <div className="data-card__bar-fill" style={{ width: `${singleStat.barPct}%` }} />
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            d.value && <p className="data-card__value">{d.value}</p>
+                          )}
+                        </div>
+                      )}
+
+                      <div className="data-card__body">
+                        <div className="data-card__head">
+                          <p className="data-card__label">{d.label}</p>
+                          <p className="data-card__meta">{d.survey}</p>
+                        </div>
+
+                        {d.highlight && <p className="data-card__highlight">{d.value}</p>}
+
+                        {isMultiStat && (
+                          <div
+                            className="data-card__stats"
+                            style={{ '--stat-cols': Math.min(d.stats!.length, 3) } as React.CSSProperties}
+                          >
+                            {d.stats!.map((s, j) => (
+                              <div className="data-card__stat" key={j}>
+                                <p className="data-card__stat-label">{s.label}</p>
+                                <p className="data-card__stat-value">{s.value}</p>
+                                {typeof s.barPct === 'number' && (
+                                  <div className="data-card__bar">
+                                    <div className="data-card__bar-fill" style={{ width: `${s.barPct}%` }} />
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {d.description && <p className="data-card__description">{d.description}</p>}
+
+                        {d.breakdown && (
+                          <ul className={`data-card__breakdown ${d.chartable ? 'data-card__breakdown--chart' : ''}`}>
+                            {d.breakdown.map((b, j) => (
+                              <li key={j}>
+                                <div className="data-card__breakdown-row">
+                                  <span>{b.label}</span>
+                                  <strong>{b.value}</strong>
+                                </div>
+                                {d.chartable && typeof b.barPct === 'number' && (
+                                  <div className="data-card__bar">
+                                    <div className="data-card__bar-fill" style={{ width: `${b.barPct}%` }} />
+                                  </div>
+                                )}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                        {d.note && <p className="data-card__note">{d.note}</p>}
+                      </div>
+
+                      <div className="data-card__source">
+                        <span>{d.source}</span>
+                        {d.sourceUrl && (
+                          <a href={d.sourceUrl} target="_blank" rel="noopener noreferrer">
+                            原本を見る →
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </section>
+          </Block>
+        )}
+
+        {hasEvidence && (
+          <Block>
+            <section className="policy-detail__section">
+              <h2 className="policy-detail__heading">調査結果から考えられること</h2>
+              <dl className="evidence-list">
+                {policy.issuesEvidence!.confirmed.length > 0 && (
+                  <div className="evidence-list__row">
+                    <dt>データから確認できること</dt>
+                    <dd>
+                      <ul>
+                        {policy.issuesEvidence!.confirmed.map((t, i) => (
+                          <li key={i}>{t}</li>
                         ))}
                       </ul>
-                    )}
-                    {d.note && <p className="data-card__note">{d.note}</p>}
-                    <p className="data-card__source">
-                      {d.survey} ／ 出典：{d.source}
-                    </p>
+                    </dd>
                   </div>
-                ))}
-              </div>
+                )}
+                {policy.issuesEvidence!.considerations.length > 0 && (
+                  <div className="evidence-list__row evidence-list__row--considerations">
+                    <dt>考えられる課題（推測）</dt>
+                    <dd>
+                      <ul>
+                        {policy.issuesEvidence!.considerations.map((t, i) => (
+                          <li key={i}>{t}</li>
+                        ))}
+                      </ul>
+                    </dd>
+                  </div>
+                )}
+                {policy.issuesEvidence!.analysisGaps.length > 0 && (
+                  <div className="evidence-list__row">
+                    <dt>さらに調査が必要なこと</dt>
+                    <dd>
+                      <ul>
+                        {policy.issuesEvidence!.analysisGaps.map((t, i) => (
+                          <li key={i}>{t}</li>
+                        ))}
+                      </ul>
+                    </dd>
+                  </div>
+                )}
+              </dl>
             </section>
           </Block>
         )}
@@ -126,91 +287,6 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
             </section>
           </Block>
         )}
-
-        <Block>
-          <section className="policy-detail__section">
-            <h2 className="policy-detail__heading">宇部市の現状と課題</h2>
-            {policy.challenges.map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
-          </section>
-        </Block>
-
-        <Block>
-          <section className="policy-detail__section">
-            <h2 className="policy-detail__heading">既存制度と改善を検討する点</h2>
-            {policy.existingSystems.map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
-          </section>
-        </Block>
-
-        {hasEvidence && (
-          <Block>
-            <section className="policy-detail__section">
-              <h2 className="policy-detail__heading">調査結果からわかること</h2>
-              {policy.issuesEvidence!.confirmed.length > 0 && (
-                <div className="evidence-block evidence-block--confirmed">
-                  <p className="evidence-block__label">✅ 確認された事実</p>
-                  <ul>
-                    {policy.issuesEvidence!.confirmed.map((t, i) => (
-                      <li key={i}>{t}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {policy.issuesEvidence!.considerations.length > 0 && (
-                <div className="evidence-block evidence-block--considerations">
-                  <p className="evidence-block__label">💭 そこから考えられる課題（推測）</p>
-                  <ul>
-                    {policy.issuesEvidence!.considerations.map((t, i) => (
-                      <li key={i}>{t}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {policy.issuesEvidence!.analysisGaps.length > 0 && (
-                <div className="evidence-block evidence-block--gaps">
-                  <p className="evidence-block__label">❓ 未実施の分析</p>
-                  <ul>
-                    {policy.issuesEvidence!.analysisGaps.map((t, i) => (
-                      <li key={i}>{t}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </section>
-          </Block>
-        )}
-
-        <Block>
-          <section className="policy-detail__section">
-            <h2 className="policy-detail__heading">具体的な取り組み</h2>
-            <ol className="policy-detail__initiatives">
-              {policy.initiatives.map((item, i) => (
-                <li key={item.title}>
-                  <span className="policy-detail__initiative-num">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <div>
-                    <div className="policy-detail__initiative-head">
-                      <h3>{item.title}</h3>
-                      <span
-                        className={`status-badge ${item.status === 'existing' ? 'status-badge--existing' : 'status-badge--unconfirmed'}`}
-                      >
-                        {item.status === 'existing' ? '既存制度の拡充' : '既存制度との関係を確認中'}
-                      </span>
-                    </div>
-                    <p>{item.desc}</p>
-                    {item.status === 'existing' && item.statusNote && (
-                      <p className="policy-detail__status-note">該当する既存制度：{item.statusNote}</p>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </section>
-        </Block>
 
         <Block>
           <section className="policy-detail__section">
