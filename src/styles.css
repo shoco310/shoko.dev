@@ -92,7 +92,7 @@ button {
   padding-inline: var(--gutter);
 }
 .container--narrow {
-  max-width: 780px;
+  max-width: 1000px;
 }
 
 .section {
@@ -637,7 +637,7 @@ button {
    A single narrow reading column with generous whitespace — no boxed
    "cards" — so the closing line reads as the loudest moment on the page. */
 .greeting__body {
-  max-width: 700px;
+  max-width: 1000px;
   margin: 0 auto;
   font-size: 1.08rem;
   line-height: 2.1;
@@ -955,9 +955,10 @@ button {
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(24, 24, 24, 0.55) 0%,
-    rgba(24, 24, 24, 0.35) 45%,
-    rgba(163, 0, 74, 0.72) 100%
+    rgba(24, 24, 24, 0) 0%,
+    rgba(24, 24, 24, 0) 30%,
+    rgba(24, 24, 24, 0.4) 65%,
+    rgba(24, 24, 24, 0.78) 100%
   );
 }
 .policy-detail__hero .container {
@@ -1043,38 +1044,406 @@ button {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 28px;
 }
 .policy-detail__initiatives li {
-  display: flex;
-  gap: 20px;
-  padding-bottom: 28px;
+  display: grid;
+  grid-template-columns: 40% 1fr;
+  gap: 8px 32px;
+  padding: 26px 0;
   border-bottom: 1px solid var(--line);
+}
+.policy-detail__initiatives li:first-child {
+  padding-top: 0;
 }
 .policy-detail__initiatives li:last-child {
   border-bottom: none;
   padding-bottom: 0;
 }
+.policy-detail__initiative-left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  align-content: flex-start;
+  gap: 6px 12px;
+  min-width: 0;
+}
 .policy-detail__initiative-num {
   flex-shrink: 0;
   font-family: var(--font-en);
-  font-size: 1.1rem;
+  font-size: 2.0rem;
   font-weight: 800;
   color: var(--pink);
-  padding-top: 3px;
+}
+.policy-detail__initiative-right {
+  min-width: 0;
 }
 .policy-detail__initiatives h3 {
   font-size: 1.08rem;
   font-weight: 800;
   color: var(--ink);
-  margin: 0 0 8px;
-  line-height: 1.6;
+  margin: 0;
+  line-height: 1.5;
 }
 .policy-detail__initiatives p {
-  font-size: 0.98rem;
-  color: var(--gray);
+  font-size: 1rem;
+  color: var(--ink);
   line-height: 1.9;
   margin: 0;
+}
+.policy-detail__initiatives .policy-detail__status-note {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: var(--gray);
+}
+.policy-detail__status-note a {
+  color: var(--pink-dark);
+  font-weight: 700;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+.status-badge--existing {
+  background: var(--white);
+  color: var(--pink-dark);
+  border: 1px solid var(--pink);
+}
+
+/* ===== DATA section =====
+   These paragraphs live directly inside .policy-detail__section, so the
+   generic `.policy-detail__section p` rule (a class + a type selector) has
+   higher specificity than a single class alone. Scoping each rule with its
+   own section class keeps two classes' worth of specificity without
+   `!important`. */
+.policy-detail__section .policy-detail__data-source-note {
+  font-size: 0.85rem;
+  color: var(--gray);
+  margin: 0 0 16px;
+  line-height: 1.7;
+}
+.policy-detail__section .policy-detail__data-note {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--pink-dark);
+  background: var(--white);
+  border: 1.5px solid var(--pink);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  margin: 0 0 24px;
+}
+.policy-detail__data-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.data-card {
+  min-width: 0;
+  padding: 32px;
+  background: var(--white);
+  border: 1.5px solid rgba(255, 22, 128, 0.3);
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) 1fr;
+  column-gap: 36px;
+  row-gap: 0;
+}
+.data-card__figure {
+  min-width: 0;
+}
+.data-card__body {
+  min-width: 0;
+}
+.data-card--stacked {
+  grid-template-columns: 1fr;
+}
+.data-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 14px;
+  margin: 0 0 10px;
+}
+.data-card .data-card__label {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: 0.01em;
+  min-width: 0;
+}
+.data-card .data-card__meta {
+  font-size: 0.8rem;
+  color: var(--gray);
+  min-width: 0;
+}
+.data-card .data-card__value {
+  font-family: var(--font-en);
+  font-size: clamp(2.00rem, 2vw, 3.5rem);
+  font-weight: 900;
+  color: var(--pink);
+  margin: 0;
+  line-height: 1.1;
+}
+.data-card .data-card__highlight {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.6;
+  margin: 4px 0 14px;
+}
+/* Each related stat gets its own "item name → big number → context" column.
+   --stat-cols is set inline per DataPoint (2 or 3) and collapses to 1 on
+   mobile regardless, since long Japanese labels don't fit narrow columns. */
+.data-card__stats {
+  --stat-cols: 2;
+  display: grid;
+  grid-template-columns: repeat(var(--stat-cols), 1fr);
+  column-gap: 28px;
+  row-gap: 22px;
+  margin: 4px 0 14px;
+}
+.data-card__stat {
+  min-width: 0;
+}
+.data-card__stat .data-card__bar {
+  margin-top: 8px;
+}
+.data-card .data-card__stat-value {
+  font-family: var(--font-en);
+  font-size: clamp(2.00rem, 2vw, 3.5rem);
+  font-weight: 900;
+  color: var(--pink);
+  line-height: 1.1;
+  margin: 2px 0 0;
+}
+.data-card .data-card__stat-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--gray);
+  line-height: 1.5;
+}
+.data-card .data-card__description {
+  font-size: 0.98rem;
+  color: var(--ink);
+  line-height: 1.8;
+  margin: 0 0 12px;
+}
+.data-card__breakdown {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.data-card__breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.88rem;
+  color: var(--ink);
+}
+.data-card__breakdown-row span {
+  min-width: 0;
+}
+.data-card__breakdown strong {
+  flex-shrink: 0;
+  color: var(--pink-dark);
+  font-weight: 800;
+}
+.data-card__breakdown--chart li {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.data-card__bar {
+  width: 100%;
+  height: 8px;
+  background: var(--line);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.data-card__bar-fill {
+  height: 100%;
+  background: var(--pink);
+  border-radius: var(--radius-full);
+}
+.data-card .data-card__note {
+  font-size: 0.82rem;
+  color: var(--gray);
+  line-height: 1.7;
+  margin: 0 0 10px;
+  font-style: italic;
+}
+.data-card__source {
+  grid-column: 1 / -1;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  font-size: 0.8rem;
+  color: var(--gray);
+  line-height: 1.6;
+}
+.data-card__source a {
+  color: var(--pink-dark);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ===== VOICE section ===== */
+.voice-quote {
+  margin: 0 0 24px;
+  padding: 26px 28px;
+  background: var(--white);
+  border: 1.5px solid var(--line);
+  border-left: 4px solid var(--pink);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+.voice-quote blockquote {
+  margin: 0 0 12px;
+  font-size: 1.02rem;
+  line-height: 1.9;
+  color: var(--ink);
+  font-weight: 600;
+}
+.voice-quote figcaption {
+  font-size: 0.82rem;
+  color: var(--gray);
+}
+.voice-quote__response {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 22, 128, 0.25);
+}
+.voice-quote__response-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--pink-dark);
+  margin: 0 0 4px !important;
+  letter-spacing: 0.02em;
+}
+.voice-quote__response p {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--ink);
+  line-height: 1.8;
+}
+
+/* ===== ISSUES: data / considerations / gaps ===== */
+.evidence-list {
+  margin: 0;
+}
+.evidence-list__row {
+  display: grid;
+  grid-template-columns: minmax(160px, 260px) 1fr;
+  gap: 8px 32px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+}
+.evidence-list__row:first-child {
+  padding-top: 0;
+}
+.evidence-list__row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.evidence-list__row dt {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.6;
+}
+.evidence-list__row dd {
+  margin: 0;
+  min-width: 0;
+}
+.evidence-list__row ul {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.evidence-list__row li {
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--ink);
+}
+/* Considerations are inference, not fact — kept visually distinct without color */
+.evidence-list__row--considerations dt {
+  color: var(--gray);
+}
+.evidence-list__row--considerations li {
+  color: var(--gray);
+  font-style: italic;
+}
+
+/* ===== SOURCES list ===== */
+.policy-detail__sources {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.policy-detail__sources li {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.policy-detail__sources li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.policy-detail__sources a {
+  color: var(--pink-dark);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.policy-detail__sources a:hover {
+  color: var(--pink);
+}
+.source-tag {
+  flex-shrink: 0;
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+.source-tag--primary {
+  background: var(--ink);
+  color: var(--white);
+}
+.source-tag--report {
+  background: var(--white);
+  color: var(--pink-dark);
+  border: 1px solid var(--pink);
+}
+.source-tag--reference {
+  background: var(--white);
+  color: var(--gray);
+  border: 1px solid var(--line);
 }
 
 .policy-detail__note {
@@ -1703,6 +2072,35 @@ button {
   }
   .policy-detail__cta .btn {
     width: 100%;
+  }
+  .data-card {
+    grid-template-columns: 1fr;
+    padding: 22px;
+  }
+  .data-card__figure {
+    margin-bottom: 14px;
+  }
+  .data-card .data-card__value,
+  .data-card .data-card__stat-value {
+    font-size: clamp(2.00rem, 3vw, 3rem);
+  }
+  .data-card__stats {
+    grid-template-columns: 1fr;
+    row-gap: 20px;
+  }
+  .policy-detail__initiatives li {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .evidence-list__row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .data-card .data-card__highlight {
+    font-size: 1.15rem;
+  }
+  .voice-quote {
+    padding: 20px;
   }
 
   .contact-item {

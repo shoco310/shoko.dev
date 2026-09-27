@@ -77,8 +77,6 @@ export default function Greeting() {
             </p>
           </Block>
 
-          <div className="greeting__divider" />
-
           <Block variants={fromRight}>
             <p>
               振り返ると、私自身も決して順風満帆な人生ではありませんでした。仕事と子育てを両立しながら、悩み、迷い、それでも一歩ずつ挑戦を続けてきました。エンジニアとして技術を学び、コミュニティ活動を通じて全国の仲間と出会い、そして起業にも挑戦しました。
@@ -104,17 +102,14 @@ export default function Greeting() {
                 <span>{text}</span>
               </motion.div>
             ))}
-            <motion.p className="greeting__principle-note" variants={fadeUp}>
-              そうした環境があれば、人は何歳からでも、新しい一歩を踏み出すことができます。
-            </motion.p>
+
           </motion.div>
 
           <div className="greeting__divider" />
-
           <Block variants={fromLeft}>
+            <p> そうした環境があれば、人は何歳からでも、新しい一歩を踏み出すことができます。</p>
             <p>
-              しかし今、宇部では人口減少や若者の流出が進み、「やりたいことがあれば都市部へ」という考え方が当たり前になりつつあります。<br />
-              私は、宇部に暮らしながらでも学び、働き、子育てをし、自分らしく挑戦できる環境を増やしたい。
+              しかし今、宇部では人口減少や若者の流出が進み、「やりたいことがあれば都市部へ」という考え方が当たり前になりつつあります。私は、宇部に暮らしながらでも学び、働き、子育てをし、自分らしく挑戦できる環境を増やしたい。
             </p>
           </Block>
 
@@ -148,9 +143,9 @@ export default function Greeting() {
             </p>
           </Block>
 
-          <Block variants={climax} amount={0.5}>
-            <div className="greeting__climax">
-              <p className="greeting__climax-text">誰もが挑戦できる宇部へ。</p>
+          <Block>
+            <div>
+              <img src="images/more-challenge.png"></img>
             </div>
           </Block>
 

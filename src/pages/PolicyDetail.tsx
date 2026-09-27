@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { policies, type Policy } from '../data/policy'
+import { policies, type Policy, type SourceItem } from '../data/policy'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -27,8 +27,21 @@ function IconLine() {
   )
 }
 
+const sourceTypeLabel: Record<SourceItem['type'], string> = {
+  primary: '一次資料',
+  report: '報道',
+  reference: '参考・他自治体事例',
+}
+
 export default function PolicyDetail({ policy }: { policy: Policy }) {
   const others = policies.filter(p => p.slug !== policy.slug)
+  const hasVoice = !!policy.voice && policy.voice.length > 0
+  const hasData = !!policy.dataPoints && policy.dataPoints.length > 0
+  const hasEvidence =
+    !!policy.issuesEvidence &&
+    (policy.issuesEvidence.confirmed.length > 0 ||
+      policy.issuesEvidence.considerations.length > 0 ||
+      policy.issuesEvidence.analysisGaps.length > 0)
 
   return (
     <article className="policy-detail">
@@ -69,12 +82,30 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
             <ol className="policy-detail__initiatives">
               {policy.initiatives.map((item, i) => (
                 <li key={item.title}>
-                  <span className="policy-detail__initiative-num">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <div>
+                  <div className="policy-detail__initiative-left">
+                    <span className="policy-detail__initiative-num">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
                     <h3>{item.title}</h3>
+                    {item.status === 'existing' && item.statusNote && (
+                      <span className="status-badge status-badge--existing">関連する既存制度あり</span>
+                    )}
+                  </div>
+                  <div className="policy-detail__initiative-right">
                     <p>{item.desc}</p>
+                    {item.status === 'existing' && item.statusNote && (
+                      <p className="policy-detail__status-note">
+                        関連制度：{item.statusNote}
+                        {item.statusUrl && (
+                          <>
+                            {' '}
+                            <a href={item.statusUrl} target="_blank" rel="noopener noreferrer">
+                              公式ページ →
+                            </a>
+                          </>
+                        )}
+                      </p>
+                    )}
                   </div>
                 </li>
               ))}
@@ -84,30 +115,204 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
 
         <Block>
           <section className="policy-detail__section">
-            <h2 className="policy-detail__heading">宇部市の現状と課題</h2>
+            <h2 className="policy-detail__heading">なぜ、この政策が必要なのか</h2>
             {policy.challenges.map((p, i) => (
               <p key={i}>{p}</p>
+            ))}
+            {policy.existingSystems.map((p, i) => (
+              <p key={`es-${i}`}>{p}</p>
             ))}
           </section>
         </Block>
 
-        <Block>
-          <section className="policy-detail__section">
-            <h2 className="policy-detail__heading">既存制度と改善を検討する点</h2>
-            {policy.existingSystems.map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
-          </section>
-        </Block>
+        {hasData && (
+          <Block>
+            <section className="policy-detail__section">
+              <h2 className="policy-detail__heading">数字で見る宇部の現状</h2>
+              <p className="policy-detail__data-source-note">
+                宇部市の公式計画・アンケート等をもとにした確認済みデータです。
+              </p>
+              {policy.dataNote && <p className="policy-detail__data-note">⚠️ {policy.dataNote}</p>}
+              <div className="policy-detail__data-list">
+                {policy.dataPoints!.map((d, i) => {
+                  const isMultiStat = !!d.stats && d.stats.length > 1
+                  const isSingleStat = !d.highlight && !isMultiStat && (!!d.value || (!!d.stats && d.stats.length === 1))
+                  const singleStat = d.stats && d.stats.length === 1 ? d.stats[0] : undefined
+                  return (
+                    <div className={`data-card ${isSingleStat ? '' : 'data-card--stacked'}`} key={i}>
+                      {isSingleStat && (
+                        <div className="data-card__figure">
+                          {singleStat ? (
+                            <>
+                              <p className="data-card__value">{singleStat.value}</p>
+                              {typeof singleStat.barPct === 'number' && (
+                                <div className="data-card__bar">
+                                  <div className="data-card__bar-fill" style={{ width: `${singleStat.barPct}%` }} />
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            d.value && <p className="data-card__value">{d.value}</p>
+                          )}
+                        </div>
+                      )}
+
+                      <div className="data-card__body">
+                        <div className="data-card__head">
+                          <p className="data-card__label">{d.label}</p>
+                          <p className="data-card__meta">{d.survey}</p>
+                        </div>
+
+                        {d.highlight && <p className="data-card__highlight">{d.value}</p>}
+
+                        {isMultiStat && (
+                          <div
+                            className="data-card__stats"
+                            style={{ '--stat-cols': Math.min(d.stats!.length, 3) } as React.CSSProperties}
+                          >
+                            {d.stats!.map((s, j) => (
+                              <div className="data-card__stat" key={j}>
+                                <p className="data-card__stat-label">{s.label}</p>
+                                <p className="data-card__stat-value">{s.value}</p>
+                                {typeof s.barPct === 'number' && (
+                                  <div className="data-card__bar">
+                                    <div className="data-card__bar-fill" style={{ width: `${s.barPct}%` }} />
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {d.description && <p className="data-card__description">{d.description}</p>}
+
+                        {d.breakdown && (
+                          <ul className={`data-card__breakdown ${d.chartable ? 'data-card__breakdown--chart' : ''}`}>
+                            {d.breakdown.map((b, j) => (
+                              <li key={j}>
+                                <div className="data-card__breakdown-row">
+                                  <span>{b.label}</span>
+                                  <strong>{b.value}</strong>
+                                </div>
+                                {d.chartable && typeof b.barPct === 'number' && (
+                                  <div className="data-card__bar">
+                                    <div className="data-card__bar-fill" style={{ width: `${b.barPct}%` }} />
+                                  </div>
+                                )}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                        {d.note && <p className="data-card__note">{d.note}</p>}
+                      </div>
+
+                      <div className="data-card__source">
+                        <span>{d.source}</span>
+                        {d.sourceUrl && (
+                          <a href={d.sourceUrl} target="_blank" rel="noopener noreferrer">
+                            原本を見る →
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </section>
+          </Block>
+        )}
+
+        {hasEvidence && (
+          <Block>
+            <section className="policy-detail__section">
+              <h2 className="policy-detail__heading">調査結果から考えられること</h2>
+              <dl className="evidence-list">
+                {policy.issuesEvidence!.confirmed.length > 0 && (
+                  <div className="evidence-list__row">
+                    <dt>データから確認できること</dt>
+                    <dd>
+                      <ul>
+                        {policy.issuesEvidence!.confirmed.map((t, i) => (
+                          <li key={i}>{t}</li>
+                        ))}
+                      </ul>
+                    </dd>
+                  </div>
+                )}
+                {policy.issuesEvidence!.considerations.length > 0 && (
+                  <div className="evidence-list__row evidence-list__row--considerations">
+                    <dt>考えられる課題（推測）</dt>
+                    <dd>
+                      <ul>
+                        {policy.issuesEvidence!.considerations.map((t, i) => (
+                          <li key={i}>{t}</li>
+                        ))}
+                      </ul>
+                    </dd>
+                  </div>
+                )}
+                {policy.issuesEvidence!.analysisGaps.length > 0 && (
+                  <div className="evidence-list__row">
+                    <dt>さらに調査が必要なこと</dt>
+                    <dd>
+                      <ul>
+                        {policy.issuesEvidence!.analysisGaps.map((t, i) => (
+                          <li key={i}>{t}</li>
+                        ))}
+                      </ul>
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            </section>
+          </Block>
+        )}
+
+        {hasVoice && (
+          <Block>
+            <section className="policy-detail__section">
+              <h2 className="policy-detail__heading">市民の声</h2>
+              {policy.voice!.map((v, i) => (
+                <figure className="voice-quote" key={i}>
+                  <blockquote>{v.quote}</blockquote>
+                  <figcaption>{v.context}</figcaption>
+                  {v.response && (
+                    <div className="voice-quote__response">
+                      <p className="voice-quote__response-label">市の考え方{v.responseLabel ? `（${v.responseLabel}）` : ''}</p>
+                      <p>{v.response}</p>
+                    </div>
+                  )}
+                </figure>
+              ))}
+            </section>
+          </Block>
+        )}
 
         <Block>
           <section className="policy-detail__section">
             <h2 className="policy-detail__heading">関連資料・出典</h2>
-            <div className="policy-detail__note">
-              <p>
-                このページの内容は、対話や情報収集を重ねながら今後も更新していきます。統計データや公的資料など、出典を確認できるものについては、確認が取れ次第この欄に追記していきます。
-              </p>
-            </div>
+            {policy.sourceList && policy.sourceList.length > 0 ? (
+              <ul className="policy-detail__sources">
+                {policy.sourceList.map((s, i) => (
+                  <li key={i}>
+                    <span className={`source-tag source-tag--${s.type}`}>{sourceTypeLabel[s.type]}</span>
+                    {s.url ? (
+                      <a href={s.url} target="_blank" rel="noopener noreferrer">
+                        {s.label}
+                      </a>
+                    ) : (
+                      <span>{s.label}</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="policy-detail__note">
+                <p>
+                  このページの内容は、対話や情報収集を重ねながら今後も更新していきます。統計データや公的資料など、出典を確認できるものについては、確認が取れ次第この欄に追記していきます。
+                </p>
+              </div>
+            )}
           </section>
         </Block>
 
