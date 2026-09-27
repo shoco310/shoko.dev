@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { policies, type Policy } from '../data/policy'
+import { policies, type Policy, type SourceItem } from '../data/policy'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -27,8 +27,21 @@ function IconLine() {
   )
 }
 
+const sourceTypeLabel: Record<SourceItem['type'], string> = {
+  primary: '一次資料',
+  report: '報道',
+  reference: '参考・他自治体事例',
+}
+
 export default function PolicyDetail({ policy }: { policy: Policy }) {
   const others = policies.filter(p => p.slug !== policy.slug)
+  const hasVoice = !!policy.voice && policy.voice.length > 0
+  const hasData = !!policy.dataPoints && policy.dataPoints.length > 0
+  const hasEvidence =
+    !!policy.issuesEvidence &&
+    (policy.issuesEvidence.confirmed.length > 0 ||
+      policy.issuesEvidence.considerations.length > 0 ||
+      policy.issuesEvidence.analysisGaps.length > 0)
 
   return (
     <article className="policy-detail">
@@ -63,24 +76,56 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
           </section>
         </Block>
 
-        <Block>
-          <section className="policy-detail__section">
-            <h2 className="policy-detail__heading">具体的な取り組み</h2>
-            <ol className="policy-detail__initiatives">
-              {policy.initiatives.map((item, i) => (
-                <li key={item.title}>
-                  <span className="policy-detail__initiative-num">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <div>
-                    <h3>{item.title}</h3>
-                    <p>{item.desc}</p>
+        {hasData && (
+          <Block>
+            <section className="policy-detail__section">
+              <h2 className="policy-detail__heading">数字で見る宇部</h2>
+              {policy.dataNote && <p className="policy-detail__data-note">⚠️ {policy.dataNote}</p>}
+              <div className="policy-detail__data-grid">
+                {policy.dataPoints!.map((d, i) => (
+                  <div className="data-card" key={i}>
+                    <p className="data-card__label">{d.label}</p>
+                    {d.value && <p className="data-card__value">{d.value}</p>}
+                    {d.breakdown && (
+                      <ul className="data-card__breakdown">
+                        {d.breakdown.map((b, j) => (
+                          <li key={j}>
+                            <span>{b.label}</span>
+                            <strong>{b.value}</strong>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    {d.note && <p className="data-card__note">{d.note}</p>}
+                    <p className="data-card__source">
+                      {d.survey} ／ 出典：{d.source}
+                    </p>
                   </div>
-                </li>
+                ))}
+              </div>
+            </section>
+          </Block>
+        )}
+
+        {hasVoice && (
+          <Block>
+            <section className="policy-detail__section">
+              <h2 className="policy-detail__heading">市民の声</h2>
+              {policy.voice!.map((v, i) => (
+                <figure className="voice-quote" key={i}>
+                  <blockquote>{v.quote}</blockquote>
+                  <figcaption>{v.context}</figcaption>
+                  {v.response && (
+                    <div className="voice-quote__response">
+                      <p className="voice-quote__response-label">市の考え方{v.responseLabel ? `（${v.responseLabel}）` : ''}</p>
+                      <p>{v.response}</p>
+                    </div>
+                  )}
+                </figure>
               ))}
-            </ol>
-          </section>
-        </Block>
+            </section>
+          </Block>
+        )}
 
         <Block>
           <section className="policy-detail__section">
@@ -100,14 +145,98 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
           </section>
         </Block>
 
+        {hasEvidence && (
+          <Block>
+            <section className="policy-detail__section">
+              <h2 className="policy-detail__heading">調査結果からわかること</h2>
+              {policy.issuesEvidence!.confirmed.length > 0 && (
+                <div className="evidence-block evidence-block--confirmed">
+                  <p className="evidence-block__label">✅ 確認された事実</p>
+                  <ul>
+                    {policy.issuesEvidence!.confirmed.map((t, i) => (
+                      <li key={i}>{t}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {policy.issuesEvidence!.considerations.length > 0 && (
+                <div className="evidence-block evidence-block--considerations">
+                  <p className="evidence-block__label">💭 そこから考えられる課題（推測）</p>
+                  <ul>
+                    {policy.issuesEvidence!.considerations.map((t, i) => (
+                      <li key={i}>{t}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {policy.issuesEvidence!.analysisGaps.length > 0 && (
+                <div className="evidence-block evidence-block--gaps">
+                  <p className="evidence-block__label">❓ 未実施の分析</p>
+                  <ul>
+                    {policy.issuesEvidence!.analysisGaps.map((t, i) => (
+                      <li key={i}>{t}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </section>
+          </Block>
+        )}
+
+        <Block>
+          <section className="policy-detail__section">
+            <h2 className="policy-detail__heading">具体的な取り組み</h2>
+            <ol className="policy-detail__initiatives">
+              {policy.initiatives.map((item, i) => (
+                <li key={item.title}>
+                  <span className="policy-detail__initiative-num">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <div>
+                    <div className="policy-detail__initiative-head">
+                      <h3>{item.title}</h3>
+                      <span
+                        className={`status-badge ${item.status === 'existing' ? 'status-badge--existing' : 'status-badge--unconfirmed'}`}
+                      >
+                        {item.status === 'existing' ? '既存制度の拡充' : '既存制度との関係を確認中'}
+                      </span>
+                    </div>
+                    <p>{item.desc}</p>
+                    {item.status === 'existing' && item.statusNote && (
+                      <p className="policy-detail__status-note">該当する既存制度：{item.statusNote}</p>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        </Block>
+
         <Block>
           <section className="policy-detail__section">
             <h2 className="policy-detail__heading">関連資料・出典</h2>
-            <div className="policy-detail__note">
-              <p>
-                このページの内容は、対話や情報収集を重ねながら今後も更新していきます。統計データや公的資料など、出典を確認できるものについては、確認が取れ次第この欄に追記していきます。
-              </p>
-            </div>
+            {policy.sourceList && policy.sourceList.length > 0 ? (
+              <ul className="policy-detail__sources">
+                {policy.sourceList.map((s, i) => (
+                  <li key={i}>
+                    <span className={`source-tag source-tag--${s.type}`}>{sourceTypeLabel[s.type]}</span>
+                    {s.url ? (
+                      <a href={s.url} target="_blank" rel="noopener noreferrer">
+                        {s.label}
+                      </a>
+                    ) : (
+                      <span>{s.label}</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="policy-detail__note">
+                <p>
+                  このページの内容は、対話や情報収集を重ねながら今後も更新していきます。統計データや公的資料など、出典を確認できるものについては、確認が取れ次第この欄に追記していきます。
+                </p>
+              </div>
+            )}
           </section>
         </Block>
 
