@@ -12,3 +12,10 @@ export const voiceEnabled = import.meta.env.VITE_VOICE_ENABLED === 'true'
  * citizen submission form.
  */
 export const volunteerEnabled = import.meta.env.VITE_VOLUNTEER_ENABLED === 'true'
+
+/**
+ * Public issues (#/issues) written from citizen submissions. Switched on per
+ * environment with VITE_ISSUES_ENABLED=true; needs VITE_SUPABASE_URL and
+ * VITE_SUPABASE_PUBLISHABLE_KEY.
+ */
+export const issuesEnabled = import.meta.env.VITE_ISSUES_ENABLED === 'true'

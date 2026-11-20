@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
 import { routeHref } from '../router'
+import { LatestIssues } from './PolicyIssues'
+import { issuesEnabled } from '../data/features'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -90,6 +92,8 @@ export default function ParticipateSection() {
               </motion.li>
             ))}
           </motion.ol>
+
+          {issuesEnabled && <LatestIssues />}
 
           <motion.p className="participate__loop" variants={fadeUp}>
             <span aria-hidden="true">↻ </span>

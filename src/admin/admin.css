@@ -360,3 +360,131 @@ body {
     justify-content: flex-start;
   }
 }
+
+.admin-new {
+  margin-left: auto;
+  padding: 8px 18px;
+  font-size: 0.88rem;
+}
+.admin-input {
+  width: 100%;
+  font: inherit;
+  padding: 10px 12px;
+  border: 1.5px solid #bdbdbd;
+  border-radius: var(--radius-sm);
+  background: var(--white);
+}
+.admin-input:focus-visible {
+  outline: 3px solid var(--pink);
+  outline-offset: 1px;
+}
+.admin-fieldset {
+  border: 0;
+  padding: 0;
+  margin: 8px 0 0;
+  min-width: 0;
+}
+.admin-fieldset legend {
+  font-weight: 800;
+  font-size: 0.92rem;
+  margin-bottom: 6px;
+}
+.admin-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: 0.92rem;
+}
+.admin-checks label,
+.issue-link-row label,
+.admin-check {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  font-weight: 600;
+}
+.admin-check {
+  display: flex;
+  align-items: flex-start;
+  margin: 4px 0;
+  font-size: 0.92rem;
+}
+.admin-check input {
+  margin-top: 4px;
+}
+.issue-link-row {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.issue-source {
+  padding: 10px 14px;
+  border-left: 3px solid var(--line);
+  background: var(--gray-light);
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+}
+.issue-source + .issue-source {
+  margin-top: 8px;
+}
+.issue-source__head {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 4px;
+  font-family: var(--font-en);
+  font-weight: 800;
+  color: var(--pink-dark);
+}
+.issue-source p {
+  margin: 0;
+}
+.issue-attach {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.issue-attach input {
+  flex: 1;
+  font: inherit;
+  padding: 8px 12px;
+  border: 1.5px solid #bdbdbd;
+  border-radius: var(--radius-sm);
+}
+.issue-updates-admin {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.issue-updates-admin li {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+.issue-updates-admin p {
+  margin: 0;
+}
+.issue-updates-admin .admin-link {
+  margin-left: 12px;
+}
+.issue-approval {
+  padding: 16px;
+  border: 2px solid var(--pink);
+  border-radius: var(--radius-md);
+}
+.admin-status--issue-published {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: var(--white);
+}
+.admin-status--issue-draft {
+  background: var(--ink);
+  color: var(--white);
+}
+.issue-editor .issue-card:hover {
+  transform: none;
+}
+.issue-editor .issue-card {
+  pointer-events: none;
+}

@@ -21,6 +21,8 @@ export type Route =
   | { name: 'privacy' }
   | { name: 'voice' }
   | { name: 'join' }
+  | { name: 'issues' }
+  | { name: 'issue'; id: number }
   | { name: 'notFound' }
 
 export function parseHash(hash: string): Route {
@@ -48,6 +50,9 @@ export function parseHash(hash: string): Route {
     case 'activity':
     case 'about':
     case 'privacy':
+    case 'issues':
+      if (!second) return { name: 'issues' }
+      return /^[1-9][0-9]{0,8}$/.test(second) ? { name: 'issue', id: Number(second) } : { name: 'notFound' }
     case 'voice':
     case 'join':
       return second ? { name: 'notFound' } : { name: first }
@@ -64,6 +69,8 @@ export function routeHref(route: LinkableRoute): string {
       return route.anchor ? `#${route.anchor}` : '#top'
     case 'policy':
       return `#/policy/${encodeURIComponent(route.slug)}`
+    case 'issue':
+      return `#/issues/${route.id}`
     default:
       return `#/${route.name}`
   }
@@ -71,7 +78,9 @@ export function routeHref(route: LinkableRoute): string {
 
 /** Stable identity for a route, used to detect page changes. */
 export function routeKey(route: Route): string {
-  return route.name === 'policy' ? `policy:${route.slug}` : route.name
+  if (route.name === 'policy') return `policy:${route.slug}`
+  if (route.name === 'issue') return `issue:${route.id}`
+  return route.name
 }
 
 export function useRoute(): Route {
