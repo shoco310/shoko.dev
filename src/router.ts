@@ -46,13 +46,13 @@ export function parseHash(hash: string): Route {
   switch (first) {
     case 'policy':
       return second ? { name: 'policy', slug: second } : { name: 'notFound' }
+    case 'issues':
+      if (!second) return { name: 'issues' }
+      return /^[1-9][0-9]{0,8}$/.test(second) ? { name: 'issue', id: Number(second) } : { name: 'notFound' }
     case 'data':
     case 'activity':
     case 'about':
     case 'privacy':
-    case 'issues':
-      if (!second) return { name: 'issues' }
-      return /^[1-9][0-9]{0,8}$/.test(second) ? { name: 'issue', id: Number(second) } : { name: 'notFound' }
     case 'voice':
     case 'join':
       return second ? { name: 'notFound' } : { name: first }

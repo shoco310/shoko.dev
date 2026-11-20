@@ -20,6 +20,13 @@ describe('router', () => {
     expect(parseHash('#/issues/1/2')).toEqual({ name: 'notFound' })
   })
 
+  it('parses every static page to itself (regression: case fall-through)', () => {
+    for (const name of ['data', 'activity', 'about', 'privacy', 'voice', 'join'] as const) {
+      expect(parseHash(`#/${name}`)).toEqual({ name })
+      expect(parseHash(`#/${name}/x`)).toEqual({ name: 'notFound' })
+    }
+  })
+
   it('parses the form pages', () => {
     expect(parseHash('#/voice')).toEqual({ name: 'voice' })
     expect(parseHash('#/join')).toEqual({ name: 'join' })
