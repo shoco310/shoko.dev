@@ -1082,3 +1082,22 @@ body {
 .policy-detail__history-link {
   margin: 0 0 var(--space-5);
 }
+
+/* 私について: the portrait at about half its former size. */
+.profile-box {
+  grid-template-columns: 270px minmax(0, 1fr);
+  gap: var(--space-6);
+}
+.profile-photo {
+  max-width: 270px;
+}
+@media (max-width: 1024px) {
+  .profile-box {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  .profile-photo {
+    max-width: 220px;
+    margin-inline: 0;
+  }
+}
