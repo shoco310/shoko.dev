@@ -11,14 +11,9 @@ const siteLinks = mainNav.filter(item => !item.children)
 
 /**
  * Compact dark footer: brand and SNS, three link columns, contact details
- * of the supporters' association, then the legal line. 「ページの先頭へ」
- * returns to the top of the current page.
+ * of the supporters' association, then the legal line.
  */
 export default function Footer() {
-  const toTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-    document.querySelector<HTMLElement>('.site-header__logo')?.focus({ preventScroll: true })
-  }
 
   return (
     <footer className="site-footer">
@@ -44,10 +39,6 @@ export default function Footer() {
               </li>
             ))}
           </ul>
-          <button type="button" className="site-footer__totop" onClick={toTop}>
-            ページの先頭へ
-            <span aria-hidden="true">↑</span>
-          </button>
         </div>
 
         <div className="site-footer__grid">
