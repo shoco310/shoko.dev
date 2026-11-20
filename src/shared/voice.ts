@@ -5,8 +5,11 @@
  *
  * Must stay in sync with the CHECK constraints in
  * supabase/migrations/*_submissions.sql.
+ *
+ * Imported by the Vercel Function at runtime as native Node ESM, so relative
+ * imports here (and in api/) must keep their explicit '.js' extension.
  */
-import { privacyPolicyDate } from '../data/site'
+import { privacyPolicyDate } from '../data/site.js'
 
 export const BODY_MAX = 4000
 export const AREA_MAX = 50

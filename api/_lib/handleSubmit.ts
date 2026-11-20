@@ -5,7 +5,7 @@ import {
   validateVoice,
   type SubmitErrorCode,
   type SubmitResponse,
-} from '../../src/shared/voice'
+} from '../../src/shared/voice.js'
 
 /**
  * POST /api/submit — the only way a citizen submission reaches the database.

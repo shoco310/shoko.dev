@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { handleSubmit, verifyTurnstileWithCloudflare } from './_lib/handleSubmit'
+import { handleSubmit, verifyTurnstileWithCloudflare } from './_lib/handleSubmit.js'
 
 /**
  * Vercel Function: POST /api/submit (Node.js runtime, region hnd1 via vercel.json).
