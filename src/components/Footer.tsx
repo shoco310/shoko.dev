@@ -1,8 +1,10 @@
 import { navLinks } from './Header'
 import { operator, supportersAssociation } from '../data/site'
 import { routeHref } from '../router'
+import { voiceEnabled } from '../data/features'
 
 const subLinks = [
+  ...(voiceEnabled ? [{ href: routeHref({ name: 'voice' }), label: '困りごと・ご意見を送る' }] : []),
   { href: routeHref({ name: 'data' }), label: '数字で見る宇部' },
   { href: routeHref({ name: 'activity' }), label: '活動・調査の状況' },
   { href: routeHref({ name: 'about' }), label: 'このサイトについて' },

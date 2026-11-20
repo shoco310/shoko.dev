@@ -1,0 +1,307 @@
+/* Review screen. Reuses the site tokens from styles.css. */
+body {
+  background: var(--gray-light);
+}
+
+.admin-auth {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+}
+.admin-auth__card {
+  width: min(440px, 100%);
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 32px 28px;
+  box-shadow: var(--shadow-md);
+  border-top: 4px solid var(--pink);
+}
+.admin-auth__brand {
+  margin: 0 0 8px;
+  font-weight: 800;
+  color: var(--pink-dark);
+  font-size: 0.9rem;
+}
+.admin-auth__title {
+  margin: 0 0 16px;
+  font-size: 1.4rem;
+}
+.admin-form {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+.admin-form label,
+.admin-panel label {
+  font-weight: 800;
+  font-size: 0.92rem;
+  margin-top: 8px;
+}
+.admin-form input,
+.admin-panel select,
+.admin-panel textarea {
+  width: 100%;
+  font: inherit;
+  padding: 10px 12px;
+  border: 1.5px solid #bdbdbd;
+  border-radius: var(--radius-sm);
+  background: var(--white);
+}
+.admin-form input:focus-visible,
+.admin-panel select:focus-visible,
+.admin-panel textarea:focus-visible {
+  outline: 3px solid var(--pink);
+  outline-offset: 1px;
+}
+.admin-form .btn {
+  margin-top: 12px;
+  justify-content: center;
+}
+.admin-qr {
+  display: block;
+  margin: 16px auto;
+  background: var(--white);
+}
+.admin-secret {
+  word-break: break-all;
+  font-size: 0.85rem;
+}
+.admin-error {
+  color: var(--pink-deep);
+  font-weight: 700;
+}
+.admin-muted {
+  color: var(--gray);
+  font-size: 0.9rem;
+}
+.admin-link {
+  background: none;
+  border: 0;
+  padding: 6px 0;
+  color: var(--gray);
+  text-decoration: underline;
+  font-size: 0.9rem;
+}
+.admin-link--light {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px;
+  background: var(--ink);
+  color: var(--white);
+  border-bottom: 3px solid var(--pink);
+}
+.admin-header__title {
+  margin: 0;
+  font-weight: 900;
+}
+.admin-header__user {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px 24px 0;
+}
+.admin-tab {
+  border: 1.5px solid var(--ink);
+  background: var(--white);
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+.admin-tab.is-active {
+  background: var(--ink);
+  color: var(--white);
+}
+.admin-tab__count {
+  font-size: 0.78rem;
+  opacity: 0.75;
+}
+
+.admin-body {
+  display: grid;
+  grid-template-columns: minmax(280px, 400px) 1fr;
+  gap: 20px;
+  padding: 16px 24px 40px;
+  align-items: start;
+}
+.admin-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.admin-item {
+  width: 100%;
+  text-align: left;
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  background: var(--white);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-sm);
+  font: inherit;
+}
+.admin-item.is-selected {
+  border-color: var(--pink);
+}
+.admin-item:focus-visible {
+  outline: 3px solid var(--pink);
+}
+.admin-item__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--gray);
+}
+.admin-item__contact {
+  font-weight: 700;
+  color: var(--ink);
+}
+.admin-item__body {
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+.admin-item__themes {
+  font-size: 0.8rem;
+  color: var(--pink-dark);
+  font-weight: 700;
+}
+.admin-status {
+  display: inline-block;
+  padding: 1px 10px;
+  border-radius: var(--radius-full);
+  font-weight: 800;
+  font-size: 0.75rem;
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+}
+.admin-status--received {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: var(--white);
+}
+.admin-status--urgent_referral {
+  background: var(--pink-deep);
+  border-color: var(--pink-deep);
+  color: var(--white);
+}
+.admin-status--reviewing {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.admin-detail {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 24px 28px;
+  position: sticky;
+  top: 16px;
+}
+.admin-detail__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.admin-detail__receipt {
+  margin: 0;
+  font-family: var(--font-en);
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--pink);
+  letter-spacing: 0.04em;
+}
+.admin-detail__body {
+  white-space: pre-wrap;
+  line-height: 1.9;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin: 12px 0;
+}
+.admin-facts {
+  margin: 0;
+  display: grid;
+  gap: 4px;
+}
+.admin-facts > div {
+  display: grid;
+  grid-template-columns: 7em 1fr;
+  gap: 8px;
+  font-size: 0.92rem;
+}
+.admin-facts dt {
+  font-weight: 800;
+}
+.admin-facts dd {
+  margin: 0;
+  word-break: break-all;
+}
+.admin-panel {
+  margin-top: 24px;
+  display: grid;
+  gap: 6px;
+}
+.admin-panel h2 {
+  font-size: 1rem;
+  margin: 0 0 4px;
+}
+.admin-panel .btn {
+  justify-self: start;
+}
+.admin-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 8px;
+}
+.admin .btn:disabled,
+.admin-auth .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 860px) {
+  .admin-body {
+    grid-template-columns: 1fr;
+  }
+  .admin-detail {
+    position: static;
+  }
+  .admin-header,
+  .admin-tabs,
+  .admin-body {
+    padding-inline: 16px;
+  }
+}
+
+.admin-flash {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  background: var(--white);
+  border-left: 4px solid var(--pink);
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.9rem;
+}

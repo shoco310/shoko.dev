@@ -10,24 +10,30 @@ select plan(31);
 -- ---------------------------------------------------------------------------
 insert into auth.users (id, email, aud, role)
 values
-  ('00000000-0000-0000-0000-0000000000a1', 'operator@example.test', 'authenticated', 'authenticated'),
-  ('00000000-0000-0000-0000-0000000000b2', 'stranger@example.test', 'authenticated', 'authenticated');
+  ('00000000-0000-0000-0000-0000000000a1', 'pgtap-operator@example.test', 'authenticated', 'authenticated'),
+  ('00000000-0000-0000-0000-0000000000b2', 'pgtap-stranger@example.test', 'authenticated', 'authenticated');
 insert into public.staff (user_id, role, display_name)
 values ('00000000-0000-0000-0000-0000000000a1', 'admin', 'Operator');
 
 -- A submission with contact details, created the way /api/submit does it.
+-- Tests must pass on a database that already holds other rows, so every
+-- check below targets this test's own submission.
+create temp table t (receipt text, sid uuid) on commit drop;
+grant all on t to service_role, authenticated, anon;
 set local role service_role;
-select ok(
-  public.submit_voice('バス停が遠くて通院が大変です', '2026-11-20', 'hash-a', '{交通}', '東岐波', '40s',
-                      '山田', 'Taro@Example.test', true) ~ '^UB-[2-9A-HJKMNP-TV-Z]{4}-[2-9A-HJKMNP-TV-Z]{4}$',
-  'submit_voice returns a receipt number like UB-XXXX-XXXX'
-);
+insert into t (receipt)
+  select public.submit_voice('バス停が遠くて通院が大変です', '2026-11-20', 'pgtap-hash', '{交通}', '東岐波', '40s',
+                             '山田', 'Taro@Example.test', true);
 reset role;
+update t set sid = (select id from public.submissions s where s.receipt_no = t.receipt);
 
-select is((select count(*)::int from public.submissions), 1, 'one submission stored');
-select is((select has_contact from public.submissions limit 1), true, 'has_contact flag set');
-select is((select email from public.submission_contacts limit 1), 'taro@example.test', 'email normalized to lower case');
-select is((select theme_hints from public.submissions limit 1), '{交通}'::text[], 'theme hints stored');
+select ok((select receipt from t) ~ '^UB-[2-9A-HJKMNP-TV-Z]{4}-[2-9A-HJKMNP-TV-Z]{4}$',
+  'submit_voice returns a receipt number like UB-XXXX-XXXX');
+select isnt((select sid from t), null, 'submission stored');
+select is((select has_contact from public.submissions where id = (select sid from t)), true, 'has_contact flag set');
+select is((select email from public.submission_contacts where submission_id = (select sid from t)), 'taro@example.test',
+  'email normalized to lower case');
+select is((select theme_hints from public.submissions where id = (select sid from t)), '{交通}'::text[], 'theme hints stored');
 
 -- ---------------------------------------------------------------------------
 -- Structural guarantees
@@ -69,7 +75,7 @@ select set_config('request.jwt.claims',
 set local role authenticated;
 select is((select count(*)::int from public.submissions), 0, 'non-staff sees no submissions');
 select throws_ok(
-  $$select * from public.reveal_contact((select id from public.submissions limit 1))$$,
+  $$select * from public.reveal_contact((select sid from t))$$,
   '42501', null, 'non-staff cannot reveal contacts');
 reset role;
 
@@ -88,28 +94,31 @@ reset role;
 select set_config('request.jwt.claims',
   '{"sub":"00000000-0000-0000-0000-0000000000a1","role":"authenticated","aal":"aal2"}', true);
 set local role authenticated;
-select is((select count(*)::int from public.submissions), 1, 'staff with MFA sees submissions');
+select ok(exists (select 1 from public.submissions where id = (select sid from t)), 'staff with MFA sees submissions');
 select is(
-  (select email from public.reveal_contact((select id from public.submissions limit 1))),
+  (select email from public.reveal_contact((select sid from t))),
   'taro@example.test', 'staff can reveal a contact');
 select throws_ok(
-  $$update public.submissions set body = 'changed'$$, '42501', null, 'staff cannot rewrite the submission text');
-update public.submissions set status = 'used', reviewer_note = '交通の課題として整理';
+  $$update public.submissions set body = 'changed' where id = (select sid from t)$$, '42501', null,
+  'staff cannot rewrite the submission text');
+update public.submissions set status = 'used', reviewer_note = '交通の課題として整理' where id = (select sid from t);
 reset role;
 
-select is((select count(*)::int from public.audit_log where action = 'reveal_contact'), 1, 'contact reveal was logged');
-select is((select count(*)::int from public.audit_log where action = 'update_submission'), 1, 'status change was logged');
+select is((select count(*)::int from public.audit_log where action = 'reveal_contact' and target_id = (select sid::text from t)), 1,
+  'contact reveal was logged');
+select is((select count(*)::int from public.audit_log where action = 'update_submission' and target_id = (select sid::text from t)), 1,
+  'status change was logged');
 select ok(
-  (select delete_after from public.submission_contacts limit 1) <= (current_date + interval '6 months')::date,
+  (select delete_after from public.submission_contacts where submission_id = (select sid from t)) <= (current_date + interval '6 months')::date,
   'closing a submission shortens contact retention to 6 months');
 
 -- ---------------------------------------------------------------------------
 -- Rate limiting and validation
 -- ---------------------------------------------------------------------------
 set local role service_role;
-select lives_ok($$select public.submit_voice('2件目', '2026-11-20', 'hash-a')$$, '2nd submission within an hour is accepted');
-select lives_ok($$select public.submit_voice('3件目', '2026-11-20', 'hash-a')$$, '3rd submission within an hour is accepted');
-select throws_ok($$select public.submit_voice('4件目', '2026-11-20', 'hash-a')$$, 'P0001', 'rate_limited',
+select lives_ok($$select public.submit_voice('2件目', '2026-11-20', 'pgtap-hash')$$, '2nd submission within an hour is accepted');
+select lives_ok($$select public.submit_voice('3件目', '2026-11-20', 'pgtap-hash')$$, '3rd submission within an hour is accepted');
+select throws_ok($$select public.submit_voice('4件目', '2026-11-20', 'pgtap-hash')$$, 'P0001', 'rate_limited',
   '4th submission from the same sender within an hour is rejected');
 reset role;
 
