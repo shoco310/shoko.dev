@@ -8,7 +8,7 @@ export default function AboutPage() {
       <div className="policy-detail__note page__notice">
         <p>
           <strong>
-            このサイトは、{operator.name}が運営する政治活動のためのウェブサイトです。宇部市の公式サイトや、行政のサービスではありません。
+            このサイトは、{operator.displayName}が個人で運営する、政治活動・政策発信のためのウェブサイトです。宇部市の公式サイトや、行政のサービスではありません。
           </strong>
         </p>
         <p>
@@ -43,8 +43,8 @@ export default function AboutPage() {
       <PageSection title="運営者">
         <dl className="info-list">
           <div>
-            <dt>運営</dt>
-            <dd>{operator.name}</dd>
+            <dt>運営者</dt>
+            <dd>{operator.displayName}</dd>
           </div>
           <div>
             <dt>所在地</dt>

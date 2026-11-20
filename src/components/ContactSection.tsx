@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { operator } from '../data/site'
+import { operator, supportersAssociation } from '../data/site'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -30,7 +30,7 @@ export default function ContactSection() {
           <motion.div className="contact-list" variants={stagger}>
             <motion.div className="contact-item" variants={fadeUp}>
               <span className="contact-item__label">団体名</span>
-              <span className="contact-item__value">{operator.name}</span>
+              <span className="contact-item__value">{supportersAssociation}</span>
             </motion.div>
 
             <motion.div className="contact-item" variants={fadeUp}>

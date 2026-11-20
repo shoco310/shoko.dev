@@ -1,5 +1,5 @@
 import PageLayout, { PageSection } from '../components/PageLayout'
-import { operator, privacyPolicyDate } from '../data/site'
+import { operator, privacyPolicyDate, supportersAssociation } from '../data/site'
 
 function formatDate(iso: string) {
   const [y, m, d] = iso.split('-').map(Number)
@@ -11,7 +11,7 @@ export default function PrivacyPage() {
     <PageLayout
       en="PRIVACY"
       title="プライバシーポリシー"
-      lead={`${operator.name}（以下「後援会」）は、このサイトを通じて得た個人情報を、個人情報の保護に関する法律その他の法令を守って取り扱います。`}
+      lead={`このサイトの運営者である${operator.displayName}（以下「運営者」）は、このサイトを通じて得た個人情報を、個人情報の保護に関する法律その他の法令を守って取り扱います。`}
     >
       <PageSection title="1. 取得する情報と利用目的">
         <dl className="info-list info-list--stacked">
@@ -24,7 +24,7 @@ export default function PrivacyPage() {
           <div>
             <dt>後援会の入会フォーム（Google フォーム）</dt>
             <dd>
-              フォームに入力された情報を、後援会の運営と、会員の方へのご連絡のために利用します。
+              フォームに入力された情報を、{supportersAssociation}の運営と、会員の方へのご連絡のために利用します。{supportersAssociation}の代表は運営者が務めており、運営者が管理します。
             </dd>
           </div>
           <div>
@@ -64,7 +64,7 @@ export default function PrivacyPage() {
 
       <PageSection title="4. 開示・訂正・削除のご請求">
         <p>
-          後援会が保有するご自身の個人情報について、開示・訂正・利用停止・削除をご希望の場合は、下記の窓口までご連絡ください。ご本人であることを確認したうえで対応します。
+          運営者が保有するご自身の個人情報について、開示・訂正・利用停止・削除をご希望の場合は、下記の窓口までご連絡ください。ご本人であることを確認したうえで対応します。
         </p>
       </PageSection>
 
@@ -74,11 +74,11 @@ export default function PrivacyPage() {
         </p>
       </PageSection>
 
-      <PageSection title="お問い合わせ窓口">
+      <PageSection title="個人情報の管理責任者・お問い合わせ窓口">
         <dl className="info-list">
           <div>
-            <dt>運営</dt>
-            <dd>{operator.name}</dd>
+            <dt>管理責任者</dt>
+            <dd>{operator.displayName}</dd>
           </div>
           <div>
             <dt>所在地</dt>
