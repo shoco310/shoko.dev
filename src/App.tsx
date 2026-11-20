@@ -3,6 +3,7 @@ import { MotionConfig } from 'framer-motion'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import Footer from './components/Footer'
+import BackToTop from './components/BackToTop'
 import PolicyDetail from './pages/PolicyDetail'
 import ProfilePage from './pages/ProfilePage'
 import VisionPage from './pages/VisionPage'
@@ -136,6 +137,7 @@ export default function App() {
         {renderPage(route, policy)}
       </main>
       <Footer />
+      <BackToTop />
     </MotionConfig>
   )
 }
