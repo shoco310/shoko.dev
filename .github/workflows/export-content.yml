@@ -1,0 +1,42 @@
+name: Export published content to Git
+
+# Keeps a Git history of what is public on the site (events, issues), which
+# is edited in the review screen and stored in Supabase. Reads with the
+# publishable key only (public data); writes with the built-in GITHUB_TOKEN.
+
+on:
+  schedule:
+    - cron: '17 18 * * *' # 03:17 JST daily
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: export-content
+  cancel-in-progress: false
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Export
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+        run: node scripts/export-content.mjs
+      - name: Commit if changed
+        run: |
+          if [ -n "$(git status --porcelain content)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add content
+            git commit -m "Export published content ($(date -u +%Y-%m-%d))"
+            git push
+          else
+            echo "No changes"
+          fi

@@ -1,40 +1,15 @@
 /**
- * Data checks for hand-edited content. Runs in `npm test` and before every
- * production build (package.json "build"), so a typo in events.ts or a
- * malformed changelog entry stops the deploy instead of breaking the site.
+ * Data checks for hand-edited content in the repository. Runs in `npm test`
+ * and before every production build (package.json "build"), so a malformed
+ * changelog entry stops the deploy instead of breaking the site. (Events now
+ * live in the database and are validated by its constraints and the form.)
  */
 import { describe, expect, it } from 'vitest'
-import { activities } from '../src/data/activity'
-import { events } from '../src/data/events'
 import { policies } from '../src/data/policy'
-import { endsAt, startsAt } from '../src/lib/events'
 
 const DATE = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/
-const TIME = /^([01]\d|2[0-3]):[0-5]\d$/
 const validDate = (s: string) => DATE.test(s) && !Number.isNaN(Date.parse(`${s}T00:00:00+09:00`)) &&
   new Date(`${s}T00:00:00Z`).toISOString().startsWith(s)
-
-describe('events.ts', () => {
-  it('has unique ids', () => {
-    const ids = events.map(e => e.id)
-    expect(new Set(ids).size).toBe(ids.length)
-  })
-  for (const e of events) {
-    it(`event ${e.id} is well-formed`, () => {
-      expect(e.id).toMatch(/^\d{4}-\d{2}-\d{2}-[a-z0-9-]+$/)
-      expect(validDate(e.date), `date ${e.date}`).toBe(true)
-      expect(e.id.startsWith(e.date), 'id starts with the date').toBe(true)
-      if (e.start) expect(e.start).toMatch(TIME)
-      if (e.end) expect(e.end).toMatch(TIME)
-      if (e.end && !e.start) throw new Error('end without start')
-      if (e.start && e.end) expect(endsAt(e)).toBeGreaterThan(startsAt(e))
-      expect(e.title.trim().length).toBeGreaterThan(0)
-      expect(e.description.trim().length).toBeGreaterThan(0)
-      for (const url of [e.applyUrl, e.placeUrl, e.reportUrl]) if (url) expect(url).toMatch(/^https:\/\//)
-      if (e.reportActivityId) expect(activities.some(a => a.id === e.reportActivityId), 'report activity exists').toBe(true)
-    })
-  }
-})
 
 describe('policy changelog', () => {
   for (const p of policies) {

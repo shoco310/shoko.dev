@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { EventItem } from '../src/data/events'
+import type { EventItem } from '../src/shared/events'
 import { endsAt, eventState, formatEventDate, splitEvents, startsAt } from '../src/lib/events'
 
 const base: EventItem = { id: '2026-12-05-test', title: 'テスト', date: '2026-12-05', description: 'x' }
@@ -28,6 +28,10 @@ describe('event dates (Japan time)', () => {
     expect(eventState(base, at('2026-12-06T00:00:00+09:00'))).toBe('ended')
   })
 
+  it('a manual end overrides the date', () => {
+    expect(eventState({ ...base, status: 'ended' }, at('2026-12-01T00:00:00+09:00'))).toBe('ended')
+  })
+
   it('cancelled / postponed override the automatic state', () => {
     expect(eventState({ ...base, status: 'cancelled' }, at('2026-12-01T00:00:00+09:00'))).toBe('cancelled')
     expect(eventState({ ...base, status: 'postponed' }, at('2026-12-01T00:00:00+09:00'))).toBe('postponed')
@@ -40,10 +44,11 @@ describe('event dates (Japan time)', () => {
       { ...base, id: 'c', date: '2026-11-01' },
       { ...base, id: 'd', date: '2026-10-01' },
       { ...base, id: 'e', date: '2026-12-03', status: 'cancelled' },
+      { ...base, id: 'f', date: '2026-12-20', status: 'ended' },
     ]
     const { upcoming, past } = splitEvents(list, at('2026-11-20T12:00:00+09:00'))
     expect(upcoming.map(e => e.id)).toEqual(['b', 'e', 'a'])
-    expect(past.map(e => e.id)).toEqual(['c', 'd'])
+    expect(past.map(e => e.id)).toEqual(['f', 'c', 'd'])
   })
 
   it('formats the date with the weekday', () => {

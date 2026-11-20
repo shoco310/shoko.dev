@@ -1,4 +1,4 @@
-import type { EventItem } from '../data/events'
+import type { EventItem } from '../shared/events'
 import { eventState, formatEventDate, reportLink, stateLabels } from '../lib/events'
 
 /** One event, as a readable list item (works on phones without a calendar grid). */

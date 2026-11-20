@@ -1,32 +1,8 @@
 import { PUBLIC_ISSUE_COLUMNS, type IssueUpdate, type PublicIssue } from '../shared/issues'
 
-/**
- * Read-only access to published issues for the public site. supabase-js is
- * loaded lazily so the rest of the site stays light, and the client never
- * stores a session (visitors are always anonymous; RLS shows only what the
- * operator has approved).
- */
-type Client = Awaited<ReturnType<typeof createPublicClient>>
-let clientPromise: Promise<Client> | null = null
+import { publicClient as client } from './publicSupabase'
 
-async function createPublicClient() {
-  const { createClient } = await import('@supabase/supabase-js')
-  const url = import.meta.env.VITE_SUPABASE_URL
-  const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
-  if (!url || !key) throw new Error('not_configured')
-  return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } })
-}
-
-function client() {
-  if (!clientPromise) {
-    clientPromise = createPublicClient().catch(e => {
-      clientPromise = null
-      throw e
-    })
-  }
-  return clientPromise
-}
-
+/** Read-only access to published issues (RLS shows only what the operator approved). */
 export async function listPublishedIssues(): Promise<PublicIssue[]> {
   const sb = await client()
   const { data, error } = await sb

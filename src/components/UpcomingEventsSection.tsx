@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion'
 import EventCard from './EventCard'
 import { splitEvents } from '../lib/events'
+import { listPublishedEvents } from '../lib/publicEvents'
+import { useAsync } from '../lib/useAsync'
 import { routeHref } from '../router'
 
 const fadeUp = {
@@ -10,7 +12,8 @@ const fadeUp = {
 
 /** Top page: up to three upcoming events. Not rendered when nothing is planned. */
 export default function UpcomingEventsSection() {
-  const { upcoming } = splitEvents()
+  const { data } = useAsync(listPublishedEvents, [])
+  const { upcoming } = splitEvents(data ?? [])
   if (upcoming.length === 0) return null
   return (
     <section id="events" className="section upcoming-events">
