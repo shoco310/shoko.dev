@@ -109,7 +109,7 @@ export default function ActivityPage({ initialFilter = 'all' }: { initialFilter?
             <SectionHeading id="act-reports" title="活動報告" />
             {reports.error && <p className="page__muted">活動報告を読み込めませんでした。時間をおいて、もう一度お試しください。</p>}
             {reports.data && reports.data.length === 0 && <p>まだありません。</p>}
-            <div className="activity-grid activity-grid--page">
+            <div className="activity-list">
               {(reports.data ?? []).map(item => (
                 <ActivityCard key={item.id} item={item} />
               ))}

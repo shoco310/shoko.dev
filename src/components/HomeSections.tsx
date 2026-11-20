@@ -1,61 +1,26 @@
 import { ButtonLink, Section, SectionHeading } from './ui'
-import EventCard from './EventCard'
 import { ActivityCard } from './ActivitySection'
 import { policies } from '../data/policy'
 import { values, vision } from '../data/v2mom'
-import { splitEvents } from '../lib/events'
+import { eventState, formatEventDate, splitEvents } from '../lib/events'
 import { listPublishedEvents } from '../lib/publicEvents'
 import { listPublishedReports } from '../lib/publicContent'
 import { useAsync } from '../lib/useAsync'
 import { routeHref } from '../router'
 
 /*
- * Top-page sections ②〜⑤. Each is a short entrance with one link to the
- * page that holds the full content — no long text, nothing repeated.
- * Wording is taken from the profile, V2MOM and policy data as they are.
+ * Top-page sections. Each is a short entrance with one link to the page
+ * that holds the full content: no long text, no cards, thin rules only.
+ * Wording comes from the V2MOM and policy data as it is.
  */
 
-/** ② 私について */
-export function AboutMeTeaser() {
-  return (
-    <Section id="about-me" labelledBy="home-about-h">
-      <div className="home-about">
-        <img
-          className="home-about__photo"
-          src="/images/profile-900.png"
-          alt="さとうしょうこ"
-          loading="lazy"
-          decoding="async"
-          width={684}
-          height={674}
-        />
-        <div>
-          <SectionHeading id="home-about-h" kicker="About me" title="宇部で、挑戦する人を増やしたい。" />
-          <p className="home-text">
-            宇部市東岐波出身。13年前に東京へ移住し、ITエンジニアとしてキャリアを築く。
-            LINE（現LINEヤフー）の技術広報をはじめ、技術コミュニティ運営に長年携わる。
-            2024年に自身の会社を設立。
-          </p>
-          <p className="home-award">
-            <span aria-hidden="true">🏆 </span>
-            Forbes JAPAN「Women in Tech 30」2026 選出
-          </p>
-          <ButtonLink href={routeHref({ name: 'profile' })} variant="text">
-            プロフィールと宇部への想いを読む
-          </ButtonLink>
-        </div>
-      </div>
-    </Section>
-  )
-}
-
-/** ③ 目指す未来 (V2MOM) */
+/** VISION: Vision line and 知る・選ぶ・実現する in three columns */
 export function VisionTeaser() {
   return (
-    <Section id="vision-summary" tone="surface" labelledBy="home-vision-h">
+    <Section id="vision-summary" labelledBy="home-vision-h">
       <SectionHeading
         id="home-vision-h"
-        kicker="Vision"
+        kicker="Vision / V2MOM"
         title="目指す未来"
         action={
           <ButtonLink href={routeHref({ name: 'vision' })} variant="text">
@@ -63,19 +28,20 @@ export function VisionTeaser() {
           </ButtonLink>
         }
       />
-      <p className="home-vision__title">
-        {vision.title}
-        <span>{vision.subtitle}</span>
-      </p>
-      <p className="home-text">{vision.emphasis}</p>
-      <ol className="home-values">
+      <div className="home-vision">
+        <p className="home-vision__title">
+          {vision.title}
+          <span>{vision.subtitle}</span>
+        </p>
+        <p className="home-vision__text">{vision.emphasis}</p>
+      </div>
+      <ol className="columns-3">
         {values.map((v, i) => (
           <li key={v.verb}>
-            <span className="home-values__step" aria-hidden="true">
-              {i + 1}
-            </span>
-            <strong>{v.verb}</strong>
-            <span>{v.title}</span>
+            <span className="columns-3__num">{String(i + 1).padStart(2, '0')}</span>
+            <strong className="columns-3__title">{v.verb}</strong>
+            <span className="columns-3__sub">{v.title}</span>
+            <span className="columns-3__text">{v.body}</span>
           </li>
         ))}
       </ol>
@@ -83,7 +49,7 @@ export function VisionTeaser() {
   )
 }
 
-/** ④ 4つの重点政策 */
+/** POLICY: one row per policy — number, name, tagline, arrow */
 export function PolicyTeaser() {
   return (
     <Section id="policy" labelledBy="home-policy-h">
@@ -97,16 +63,16 @@ export function PolicyTeaser() {
           </ButtonLink>
         }
       />
-      <ul className="home-policies">
+      <ul className="row-list">
         {policies.map(p => (
           <li key={p.slug}>
-            <a href={routeHref({ name: 'policy', slug: p.slug })} className="home-policy">
-              <img src={p.image} alt="" loading="lazy" decoding="async" />
-              <span className="home-policy__num" aria-hidden="true">
-                {p.number}
+            <a href={routeHref({ name: 'policy', slug: p.slug })} className="row-link">
+              <span className="row-link__num">{p.number}</span>
+              <span className="row-link__title">{p.name}</span>
+              <span className="row-link__text">{p.tagline}</span>
+              <span className="row-link__arrow" aria-hidden="true">
+                →
               </span>
-              <span className="home-policy__name">{p.name}</span>
-              <span className="home-policy__tagline">{p.tagline}</span>
             </a>
           </li>
         ))}
@@ -115,18 +81,18 @@ export function PolicyTeaser() {
   )
 }
 
-/** ⑤ 活動: the next event (if any) and the three latest reports */
+/** ACTIVITY: the next event (if any) and the three latest reports, as a list */
 export function ActivityTeaser() {
   const events = useAsync(listPublishedEvents, [])
   const reports = useAsync(listPublishedReports, [])
   const next = splitEvents(events.data ?? []).upcoming[0]
   const latest = (reports.data ?? []).slice(0, 3)
   return (
-    <Section id="activity" tone="surface" labelledBy="home-activity-h">
+    <Section id="activity" labelledBy="home-activity-h">
       <SectionHeading
         id="home-activity-h"
         kicker="Activity"
-        title="活動"
+        title="最近の活動"
         action={
           <ButtonLink href={routeHref({ name: 'activity' })} variant="text">
             活動をすべて見る
@@ -134,18 +100,22 @@ export function ActivityTeaser() {
         }
       />
       {next && (
-        <div className="home-next-event">
-          <p className="home-next-event__label">次の予定</p>
-          <EventCard event={next} />
-        </div>
+        <a href={routeHref({ name: 'events' })} className="home-next-event">
+          <span className="home-next-event__label">次の予定</span>
+          <span className="home-next-event__date">
+            {formatEventDate(next).day}
+            {formatEventDate(next).time && ` ${formatEventDate(next).time}`}
+            {eventState(next) === 'ongoing' && '（開催中）'}
+          </span>
+          <span className="home-next-event__title">{next.title}</span>
+          <span aria-hidden="true">→</span>
+        </a>
       )}
-      {latest.length > 0 && (
-        <div className="activity-grid home-reports">
-          {latest.map(item => (
-            <ActivityCard key={item.id} item={item} />
-          ))}
-        </div>
-      )}
+      <div className="activity-list">
+        {latest.map(item => (
+          <ActivityCard key={item.id} item={item} compact />
+        ))}
+      </div>
     </Section>
   )
 }

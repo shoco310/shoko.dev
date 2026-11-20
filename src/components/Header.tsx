@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react'
+import { useId } from 'react'
 import { useRoute, type Route } from '../router'
 import { useDisclosure } from '../lib/useDisclosure'
 import {
@@ -18,18 +18,10 @@ import { IconLine } from './icons'
  */
 export default function Header() {
   const route = useRoute()
-  const [scrolled, setScrolled] = useState(false)
   const menu = useDisclosure<HTMLDivElement>()
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
   return (
-    <header className={`site-header${scrolled ? ' is-scrolled' : ''}`}>
+    <header className="site-header">
       <div className="site-header__bar">
         <a href={mainNav[0].href} className="site-header__logo">
           さとうしょうこ
