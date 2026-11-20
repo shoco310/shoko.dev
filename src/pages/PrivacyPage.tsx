@@ -1,5 +1,6 @@
 import PageLayout, { PageSection } from '../components/PageLayout'
 import { operator, privacyPolicyDate, supportersAssociation } from '../data/site'
+import { voiceEnabled } from '../data/features'
 
 function formatDate(iso: string) {
   const [y, m, d] = iso.split('-').map(Number)
@@ -27,6 +28,25 @@ export default function PrivacyPage() {
               フォームに入力された情報を、{supportersAssociation}の運営と、会員の方へのご連絡のために利用します。{supportersAssociation}の代表は運営者が務めており、運営者が管理します。
             </dd>
           </div>
+          {voiceEnabled && (
+            <div>
+              <dt>困りごと・ご意見の投稿フォーム</dt>
+              <dd>
+                <p>
+                  投稿内容と、任意で入力いただいたテーマ・地区・年代・お名前・メールアドレス・返信の希望をお預かりします。あわせて、いたずらや大量送信を防ぐため、送信元の IP アドレスを元に戻せない形に変換した値（ハッシュ値）を記録します。IP アドレスそのものは保存しません。
+                </p>
+                <p>
+                  利用目的は、政策づくりの参考にすること、内容の確認やご希望の方への返信、不正な送信の防止です。投稿は運営者が確認します。原文を公開することはありません。参考にさせていただく場合は、個人が特定できる内容を除いて要約し、課題としてこのサイトで紹介することがあります。
+                </p>
+                <p>
+                  お名前・メールアドレスなどの連絡先は、投稿内容とは分けて保管し、対応を終えてから6か月後（最長でも受け付けから1年後）に削除します。投稿内容は、政策検討の記録として保管します。
+                </p>
+                <p>
+                  投稿の保管には Supabase（データは日本国内の東京リージョンに保存）を、不正な送信の防止には Cloudflare の Turnstile を利用しています。Turnstile は、ロボットによる送信かどうかを判定するため、ブラウザや端末の情報を Cloudflare に送信します。
+                </p>
+              </dd>
+            </div>
+          )}
           <div>
             <dt>アクセス解析（Google アナリティクス）</dt>
             <dd>
