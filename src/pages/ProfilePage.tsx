@@ -11,8 +11,8 @@ export default function ProfilePage() {
   return (
     <PageLayout en="ABOUT ME" title="私について" breadcrumb={[]} bare>
       <ProfileSection />
-      <StorySection />
       <Greeting en="MY HOPE" title="宇部への想い" />
+      <StorySection />
     </PageLayout>
   )
 }

@@ -1498,3 +1498,57 @@ body {
 .research-block__title--open::before {
   border: 1px solid var(--ink);
 }
+
+/* ===== 私について: one reading column for profile, 想い and 物語 ===== */
+#profile > .container,
+#message > .container {
+  max-width: 848px;
+}
+.greeting__body {
+  margin-inline: 0;
+}
+.profile-box {
+  align-items: start;
+}
+.profile-content {
+  max-width: 34em;
+}
+.profile-content p {
+  max-width: none;
+}
+.profile-award {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  color: var(--ink);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+a.profile-award:hover {
+  border-color: var(--pink);
+  background: var(--pink-pale);
+}
+.profile-award__text {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.profile-award__more {
+  display: block;
+  margin-top: 4px;
+  font-weight: 600;
+  color: var(--pink-dark);
+}
+@media (max-width: 1024px) {
+  .profile-content {
+    max-width: none;
+  }
+}
+.profile-content .profile-award__text {
+  color: var(--ink);
+  font-size: var(--fs-sm);
+}

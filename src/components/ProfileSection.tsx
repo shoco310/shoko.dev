@@ -41,13 +41,23 @@ export default function ProfileSection() {
                 自分らしく挑戦できるまちづくりを進めていきます。
               </p>
 
-              <div className="profile-award">
-                <span className="profile-award__icon">🏆</span>
-                <p className="profile-award__text">
-                  Forbes JAPAN「Women in Tech 30」2026 選出<br />
+              <a
+                className="profile-award"
+                href="https://x.com/satoshoco/status/2015564827700376016"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="profile-award__icon" aria-hidden="true">🏆</span>
+                <span className="profile-award__text">
+                  Forbes JAPAN「Women in Tech 30」2026 選出
+                  <br />
                   ― テクノロジー領域で世界を変える30人 ―
-                </p>
-              </div>
+                  <span className="profile-award__more">
+                    X の投稿を見る <span aria-hidden="true">↗</span>
+                    <span className="visually-hidden">（新しいタブで開きます）</span>
+                  </span>
+                </span>
+              </a>
             </div>
           </div>
         </div>
