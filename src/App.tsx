@@ -7,8 +7,6 @@ import ActivitySection from './components/ActivitySection'
 import PolicySection from './components/PolicySection'
 import ParticipateSection from './components/ParticipateSection'
 import ProfileSection from './components/ProfileSection'
-import SupportSection from './components/SupportSection'
-import ContactSection from './components/ContactSection'
 import Footer from './components/Footer'
 import PolicyDetail from './pages/PolicyDetail'
 import DataPage from './pages/DataPage'
@@ -126,8 +124,6 @@ function renderPage(route: Route, policy: Policy | undefined) {
           <ActivitySection />
           <ProfileSection />
           {(voiceEnabled || volunteerEnabled) && <TakePartSection />}
-          <SupportSection />
-          <ContactSection />
         </>
       )
     case 'policy':

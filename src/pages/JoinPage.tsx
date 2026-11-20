@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import PageLayout, { PageSection } from '../components/PageLayout'
 import Turnstile from '../components/Turnstile'
+import { IconLine } from '../components/icons'
+import { associationFormUrl, lineUrl } from '../data/social'
 import { operator, supportersAssociation } from '../data/site'
 import { routeHref } from '../router'
 import {
@@ -390,6 +392,30 @@ export default function JoinPage() {
           </div>
         </form>
       </PageSection>
+
+      <AssociationSection />
     </PageLayout>
+  )
+}
+
+/** Moved from the top page's 「後援会のご案内」 section (wording unchanged). */
+function AssociationSection() {
+  return (
+    <PageSection title="後援会のご案内">
+      <p>
+        さとうしょうこ後援会では、活動を応援してくださる方を募集しています。
+        LINE公式アカウントでは、活動報告やイベント情報をいち早くお届けします。
+        一緒に、挑戦できる宇部をつくりましょう。
+      </p>
+      <div className="join-association__btns">
+        <a href={lineUrl} target="_blank" rel="noopener noreferrer" className="btn btn--primary">
+          <IconLine />
+          LINE公式に登録する
+        </a>
+        <a href={associationFormUrl} target="_blank" rel="noopener noreferrer" className="btn btn--secondary">
+          入会フォームへ
+        </a>
+      </div>
+    </PageSection>
   )
 }

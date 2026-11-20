@@ -21,10 +21,17 @@ describe('router', () => {
   })
 
   it('parses every static page to itself (regression: case fall-through)', () => {
-    for (const name of ['data', 'activity', 'about', 'privacy', 'voice', 'join', 'changes', 'events'] as const) {
+    for (const name of ['profile', 'vision', 'policies', 'data', 'activity', 'about', 'privacy', 'voice', 'join', 'changes', 'events'] as const) {
       expect(parseHash(`#/${name}`)).toEqual({ name })
       expect(parseHash(`#/${name}/x`)).toEqual({ name: 'notFound' })
     }
+  })
+
+  it('sends the bare #/policy to the policy list', () => {
+    expect(parseHash('#/policy')).toEqual({ name: 'policies' })
+    expect(routeHref({ name: 'policies' })).toBe('#/policies')
+    expect(routeHref({ name: 'vision' })).toBe('#/vision')
+    expect(routeHref({ name: 'profile' })).toBe('#/profile')
   })
 
   it('parses the form pages', () => {

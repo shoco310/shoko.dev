@@ -14,6 +14,9 @@ import { useEffect, useState } from 'react'
  */
 export type Route =
   | { name: 'home'; anchor: string | null }
+  | { name: 'profile' }
+  | { name: 'vision' }
+  | { name: 'policies' }
   | { name: 'policy'; slug: string }
   | { name: 'data' }
   | { name: 'activity' }
@@ -48,12 +51,16 @@ export function parseHash(hash: string): Route {
 
   switch (first) {
     case 'policy':
-      return second ? { name: 'policy', slug: second } : { name: 'notFound' }
+      // '#/policy' alone used to be a dead end; it now means the policy list.
+      return second ? { name: 'policy', slug: second } : { name: 'policies' }
     case 'reports':
       return second && /^\d{4}-\d{2}-\d{2}-[a-z0-9-]+$/.test(second) ? { name: 'report', slug: second } : { name: 'notFound' }
     case 'issues':
       if (!second) return { name: 'issues' }
       return /^[1-9][0-9]{0,8}$/.test(second) ? { name: 'issue', id: Number(second) } : { name: 'notFound' }
+    case 'profile':
+    case 'vision':
+    case 'policies':
     case 'changes':
     case 'events':
     case 'data':
