@@ -1,0 +1,55 @@
+<!doctype html>
+<!--
+  OGP image template (1200x630). Rendered to public/images/ogp.jpg by
+  scripts/ogp/render.mjs. Query parameters let the same design produce
+  page-specific images later (kicker, title, sub) — see docs in render.mjs.
+-->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --pink: #e83e8c; --pink-dark: #c2185b; --ink: #181818; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    color: var(--ink);
+    background: #fff url("../../public/images/hero-main.jpg") right 18% center / auto 118% no-repeat;
+    position: relative;
+  }
+  .veil {
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(255,255,255,.97) 0%, rgba(255,255,255,.93) 38%, rgba(255,255,255,.55) 56%, rgba(255,255,255,0) 70%);
+  }
+  .bar { position: absolute; left: 0; right: 0; bottom: 0; height: 14px; background: var(--pink); }
+  .content { position: absolute; left: 72px; top: 0; bottom: 14px; width: 720px; display: flex; flex-direction: column; justify-content: center; }
+  .kicker {
+    align-self: flex-start; background: var(--pink-dark); color: #fff; font-weight: 800; font-size: 22px;
+    letter-spacing: .12em; padding: 9px 22px; border-radius: 999px; margin-bottom: 28px;
+  }
+  .catch { color: var(--pink); font-weight: 900; font-size: 54px; white-space: nowrap; line-height: 1.25; letter-spacing: .01em; }
+  .name { font-weight: 900; font-size: 74px; letter-spacing: .08em; margin-top: 22px; line-height: 1.1; }
+  .en { font-family: Outfit, sans-serif; font-weight: 800; color: var(--pink-dark); letter-spacing: .32em; font-size: 20px; margin-top: 10px; }
+  .sub { margin-top: 26px; font-weight: 700; font-size: 24px; white-space: nowrap; line-height: 1.6; color: #333; }
+  .url { position: absolute; right: 36px; bottom: 34px; font-family: Outfit, sans-serif; font-weight: 800; font-size: 26px;
+         color: #fff; background: rgba(24,24,24,.72); padding: 6px 16px; border-radius: 10px; letter-spacing: .04em; }
+</style>
+</head>
+<body>
+  <div class="veil"></div>
+  <div class="content">
+    <p class="kicker" id="kicker">宇部から、新しい挑戦を。</p>
+    <p class="catch" id="title">誰もが挑戦できる宇部へ。</p>
+    <p class="name">さとうしょうこ</p>
+    <p class="en">SHOKO SATO</p>
+    <p class="sub" id="sub">市民の声を政策に。活動も変更も、すべて公開。</p>
+  </div>
+  <p class="url">shoko.dev</p>
+  <div class="bar"></div>
+  <script>
+    const q = new URLSearchParams(location.search)
+    for (const id of ['kicker', 'title', 'sub']) if (q.has(id)) document.getElementById(id).textContent = q.get(id)
+  </script>
+</body>
+</html>
