@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
-import { policies, type Policy, type SourceItem } from '../data/policy'
+import { policies, type Policy } from '../data/policy'
+import { SourceList } from '../components/SourceList'
 import DataCard from '../components/DataCard'
 import { routeHref } from '../router'
 import { PolicyIssues } from '../components/PolicyIssues'
@@ -10,12 +11,8 @@ import { issuesEnabled } from '../data/features'
 import { researchAsOf, researchGroups } from '../data/research'
 import { associationFormUrl, lineUrl } from '../data/social'
 import { formatJaDate, jumpTo } from '../lib/inPage'
+import { researchHref } from './ResearchPage'
 
-const sourceTypeLabel: Record<SourceItem['type'], string> = {
-  primary: '一次資料',
-  report: '報道',
-  reference: '参考・他自治体事例',
-}
 
 /**
  * One policy, in five blocks shared by all four pages:
@@ -169,20 +166,7 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
           <div className="policy-detail__sub">
             <h3 className="policy-detail__subheading">関連資料・出典</h3>
             {policy.sourceList && policy.sourceList.length > 0 ? (
-              <ul className="policy-detail__sources">
-                {policy.sourceList.map((s, i) => (
-                  <li key={i}>
-                    <span className={`source-tag source-tag--${s.type}`}>{sourceTypeLabel[s.type]}</span>
-                    {s.url ? (
-                      <a href={s.url} target="_blank" rel="noopener noreferrer">
-                        {s.label}
-                      </a>
-                    ) : (
-                      <span>{s.label}</span>
-                    )}
-                  </li>
-                ))}
-              </ul>
+              <SourceList sources={policy.sourceList} />
             ) : (
               <div className="policy-detail__note">
                 <p>
@@ -244,6 +228,9 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
               <div className="research-group research-group--plain">
                 <ResearchStatusList slug={policy.slug} />
               </div>
+              <p className="policy-detail__research-link">
+                <a href={researchHref(policy.slug)}>政策調査のページで見る →</a>
+              </p>
             </div>
           )}
           {issuesEnabled && <PolicyIssues slug={policy.slug} level={3} />}

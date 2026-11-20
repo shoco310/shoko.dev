@@ -1,33 +1,32 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import PageLayout from '../components/PageLayout'
 import { ActivityCard } from '../components/ActivitySection'
 import EventCard from '../components/EventCard'
-import { ResearchStatusList } from '../components/ResearchStatus'
 import { Notice, SectionHeading } from '../components/ui'
 import { listPublishedReports } from '../lib/publicContent'
 import { listPublishedEvents } from '../lib/publicEvents'
 import { splitEvents } from '../lib/events'
 import { useAsync } from '../lib/useAsync'
-import { formatJaDate } from '../lib/inPage'
-import { policies } from '../data/policy'
-import { researchAsOf, researchGroups } from '../data/research'
 import { volunteerEnabled } from '../data/features'
 import { lineUrl, socialLinks } from '../data/social'
 import { routeHref } from '../router'
 
-export type ActivityFilter = 'all' | 'reports' | 'events' | 'research'
+export type ActivityFilter = 'all' | 'reports' | 'events'
 
 const filters: { key: ActivityFilter; label: string }[] = [
   { key: 'all', label: 'すべて' },
   { key: 'reports', label: '活動報告' },
   { key: 'events', label: 'イベント' },
-  { key: 'research', label: '政策調査' },
 ]
 
-/** Read ?type= from the hash ('#/activity?type=events'). */
-export function filterFromHash(hash: string): ActivityFilter | null {
+/**
+ * Read ?type= from the hash ('#/activity?type=events'). 'research' is the
+ * old 政策調査 filter, now its own page (#/research).
+ */
+export function filterFromHash(hash: string): ActivityFilter | 'research' | null {
   const q = hash.split('?')[1]
   const type = q ? new URLSearchParams(q).get('type') : null
+  if (type === 'research') return 'research'
   return filters.some(f => f.key === type) ? (type as ActivityFilter) : null
 }
 
@@ -37,9 +36,14 @@ export function filterFromHash(hash: string): ActivityFilter | null {
  * nothing new is stored. #/events opens this page filtered to events.
  */
 export default function ActivityPage({ initialFilter = 'all' }: { initialFilter?: ActivityFilter }) {
-  const [filter, setFilter] = useState<ActivityFilter>(
-    () => filterFromHash(window.location.hash) ?? initialFilter,
+  const fromUrl = filterFromHash(window.location.hash)
+  const [filter, setFilter] = useState<ActivityFilter>(() =>
+    fromUrl && fromUrl !== 'research' ? fromUrl : initialFilter,
   )
+  // Old link to the research filter: open the research page instead.
+  useEffect(() => {
+    if (fromUrl === 'research') window.location.replace(routeHref({ name: 'research' }))
+  }, [fromUrl])
   const reports = useAsync(listPublishedReports, [])
   const events = useAsync(listPublishedEvents, [])
   const { upcoming, past } = splitEvents(events.data ?? [])
@@ -56,7 +60,7 @@ export default function ActivityPage({ initialFilter = 'all' }: { initialFilter?
     <PageLayout
       en="ACTIVITY"
       title="活動"
-      lead="活動報告、意見交換会などの予定、政策づくりのための調査の進み具合を公開しています。"
+      lead="活動報告と、意見交換会などの予定をお知らせします。"
       bare
     >
       <div className="container container--narrow activity-page">
@@ -141,32 +145,9 @@ export default function ActivityPage({ initialFilter = 'all' }: { initialFilter?
           </section>
         )}
 
-        {show('research') && (
-          <section className="activity-block" aria-labelledby="act-research">
-            <SectionHeading
-              id="act-research"
-              title="政策調査の進み具合"
-              lead={`政策の根拠となる情報を、宇部市の公式資料などで確認しています。確認できたこと・まだ確認できていないことを分けて掲載しています（${formatJaDate(researchAsOf)}時点）。`}
-            />
-            <div className="research-list">
-              {researchGroups.map(group => {
-                const policy = policies.find(p => p.slug === group.policySlug)
-                if (!policy) return null
-                return (
-                  <div className="research-group" key={group.policySlug}>
-                    <h3 className="research-group__title">
-                      <a href={routeHref({ name: 'policy', slug: policy.slug })}>
-                        <span aria-hidden="true">{policy.emoji}</span>
-                        {policy.name}
-                      </a>
-                    </h3>
-                    <ResearchStatusList slug={policy.slug} />
-                  </div>
-                )
-              })}
-            </div>
-          </section>
-        )}
+        <p className="activity-research-link">
+          政策づくりのための調査の進み具合は、<a href={routeHref({ name: 'research' })}>政策調査</a>のページにまとめています。
+        </p>
       </div>
     </PageLayout>
   )

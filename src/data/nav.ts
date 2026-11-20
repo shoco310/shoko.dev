@@ -27,6 +27,7 @@ export const policyMenu: NavLink[] = [
       slug: p.slug,
     })),
   },
+  { label: '政策調査', href: routeHref({ name: 'research' }), match: ['research'] },
   { label: '数字で見る宇部', href: routeHref({ name: 'data' }), match: ['data'] },
   { label: '政策の変更履歴', href: routeHref({ name: 'changes' }), match: ['changes'] },
 ]
@@ -38,7 +39,7 @@ export const mainNav: NavItem[] = [
   {
     label: 'V2MOM・政策',
     href: routeHref({ name: 'vision' }),
-    match: ['vision', 'policies', 'policy', 'data', 'changes'],
+    match: ['vision', 'policies', 'policy', 'research', 'data', 'changes'],
     children: policyMenu,
   },
   { label: '活動', href: routeHref({ name: 'activity' }), match: ['activity', 'events', 'report'] },
