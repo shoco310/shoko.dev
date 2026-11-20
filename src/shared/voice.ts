@@ -104,6 +104,8 @@ export type SubmitErrorCode =
   | 'invalid'
   | 'turnstile_failed'
   | 'rate_limited'
+  | 'duplicate'
+  | 'busy'
   | 'forbidden_origin'
   | 'too_large'
   | 'unavailable'

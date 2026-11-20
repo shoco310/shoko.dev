@@ -3,7 +3,7 @@
 -- Every test runs inside a transaction that is rolled back.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(34);
+select plan(37);
 
 -- ---------------------------------------------------------------------------
 -- Fixtures: one staff member (operator), one signed-in non-staff user
@@ -113,13 +113,43 @@ select ok(
   'closing a submission shortens contact retention to 6 months');
 
 -- ---------------------------------------------------------------------------
--- Rate limiting and validation
+-- Rate limiting (fair limits: 20/hour and 50/day per sender, duplicates,
+-- 200/hour site-wide)
 -- ---------------------------------------------------------------------------
 set local role service_role;
-select lives_ok($$select public.submit_voice('2件目', '2026-11-20', 'pgtap-hash')$$, '2nd submission within an hour is accepted');
-select lives_ok($$select public.submit_voice('3件目', '2026-11-20', 'pgtap-hash')$$, '3rd submission within an hour is accepted');
-select throws_ok($$select public.submit_voice('4件目', '2026-11-20', 'pgtap-hash')$$, 'P0001', 'rate_limited',
-  '4th submission from the same sender within an hour is rejected');
+select lives_ok($$select public.submit_voice('2件目', '2026-11-20', 'pgtap-hash')$$,
+  'a 2nd submission within an hour is accepted (shared networks are not blocked early)');
+select throws_ok($$select public.submit_voice('2件目', '2026-11-20', 'pgtap-hash')$$, 'P0001', 'duplicate',
+  'the same text from the same sender within 24 hours is rejected as a duplicate');
+select lives_ok($$select public.submit_voice('2件目', '2026-11-20', 'pgtap-other-sender')$$,
+  'the same text from a different sender is accepted');
+reset role;
+
+-- Fill up to the hourly per-sender limit (20) for one sender.
+insert into public.submissions (receipt_no, body, privacy_version, ip_hash)
+select 'UB-RATE-' || lpad(g::text, 4, '0'), 'rate ' || g, '2026-11-20', 'pgtap-busy-sender'
+from generate_series(1, 20) g;
+set local role service_role;
+select throws_ok($$select public.submit_voice('21件目', '2026-11-20', 'pgtap-busy-sender')$$, 'P0001', 'rate_limited',
+  'the 21st submission from one sender within an hour is rejected');
+reset role;
+
+-- Daily limit (50): spread earlier submissions over the day.
+insert into public.submissions (receipt_no, body, privacy_version, ip_hash, created_at)
+select 'UB-DAY0-' || lpad(g::text, 4, '0'), 'day ' || g, '2026-11-20', 'pgtap-day-sender', now() - interval '3 hours'
+from generate_series(1, 50) g;
+set local role service_role;
+select throws_ok($$select public.submit_voice('51件目', '2026-11-20', 'pgtap-day-sender')$$, 'P0001', 'rate_limited',
+  'the 51st submission from one sender within a day is rejected');
+reset role;
+
+-- Site-wide hourly cap (200).
+insert into public.submissions (receipt_no, body, privacy_version, ip_hash)
+select 'UB-SITE-' || lpad(g::text, 4, '0'), 'site ' || g, '2026-11-20', 'pgtap-flood-' || g
+from generate_series(1, 200) g;
+set local role service_role;
+select throws_ok($$select public.submit_voice('新しい送信者', '2026-11-20', 'pgtap-new-sender')$$, 'P0001', 'busy',
+  'when 200 submissions arrived in the last hour, new ones are refused as busy');
 reset role;
 
 -- ---------------------------------------------------------------------------

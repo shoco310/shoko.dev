@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { handleSubmit, hashIp, type SubmitDeps } from '../api/_lib/handleSubmit'
+import { handleSubmit, hashIp, rateLimitKey, type SubmitDeps } from '../api/_lib/handleSubmit'
 
 const validBody = {
   body: 'バス停が遠くて通院が大変です',
@@ -154,5 +154,36 @@ describe('POST /api/submit', () => {
     const d = deps()
     await handleSubmit(req({ ...validBody, privacyVersion: 'fake' }), d)
     expect(d.calls[0].p_privacy_version).not.toBe('fake')
+  })
+
+  it('maps duplicate and busy DB errors to clear responses', async () => {
+    const dup = await handleSubmit(req(validBody), deps({ callSubmitVoice: vi.fn(async () => ({ error: 'duplicate' })) }))
+    expect(dup.status).toBe(409)
+    expect(await dup.json()).toMatchObject({ error: 'duplicate' })
+    const busy = await handleSubmit(req(validBody), deps({ callSubmitVoice: vi.fn(async () => ({ error: 'busy' })) }))
+    expect(busy.status).toBe(503)
+    expect(await busy.json()).toMatchObject({ error: 'busy' })
+  })
+})
+
+describe('rate limit key', () => {
+  it('uses the full IPv4 address', () => {
+    expect(rateLimitKey('203.0.113.7')).toBe('203.0.113.7')
+    expect(rateLimitKey('::ffff:203.0.113.7')).toBe('203.0.113.7')
+  })
+
+  it('groups IPv6 addresses by /64 network', () => {
+    const a = rateLimitKey('2001:db8:1234:5678:aaaa:bbbb:cccc:dddd')
+    const b = rateLimitKey('2001:0db8:1234:5678:1:2:3:4')
+    const c = rateLimitKey('2001:db8:1234:5678::1')
+    expect(a).toBe('2001:db8:1234:5678::/64')
+    expect(b).toBe(a)
+    expect(c).toBe(a)
+    expect(rateLimitKey('2001:db8:1234:9999::1')).not.toBe(a)
+  })
+
+  it('hashes addresses in the same /64 to the same value', () => {
+    expect(hashIp('2001:db8:1:2::a', 's')).toBe(hashIp('2001:db8:1:2:ffff::b', 's'))
+    expect(hashIp('2001:db8:1:2::a', 's')).not.toBe(hashIp('2001:db8:1:3::a', 's'))
   })
 })
