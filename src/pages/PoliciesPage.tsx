@@ -1,5 +1,5 @@
 import PageLayout from '../components/PageLayout'
-import { Badge, ButtonLink, Card, CardGrid, Section } from '../components/ui'
+import { ButtonLink, Section } from '../components/ui'
 import { policies } from '../data/policy'
 import { routeHref } from '../router'
 
@@ -17,33 +17,30 @@ export default function PoliciesPage() {
       breadcrumb={[{ label: 'V2MOM・政策', href: routeHref({ name: 'vision' }) }]}
       bare
     >
-      <Section tone="surface">
-        <CardGrid columns={2}>
+      <Section>
+        <ol className="policy-rows">
           {policies.map(p => (
-            <Card
-              key={p.slug}
-              href={routeHref({ name: 'policy', slug: p.slug })}
-              media={<img src={p.image} alt="" loading="lazy" decoding="async" />}
-              badges={<Badge tone="pink">{p.number}</Badge>}
-              title={
-                <>
-                  <span aria-hidden="true">{p.emoji} </span>
-                  {p.name}
-                </>
-              }
-              linkLabel="詳しく見る"
-            >
-              <p className="policy-card__tagline">{p.tagline}</p>
-              <p>{p.summary}</p>
-              <p className="policy-card__label">主な取り組み</p>
-              <ul className="policy-card__list">
-                {p.initiatives.map(i => (
-                  <li key={i.title}>{i.title}</li>
-                ))}
-              </ul>
-            </Card>
+            <li key={p.slug}>
+              <a href={routeHref({ name: 'policy', slug: p.slug })} className="policy-rows__link">
+                <span className="policy-rows__num">{p.number}</span>
+                <span className="policy-rows__head">
+                  <span className="policy-rows__name">{p.name}</span>
+                  <span className="policy-rows__tagline">{p.tagline}</span>
+                </span>
+                <span className="policy-rows__body">
+                  <span className="policy-rows__summary">{p.summary}</span>
+                  <span className="policy-rows__label">主な取り組み</span>
+                  <span className="policy-rows__list">
+                    {p.initiatives.map(i => (
+                      <span key={i.title}>{i.title}</span>
+                    ))}
+                  </span>
+                  <span className="policy-rows__more">詳しく見る →</span>
+                </span>
+              </a>
+            </li>
           ))}
-        </CardGrid>
+        </ol>
         <p className="policies-related">
           <ButtonLink href={routeHref({ name: 'vision' })} variant="text">
             V2MOM（目指す未来）

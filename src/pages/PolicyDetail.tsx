@@ -49,12 +49,9 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
   return (
     <article className="policy-detail">
       <header className="policy-detail__hero">
-        <div className="policy-detail__hero-media">
-          <img src={policy.image} alt="" />
-        </div>
         <div className="container">
           <Breadcrumb
-            tone="dark"
+            tone="light"
             items={[
               { label: 'ホーム', href: routeHref({ name: 'home', anchor: null }) },
               { label: 'V2MOM・政策', href: routeHref({ name: 'vision' }) },
@@ -62,16 +59,18 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
               { label: policy.name },
             ]}
           />
-          <span className="policy-detail__num" aria-hidden="true">
-            {policy.number}
-          </span>
-          <h1 className="policy-detail__title">
-            <span className="policy-detail__emoji" aria-hidden="true">
-              {policy.emoji}
-            </span>
-            {policy.name}
-          </h1>
-          <p className="policy-detail__tagline">{policy.tagline}</p>
+          <div className="policy-detail__hero-inner">
+            <div>
+              <span className="policy-detail__num" aria-hidden="true">
+                {policy.number}
+              </span>
+              <h1 className="policy-detail__title">{policy.name}</h1>
+              <p className="policy-detail__tagline">{policy.tagline}</p>
+            </div>
+            <div className="policy-detail__hero-media">
+              <img src={policy.image} alt="" />
+            </div>
+          </div>
         </div>
       </header>
 

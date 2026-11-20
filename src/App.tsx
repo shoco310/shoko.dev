@@ -19,7 +19,7 @@ import IssueDetailPage from './pages/IssueDetailPage'
 import ChangesPage from './pages/ChangesPage'
 import ReportPage from './pages/ReportPage'
 import TakePartSection from './components/TakePartSection'
-import { AboutMeTeaser, ActivityTeaser, PolicyTeaser, VisionTeaser } from './components/HomeSections'
+import { ActivityTeaser, PolicyTeaser, VisionTeaser } from './components/HomeSections'
 import { issuesEnabled, voiceEnabled, volunteerEnabled } from './data/features'
 import { getPolicyBySlug, type Policy } from './data/policy'
 import { legacyAnchorTarget, routeHref, routeKey, useRoute, type Route } from './router'
@@ -134,7 +134,6 @@ function renderPage(route: Route, policy: Policy | undefined) {
       return (
         <>
           <Hero />
-          <AboutMeTeaser />
           <VisionTeaser />
           <PolicyTeaser />
           <ActivityTeaser />

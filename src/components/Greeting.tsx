@@ -1,48 +1,8 @@
-import { motion, type Variants } from 'framer-motion'
+import type { ReactNode } from 'react'
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: 'easeOut' } },
-}
-// Fade only: sideways entrances started off-screen and widened the page on phones.
-const fromLeft = fadeUp
-const fromRight = fadeUp
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.14 } },
-}
-const listItem = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { duration: 0.42, ease: 'easeOut' } },
-}
-const visionItem = {
-  hidden: { opacity: 0, y: 20, scale: 0.95 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.45, ease: 'easeOut' } },
-}
-const climax = {
-  hidden: { opacity: 0, scale: 0.88, y: 16 },
-  show: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } },
-}
-
-function Block({
-  children,
-  variants = fadeUp,
-  amount = 0.3,
-}: {
-  children: React.ReactNode
-  variants?: Variants
-  amount?: number
-}) {
-  return (
-    <motion.div
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount }}
-      variants={variants}
-    >
-      {children}
-    </motion.div>
-  )
+/** Plain wrapper (the scroll animations were removed in the 2026-11 design refresh). */
+function Block({ children }: { children: ReactNode }) {
+  return <div>{children}</div>
 }
 
 export default function Greeting({
@@ -53,7 +13,7 @@ export default function Greeting({
     <section id="message" className="section section--tint">
       <div className="container">
 
-        <Block variants={fadeUp}>
+        <Block>
           <div className="section-heading">
             <span className="section-heading__en" aria-hidden="true">{en}</span>
             <h2 className="section-heading__ja">{title}</h2>
@@ -63,11 +23,11 @@ export default function Greeting({
 
         <div className="greeting__body">
 
-          <Block variants={fadeUp}>
+          <Block>
             <p className="greeting__lead">宇部で、挑戦する人を増やしたい。</p>
           </Block>
 
-          <Block variants={fromLeft}>
+          <Block>
             <p>
               28歳の時に地元を離れ東京へ。エンジニアとしてIT業界で働き、技術広報やコミュニティ運営に携わり、多くの人が新しい一歩を踏み出す瞬間を見てきました。
               技術を学ぶ機会、新しい仕事との出会い、挑戦を応援してくれる仲間とのつながり。そうした環境が、人の可能性を大きく広げることを実感してきました。
@@ -75,7 +35,7 @@ export default function Greeting({
             </p>
           </Block>
 
-          <Block variants={fromRight}>
+          <Block>
             <p>
               振り返ると、私自身も決して順風満帆な人生ではありませんでした。仕事と子育てを両立しながら、悩み、迷い、それでも一歩ずつ挑戦を続けてきました。エンジニアとして技術を学び、コミュニティ活動を通じて全国の仲間と出会い、そして起業にも挑戦しました。
               だからこそ強く感じています。<br />
@@ -83,40 +43,32 @@ export default function Greeting({
             </p>
           </Block>
 
-          <motion.div
+          <div
             className="greeting__principles"
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.4 }}
-            variants={stagger}
           >
             {[
               '学ぶ機会があること。',
               '挑戦を応援してくれる人がいること。',
               '困ったときに相談できる場所があること。',
             ].map(text => (
-              <motion.div key={text} className="greeting__principle" variants={listItem}>
+              <div key={text} className="greeting__principle">
                 <span className="greeting__principle-check" aria-hidden="true">✓</span>
                 <span>{text}</span>
-              </motion.div>
+              </div>
             ))}
 
-          </motion.div>
+          </div>
 
           <div className="greeting__divider" />
-          <Block variants={fromLeft}>
+          <Block>
             <p> そうした環境があれば、人は何歳からでも、新しい一歩を踏み出すことができます。</p>
             <p>
               しかし今、宇部では人口減少や若者の流出が進み、「やりたいことがあれば都市部へ」という考え方が当たり前になりつつあります。私は、宇部に暮らしながらでも学び、働き、子育てをし、自分らしく挑戦できる環境を増やしたい。
             </p>
           </Block>
 
-          <motion.div
+          <div
             className="greeting__vision"
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.2 }}
-            variants={stagger}
           >
             {[
               { emoji: '🌱', text: '子どもたちが未来に希望を持てるまち。' },
@@ -124,14 +76,14 @@ export default function Greeting({
               { emoji: '🤝', text: '子育てや介護をしながらでも、自分らしく活躍できるまち。' },
               { emoji: '✨', text: '年齢や性別、立場に関係なく、一人ひとりの挑戦が応援されるまち。' },
             ].map(item => (
-              <motion.div key={item.text} className="greeting__vision-item" variants={visionItem}>
+              <div key={item.text} className="greeting__vision-item">
                 <span className="greeting__vision-emoji" aria-hidden="true">{item.emoji}</span>
                 <span>{item.text}</span>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
 
-          <Block variants={fadeUp}>
+          <Block>
             <p>
               そんな宇部を、皆さんと一緒につくっていきたいと思っています。
             </p>
@@ -147,17 +99,16 @@ export default function Greeting({
             </div>
           </Block>
 
-          <Block variants={fadeUp}>
+          <Block>
             <p>その実現に向けて、皆さんとともに歩んでまいります。</p>
           </Block>
 
-          <Block variants={fadeUp}>
-            <motion.a
+          <Block>
+            <a
               href="https://note.com/satoshoco/n/n073cb334dd8b"
               target="_blank"
               rel="noopener noreferrer"
               className="note-card"
-              whileHover={{ y: -3 }}
             >
               <div className="note-card__icon">📝</div>
               <div className="note-card__content">
@@ -165,7 +116,7 @@ export default function Greeting({
                 <span className="note-card__title">決意表明の全文を読む</span>
               </div>
               <span className="note-card__arrow">→</span>
-            </motion.a>
+            </a>
           </Block>
 
         </div>

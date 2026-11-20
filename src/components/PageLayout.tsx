@@ -32,7 +32,7 @@ export default function PageLayout({
         <div className="container container--narrow">
           {breadcrumb ? (
             <Breadcrumb
-              tone="dark"
+              tone="light"
               items={[{ label: 'ホーム', href: home }, ...breadcrumb, { label: title }]}
             />
           ) : (

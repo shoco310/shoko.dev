@@ -1,0 +1,112 @@
+/* Activity report rows. Imported by the component so the dashboard preview
+   (admin.html) gets the same look as the public site. */
+/* Activity reports as a list (top page compact; activity page with summary). */
+.activity-list {
+  border-top: 1px solid var(--line-soft);
+}
+.activity-row {
+  border-bottom: 1px solid var(--line-soft);
+}
+.activity-row__link {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr) auto auto;
+  gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-3) var(--space-1);
+  transition: background-color 0.2s ease;
+}
+.activity-row__link:hover {
+  background: var(--pink-pale);
+}
+.activity-row__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: var(--fs-sm);
+  color: var(--gray);
+}
+.activity-row__meta time {
+  font-family: var(--font-en);
+}
+.activity-row__kind {
+  align-self: flex-start;
+  padding: 0 8px;
+  border: 1px solid var(--line-soft);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  line-height: 1.8;
+}
+.activity-row__main {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.activity-row__title {
+  font-weight: 700;
+  line-height: 1.6;
+}
+.activity-row__link:hover .activity-row__title {
+  color: var(--pink-dark);
+}
+.activity-row__summary {
+  font-size: var(--fs-sm);
+  line-height: 1.75;
+  color: var(--gray);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.activity-row__more {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--pink-dark);
+}
+.activity-row__photo {
+  width: 120px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+.activity-row__arrow {
+  color: var(--pink-dark);
+}
+.activity-row--compact .activity-row__link {
+  grid-template-columns: 11rem minmax(0, 1fr) auto;
+  align-items: baseline;
+}
+.activity-row--compact .activity-row__meta {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 10px;
+}
+@media (max-width: 760px) {
+  .activity-row__link,
+  .activity-row--compact .activity-row__link {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 12px;
+  }
+  .activity-row__meta {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+  .activity-row__photo {
+    display: none;
+  }
+}
+
+.activity-row__meta time,
+.activity-row__kind {
+  white-space: nowrap;
+}
+.activity-row--compact .activity-row__link {
+  grid-template-columns: 14rem minmax(0, 1fr) auto;
+}
+@media (max-width: 760px) {
+  .activity-row--compact .activity-row__link {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}

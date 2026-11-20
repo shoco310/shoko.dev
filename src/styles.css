@@ -7,36 +7,41 @@
   --pink-dark: #c2185b;
   --pink-deep: #9a1048;
   --white: #ffffff;
-  --ink: #181818;
-  /* Supporting text: 7:1 on white (was #666, 5.7:1). */
-  --gray: #595959;
-  --gray-light: #f2f2f2;
-  /* Quiet panel behind cards and notices. */
-  --surface: #f7f7f8;
+  /* Design refresh 2026-11: white + charcoal, pink as an accent. */
+  --ink: #1c1c1c;
+  /* Supporting text: 4.8:1 on white. */
+  --gray: #6b7280;
+  --gray-light: #f3f4f6;
+  /* Quiet panel (notices, table heads). */
+  --surface: #f9fafb;
+  /* Pale pink band (参加する) and highlighted rows. */
+  --pink-pale: #fdf2f7;
 
   /* Aliases */
   --text: var(--ink);
   --text-muted: var(--gray);
-  --line: rgba(232, 62, 140, 0.16);
+  --line: #e5e7eb;
 
-  --shadow-sm: 0 2px 10px rgba(24, 24, 24, 0.05);
-  --shadow-md: 0 10px 30px rgba(24, 24, 24, 0.08);
-  --shadow-lg: 0 24px 60px rgba(163, 0, 74, 0.13);
-  --shadow-pink: 0 8px 24px rgba(232, 62, 140, 0.28);
+  /* No shadows in the refreshed design: structure comes from lines. */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-pink: none;
 
-  --radius-sm: 10px;
-  --radius-md: 18px;
-  --radius-lg: 28px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
   --radius-full: 999px;
 
-  --header-h: 76px;
+  --header-h: 64px;
 
-  --font-jp: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic",
-    "Noto Sans JP", sans-serif;
-  --font-en: "Outfit", var(--font-jp);
+  --font-jp: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Yu Gothic", sans-serif;
+  --font-en: "Inter", var(--font-jp);
 
   --gutter: 24px;
-  --container-max: 1320px;
+  /* 1120px of content plus the side gutters */
+  --container-max: 1168px;
   --section-pad: clamp(80px, 9vw, 132px);
   --section-pad-lg: clamp(100px, 12vw, 168px);
 
@@ -44,16 +49,17 @@
      New and shared components use these; older sections move over to them
      page by page. */
   /* Type scale: body 16px (mobile) to 17px (PC), H1-H3 fixed steps. */
-  --fs-sm: 0.875rem; /* 14px: the minimum on the site */
-  --fs-body: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
-  --fs-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.125rem);
-  --fs-h3: clamp(1.1875rem, 1.1rem + 0.3vw, 1.25rem);
-  --fs-h2: clamp(1.5rem, 1.3rem + 0.9vw, 1.75rem);
-  --fs-h1: clamp(2rem, 1.6rem + 1.6vw, 2.5rem);
-  --fs-kicker: 0.875rem;
-  --lh-body: 1.75;
-  --lh-heading: 1.4;
-  --fw-heading: 900;
+  --fs-label: 0.75rem; /* 12px: English labels only */
+  --fs-sm: 0.875rem; /* 14px: smallest Japanese text */
+  --fs-body: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem); /* 15-16px */
+  --fs-lead: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
+  --fs-h3: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem); /* 18-20px */
+  --fs-h2: clamp(1.375rem, 1.25rem + 0.5vw, 1.625rem); /* 22-26px */
+  --fs-h1: clamp(1.625rem, 1.45rem + 0.7vw, 1.875rem); /* 26-30px */
+  --fs-kicker: var(--fs-label);
+  --lh-body: 1.8;
+  --lh-heading: 1.45;
+  --fw-heading: 700;
   /* Long text: at most about 40 Japanese characters per line. */
   --measure: 40em;
 
@@ -66,12 +72,12 @@
   --space-6: 48px;
   --space-8: 64px;
   --space-12: 96px;
-  --section-gap: clamp(64px, 4rem + 4vw, 96px);
+  --section-gap: clamp(56px, 3rem + 4vw, 96px);
 
   /* Shapes */
-  --radius-card: 16px;
-  --line-w: 1.5px;
-  --line-soft: #e6e6e9;
+  --radius-card: 8px;
+  --line-w: 1px;
+  --line-soft: #e5e7eb;
   --tap: 44px;
 }
 
@@ -239,267 +245,54 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
-  padding: 14px 28px;
-  border-radius: var(--radius-full);
-  font-weight: 800;
-  font-size: 1rem;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 22px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
   letter-spacing: 0.02em;
-  transition: transform 0.22s ease, box-shadow 0.22s ease,
-    background-color 0.22s ease, color 0.22s ease, border-color 0.22s ease;
-  border: 2px solid transparent;
   white-space: nowrap;
   text-decoration: none;
-  line-height: 1.4;
-  min-height: 48px;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 .btn--lg {
-  padding: 17px 34px;
+  min-height: 48px;
+  padding: 12px 26px;
   font-size: 1rem;
 }
+/* Primary: the deeper brand pink keeps white text at AA contrast (5.9:1). */
 .btn--primary {
   background: var(--pink-dark);
   color: var(--white);
-  box-shadow: var(--shadow-pink);
 }
 .btn--primary:hover {
   background: var(--pink-deep);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(232, 62, 140, 0.38);
 }
 .btn--secondary {
-  border-color: var(--pink);
-  color: var(--pink-dark);
   background: var(--white);
+  border-color: var(--ink);
+  color: var(--ink);
 }
 .btn--secondary:hover {
-  background: var(--pink-dark);
-  color: var(--white);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-pink);
+  border-color: var(--pink-dark);
+  color: var(--pink-dark);
 }
 .btn--ghost {
-  border-color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.7);
   color: var(--white);
   background: transparent;
 }
 .btn--ghost:hover {
-  background: rgba(255, 255, 255, 0.16);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.12);
 }
 .btn--white {
   background: var(--white);
   color: var(--pink-dark);
-  box-shadow: 0 8px 24px rgba(120, 0, 55, 0.22);
-}
-.btn--white:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(120, 0, 55, 0.3);
 }
 
-/* ===== Hero =====
-   Split composition: text panel + full-height portrait, side by side on
-   desktop so type and photo never overlap; stacked on small screens. */
-/* ===== Hero =====
-   One element carries the photo as its own background — content sits
-   directly on top of it (a soft gradient keeps the text legible) instead
-   of splitting the section into a separate image div and content div.
-   That side-by-side split was what forced the photo into a narrow column
-   and cropped the subject's face at common desktop widths. */
-.hero {
-  position: relative;
-  min-height: min(100svh, 980px);
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  background-color: var(--white);
-  background-image: url('/images/hero-main.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 68% 18%;
-}
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background: linear-gradient(
-    100deg,
-    rgba(255, 255, 255, 0.97) 0%,
-    rgba(255, 255, 255, 0.94) 30%,
-    rgba(255, 255, 255, 0.72) 46%,
-    rgba(255, 255, 255, 0.2) 60%,
-    rgba(255, 255, 255, 0) 74%
-  );
-  pointer-events: none;
-}
-/* Mobile still needs its own short, fixed-aspect image block so the
-   photo doesn't get crushed by the full stacked-page height — see the
-   860px breakpoint below, which shows this and clears .hero's own
-   background-image. */
-.hero__media {
-  display: none;
-}
-
-.hero__inner {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: calc(var(--header-h) + 40px) clamp(24px, 6vw, 88px) 72px;
-}
-.hero__content {
-  max-width: 600px;
-}
-
-.hero__tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.875rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  color: var(--white);
-  background: var(--pink-dark);
-  padding: 7px 18px;
-  border-radius: var(--radius-full);
-  margin-bottom: 26px;
-  box-shadow: var(--shadow-pink);
-}
-
-.hero__catch {
-  font-size: clamp(1.7rem, 3.1vw, 2.5rem);
-  font-weight: 900;
-  line-height: 1.35;
-  letter-spacing: 0.01em;
-  color: var(--pink);
-  margin: 0 0 18px;
-}
-
-.hero__title {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  /* capped well below the container width (not just under it) so a
-     heavier system-font fallback or wider glyph metrics never push
-     the name onto a second, mid-word-wrapped line */
-  font-size: clamp(2.2rem, 4.6vw, 3.4rem);
-  font-weight: 900;
-  line-height: 1.15;
-  letter-spacing: 0.05em;
-  color: var(--ink);
-  margin: 0 0 26px;
-  white-space: nowrap;
-}
-.hero__title-en {
-  font-family: var(--font-en);
-  font-size: 0.24em;
-  font-weight: 700;
-  letter-spacing: 0.3em;
-  color: var(--pink-dark);
-}
-
-.hero__desc {
-  font-size: 1.0625rem;
-  font-weight: 600;
-  color: var(--ink);
-  max-width: 560px;
-  margin: 0 0 34px;
-  line-height: 1.95;
-}
-
-.hero__btns {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-bottom: 26px;
-}
-
-.hero__sns {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 32px;
-}
-.hero__sns-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  font-size: 0.9375rem;
-  font-weight: 800;
-  color: var(--ink);
-  background: var(--white);
-  border: 1.5px solid rgba(24, 24, 24, 0.1);
-  padding: 8px 16px 8px 8px;
-  border-radius: var(--radius-full);
-  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease,
-    border-color 0.2s ease;
-}
-.hero__sns-link svg {
-  width: 26px;
-  height: 26px;
-  padding: 5px;
-  box-sizing: border-box;
-  border-radius: 50%;
-  background: var(--pink);
-  color: var(--white);
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-.hero__sns-link:hover {
-  background: var(--pink);
-  color: var(--white);
-  border-color: var(--pink);
-  transform: translateY(-2px);
-}
-.hero__sns-link:hover svg {
-  background: rgba(255, 255, 255, 0.25);
-  color: var(--white);
-}
-
-.hero__nav {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.hero__nav a {
-  font-size: 0.875rem;
-  font-weight: 800;
-  color: var(--pink-dark);
-  background: var(--white);
-  border: 1.5px solid var(--pink);
-  padding: 8px 16px;
-  border-radius: var(--radius-full);
-  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease,
-    border-color 0.2s ease;
-}
-.hero__nav a:hover {
-  background: var(--pink);
-  color: var(--white);
-  border-color: var(--pink);
-  transform: translateY(-2px);
-}
-
-.hero__scroll {
-  position: absolute;
-  bottom: 30px;
-  left: clamp(24px, 6vw, 88px);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--pink-dark);
-  z-index: 3;
-}
-.hero__scroll-text {
-  font-family: var(--font-en);
-  font-size: 0.875rem;
-  font-weight: 800;
-  letter-spacing: 0.26em;
-}
-.hero__scroll-arrow {
-  font-size: 1rem;
-  animation: bounce 1.8s ease-in-out infinite;
-}
 @keyframes bounce {
   0%,
   100% {
@@ -1654,70 +1447,6 @@ button {
   
   
 
-  /* Hero: stacked — photo on top with the face framed, text below.
-     A separate .hero__media block is still needed here: unlike desktop,
-     the text continues in normal flow below the photo, so the photo
-     needs its own short, fixed-aspect box rather than sharing .hero's
-     full (much taller) box as a background. */
-  .hero {
-    display: block;
-    min-height: 0;
-    padding-top: var(--header-h);
-    background-image: none;
-  }
-  .hero::before {
-    content: none;
-  }
-  .hero__media {
-    display: block;
-    position: relative;
-    inset: auto;
-    width: 100%;
-    min-height: 0;
-    aspect-ratio: 5 / 4;
-    max-height: 58vh;
-    overflow: hidden;
-    background-image: url('/images/hero-main-1000.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 68% 22%;
-  }
-  .hero__media::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.3) 0%,
-      rgba(255, 255, 255, 0) 30%,
-      rgba(255, 255, 255, 0) 60%,
-      rgba(255, 255, 255, 0.95) 100%
-    );
-  }
-  .hero__inner {
-    padding: 0 var(--gutter) 56px;
-    margin-top: -34px;
-  }
-  .hero__content {
-    max-width: 100%;
-    position: relative;
-    background: var(--white);
-    border-radius: 26px 26px 0 0;
-    padding: 30px 22px 4px;
-    box-shadow: 0 -14px 40px rgba(24, 24, 24, 0.07);
-  }
-  .hero__tag {
-    margin-bottom: 18px;
-  }
-  .hero__desc {
-    max-width: 100%;
-    font-size: 1rem;
-  }
-  .hero__scroll {
-    display: none;
-  }
-
   .greeting__vision {
     grid-template-columns: 1fr;
   }
@@ -1827,12 +1556,6 @@ button {
   }
 }
 
-@media (max-width: 560px) {
-  .hero__btns .btn {
-    width: 100%;
-  }
-}
-
 @media (max-width: 420px) {
   .btn--lg {
     padding: 15px 22px;
@@ -1841,9 +1564,7 @@ button {
   .section-heading__en {
     font-size: 2.6rem;
   }
-  .hero__title {
-    letter-spacing: 0.06em;
-  }
+  
 }
 
 /* ===== Reduced motion ===== */
@@ -2442,26 +2163,6 @@ button {
 }
 
 /* ===== Hero: secondary links under the participation buttons ===== */
-.hero__sublinks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 22px;
-  margin: -10px 0 24px;
-}
-.hero__sublinks a {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--pink-dark);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  min-height: 44px;
-}
-.hero__sublinks a:hover {
-  color: var(--pink-deep);
-}
 
 /* ===== Top page: two ways to take part ===== */
 .take-part__cards {

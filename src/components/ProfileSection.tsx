@@ -1,33 +1,16 @@
-import { motion } from 'framer-motion'
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: 'easeOut' } },
-}
-
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.12 } },
-}
-
 export default function ProfileSection() {
   return (
     <section id="profile" className="section section--roomy">
       <div className="container">
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.15 }}
-          variants={stagger}
-        >
-          <motion.div className="section-heading" variants={fadeUp}>
+        <div>
+          <div className="section-heading">
             <span className="section-heading__en">PROFILE</span>
             <h2 className="section-heading__ja">プロフィール</h2>
             <div className="section-heading__line" />
-          </motion.div>
+          </div>
 
           <div className="profile-box">
-            <motion.div className="profile-photo" variants={fadeUp}>
+            <div className="profile-photo">
               <img
                 src="/images/profile-900.png"
                 alt="さとうしょうこ"
@@ -36,38 +19,38 @@ export default function ProfileSection() {
                 width={684}
                 height={674}
               />
-            </motion.div>
+            </div>
 
-            <motion.div className="profile-content" variants={stagger}>
-              <motion.h3 variants={fadeUp}>さとうしょうこ</motion.h3>
-              <motion.div className="profile-content__rule" variants={fadeUp} aria-hidden="true" />
+            <div className="profile-content">
+              <h3>さとうしょうこ</h3>
+              <div className="profile-content__rule" aria-hidden="true" />
 
-              <motion.p variants={fadeUp}>
+              <p>
                 宇部市東岐波出身。13年前に東京へ移住し、ITエンジニアとしてキャリアを築く。
                 LINE（現LINEヤフー）の技術広報をはじめ、技術コミュニティ運営に長年携わる。
                 2024年に自身の会社を設立。
-              </motion.p>
+              </p>
 
-              <motion.p variants={fadeUp}>
+              <p>
                 技術コミュニティやイベント運営を通じて、人と人がつながり、
                 新しい挑戦が生まれる場づくりに取り組んできました。
-              </motion.p>
+              </p>
 
-              <motion.p variants={fadeUp}>
+              <p>
                 これまでの経験を地域に還元し、宇部で暮らす人たちが
                 自分らしく挑戦できるまちづくりを進めていきます。
-              </motion.p>
+              </p>
 
-              <motion.div className="profile-award" variants={fadeUp}>
+              <div className="profile-award">
                 <span className="profile-award__icon">🏆</span>
                 <p className="profile-award__text">
                   Forbes JAPAN「Women in Tech 30」2026 選出<br />
                   ― テクノロジー領域で世界を変える30人 ―
                 </p>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   )
