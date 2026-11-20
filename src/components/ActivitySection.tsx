@@ -12,7 +12,8 @@ const LINK_LABELS: Record<ReportRow['kind'], string> = {
 /**
  * One activity report as a list row: date, category, kind, title, summary,
  * thumbnail and an arrow; the whole row is the link. `compact` (top page)
- * leaves out the summary and photo. Also used by the dashboard preview.
+ * leaves out the kind label, summary and photo. Also used by the dashboard
+ * preview.
  */
 export function ActivityCard({ item, compact = false }: { item: ReportRow; compact?: boolean }) {
   const href = reportHref(item)
@@ -29,7 +30,7 @@ export function ActivityCard({ item, compact = false }: { item: ReportRow; compa
           {item.category ? (
             <span className="activity-row__category">{REPORT_CATEGORY_LABELS[item.category]}</span>
           ) : null}
-          <span className="activity-row__kind">{REPORT_KIND_LABELS[item.kind]}</span>
+          {!compact && <span className="activity-row__kind">{REPORT_KIND_LABELS[item.kind]}</span>}
         </span>
         <span className="activity-row__main">
           <span className="activity-row__title">{item.title}</span>

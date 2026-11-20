@@ -81,12 +81,12 @@ export function PolicyTeaser() {
   )
 }
 
-/** ACTIVITY: the next event (if any) and the three latest reports, as a list */
+/** ACTIVITY: the next event (if any) and the five latest reports, as a list */
 export function ActivityTeaser() {
   const events = useAsync(listPublishedEvents, [])
   const reports = useAsync(listPublishedReports, [])
   const next = splitEvents(events.data ?? []).upcoming[0]
-  const latest = (reports.data ?? []).slice(0, 3)
+  const latest = (reports.data ?? []).slice(0, 5)
   return (
     <Section id="activity" labelledBy="home-activity-h">
       <SectionHeading
