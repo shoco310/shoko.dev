@@ -2,11 +2,6 @@ import { useEffect, useRef } from 'react'
 import { MotionConfig } from 'framer-motion'
 import Header from './components/Header'
 import Hero from './components/Hero'
-import Greeting from './components/Greeting'
-import ActivitySection from './components/ActivitySection'
-import PolicySection from './components/PolicySection'
-import ParticipateSection from './components/ParticipateSection'
-import ProfileSection from './components/ProfileSection'
 import Footer from './components/Footer'
 import PolicyDetail from './pages/PolicyDetail'
 import ProfilePage from './pages/ProfilePage'
@@ -23,11 +18,11 @@ import IssuesPage from './pages/IssuesPage'
 import IssueDetailPage from './pages/IssueDetailPage'
 import ChangesPage from './pages/ChangesPage'
 import ReportPage from './pages/ReportPage'
-import UpcomingEventsSection from './components/UpcomingEventsSection'
 import TakePartSection from './components/TakePartSection'
+import { AboutMeTeaser, ActivityTeaser, PolicyTeaser, VisionTeaser } from './components/HomeSections'
 import { issuesEnabled, voiceEnabled, volunteerEnabled } from './data/features'
 import { getPolicyBySlug, type Policy } from './data/policy'
-import { routeKey, useRoute, type Route } from './router'
+import { legacyAnchorTarget, routeHref, routeKey, useRoute, type Route } from './router'
 
 const SITE_TITLE = 'さとうしょうこ | 誰もが挑戦できる宇部へ'
 
@@ -84,8 +79,25 @@ export default function App() {
     if (same) return
 
     if (route.name === 'home' && route.anchor) {
-      const id = route.anchor
-      requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView())
+      // Anchors from before the renewal (#message, #support…) now point
+      // to a page or a different section.
+      const legacy = legacyAnchorTarget(route.anchor, { volunteerEnabled })
+      if (legacy && 'route' in legacy) {
+        window.location.replace(routeHref(legacy.route))
+        return
+      }
+      const id = legacy?.anchor ?? route.anchor
+      const go = () => document.getElementById(id)?.scrollIntoView()
+      requestAnimationFrame(go)
+      // Events and reports above load afterwards and push sections down;
+      // land on the target again unless the reader has already scrolled.
+      const y = () => window.scrollY
+      let settled = 0
+      requestAnimationFrame(() => (settled = y()))
+      // No cleanup: StrictMode re-runs this effect and would cancel it.
+      window.setTimeout(() => {
+        if (Math.abs(y() - settled) < 4) go()
+      }, 900)
       return
     }
     if (first) return
@@ -122,12 +134,10 @@ function renderPage(route: Route, policy: Policy | undefined) {
       return (
         <>
           <Hero />
-          <Greeting />
-          <PolicySection />
-          {voiceEnabled && <ParticipateSection />}
-          <UpcomingEventsSection />
-          <ActivitySection />
-          <ProfileSection />
+          <AboutMeTeaser />
+          <VisionTeaser />
+          <PolicyTeaser />
+          <ActivityTeaser />
           {(voiceEnabled || volunteerEnabled) && <TakePartSection />}
         </>
       )

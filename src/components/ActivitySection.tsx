@@ -1,8 +1,5 @@
 import { motion } from 'framer-motion'
 import { REPORT_KIND_LABELS, reportHref, type ReportKind, type ReportRow } from '../shared/reports'
-import { listPublishedReports } from '../lib/publicContent'
-import { useAsync } from '../lib/useAsync'
-import { routeHref } from '../router'
 
 const TYPE_LABELS = REPORT_KIND_LABELS
 
@@ -25,10 +22,6 @@ const fadeUp = {
   show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: 'easeOut' } },
 }
 
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.1 } },
-}
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr)
@@ -78,47 +71,5 @@ export function ActivityCard({ item }: { item: ReportRow }) {
         </a>
       </div>
     </motion.article>
-  )
-}
-
-export default function ActivitySection() {
-  const { data: reports } = useAsync(listPublishedReports, [])
-  return (
-    <section id="activity" className="section section--tint">
-      <div className="container">
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.1 }}
-          variants={stagger}
-        >
-          <motion.div className="section-heading" variants={fadeUp}>
-            <span className="section-heading__en">ACTIVITY</span>
-            <h2 className="section-heading__ja">最新の活動</h2>
-            <div className="section-heading__line" />
-          </motion.div>
-
-          <motion.div className="activity-grid" variants={stagger}>
-            {(reports ?? []).slice(0, 6).map(item => (
-              <ActivityCard key={item.id} item={item} />
-            ))}
-          </motion.div>
-
-          <motion.div className="activity-more" variants={fadeUp}>
-            <a
-              href="https://www.instagram.com/shoko_sato_ube/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn--secondary"
-            >
-              Instagramでもっとみる →
-            </a>
-            <a href={routeHref({ name: 'activity' })} className="btn btn--secondary">
-              活動・調査の状況を見る →
-            </a>
-          </motion.div>
-        </motion.div>
-      </div>
-    </section>
   )
 }

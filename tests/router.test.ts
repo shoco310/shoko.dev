@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parseHash, routeHref } from '../src/router'
+import { legacyAnchorTarget, parseHash, routeHref } from '../src/router'
 
 describe('router', () => {
   it('keeps legacy and in-page URLs working', () => {
@@ -47,5 +47,22 @@ describe('activity filter in the URL', async () => {
     expect(filterFromHash('#/activity?type=research')).toBe('research')
     expect(filterFromHash('#/activity?type=x')).toBeNull()
     expect(filterFromHash('#/activity')).toBeNull()
+  })
+})
+
+describe('legacy top-page anchors', () => {
+  const on = { volunteerEnabled: true }
+  it('sends moved sections to their new place', () => {
+    expect(legacyAnchorTarget('message', on)).toEqual({ route: { name: 'profile' } })
+    expect(legacyAnchorTarget('profile', on)).toEqual({ route: { name: 'profile' } })
+    expect(legacyAnchorTarget('support', on)).toEqual({ route: { name: 'join' } })
+    expect(legacyAnchorTarget('support', { volunteerEnabled: false })).toEqual({ anchor: 'contact' })
+    expect(legacyAnchorTarget('participate', on)).toEqual({ anchor: 'take-part' })
+    expect(legacyAnchorTarget('events', on)).toEqual({ anchor: 'activity' })
+  })
+  it('leaves anchors that still exist alone', () => {
+    for (const a of ['top', 'policy', 'activity', 'take-part', 'contact']) {
+      expect(legacyAnchorTarget(a, on)).toBeNull()
+    }
   })
 })

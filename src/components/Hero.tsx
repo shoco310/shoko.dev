@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { voiceEnabled, volunteerEnabled } from '../data/features'
 import { routeHref } from '../router'
+import { associationFormUrl, lineUrl } from '../data/social'
 
 const container = {
   hidden: {},
@@ -30,6 +31,7 @@ export default function Hero() {
 
           <motion.p className="hero__catch" variants={item}>
             誰もが挑戦できる宇部へ。
+            <span className="hero__subcatch">「やってみたい」を、諦めなくていい街。</span>
           </motion.p>
 
           <motion.h1 className="hero__title" variants={item}>
@@ -45,8 +47,8 @@ export default function Hero() {
 
           {voiceEnabled || volunteerEnabled ? (
             <>
-              {/* Participation first; LINE and the join form stay one tap away
-                  (LINE is also in the header, joining in the 後援会 section). */}
+              {/* Participation first; LINE and the association form are in
+                  the header's 参加する menu and the footer. */}
               <motion.div className="hero__btns" variants={item}>
                 {voiceEnabled && (
                   <a href={routeHref({ name: 'voice' })} className="btn btn--primary btn--lg">
@@ -61,15 +63,11 @@ export default function Hero() {
                   </a>
                 )}
               </motion.div>
-              <motion.nav className="hero__sublinks" variants={item} aria-label="政策と活動">
-                <a href="#policy">4つの政策を見る</a>
-                <a href={routeHref({ name: 'events' })}>活動予定を見る</a>
-              </motion.nav>
             </>
           ) : (
             <motion.div className="hero__btns" variants={item}>
               <a
-                href="https://lin.ee/Rgs1sYR3"
+                href={lineUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn--primary btn--lg"
@@ -78,7 +76,7 @@ export default function Hero() {
                 LINE公式に登録する
               </a>
               <a
-                href="https://forms.gle/z3RQbWGoreoUCiZ4A"
+                href={associationFormUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn--secondary btn--lg"
@@ -140,7 +138,7 @@ export default function Hero() {
       </div>
 
       <motion.a
-        href="#message"
+        href="#about-me"
         className="hero__scroll"
         aria-label="下にスクロール"
         initial={{ opacity: 0 }}

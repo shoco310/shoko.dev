@@ -1,5 +1,5 @@
 import IssueCard from './IssueCard'
-import { listIssuesForPolicy, listPublishedIssues } from '../lib/publicIssues'
+import { listIssuesForPolicy } from '../lib/publicIssues'
 import { useAsync } from '../lib/useAsync'
 import { routeHref } from '../router'
 
@@ -23,26 +23,5 @@ export function PolicyIssues({ slug, level = 2 }: { slug: string; level?: 2 | 3 
         </a>
       </p>
     </section>
-  )
-}
-
-/** Latest published issues for the top page. Hidden until there is one. */
-export function LatestIssues({ count = 3 }: { count?: number }) {
-  const { data } = useAsync(listPublishedIssues, [])
-  if (!data || data.length === 0) return null
-  return (
-    <div className="latest-issues">
-      <h3 className="latest-issues__title">みんなの声から見えた課題</h3>
-      <div className="issue-list issue-list--grid">
-        {data.slice(0, count).map(issue => (
-          <IssueCard key={issue.id} issue={issue} />
-        ))}
-      </div>
-      <p className="latest-issues__more">
-        <a href={routeHref({ name: 'issues' })} className="btn btn--secondary">
-          課題の一覧を見る（{data.length}件） →
-        </a>
-      </p>
-    </div>
   )
 }

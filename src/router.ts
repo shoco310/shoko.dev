@@ -92,6 +92,30 @@ export function routeHref(route: LinkableRoute): string {
   }
 }
 
+/**
+ * Top-page anchors from before the 2026-11 renewal that may still be shared
+ * on SNS, and where that content lives now. Anchors not listed here
+ * (#top, #policy, #activity, #take-part, #contact) still exist.
+ */
+export function legacyAnchorTarget(
+  anchor: string,
+  flags: { volunteerEnabled: boolean },
+): { route: LinkableRoute } | { anchor: string } | null {
+  switch (anchor) {
+    case 'message':
+    case 'profile':
+      return { route: { name: 'profile' } }
+    case 'support':
+      return flags.volunteerEnabled ? { route: { name: 'join' } } : { anchor: 'contact' }
+    case 'participate':
+      return { anchor: 'take-part' }
+    case 'events':
+      return { anchor: 'activity' }
+    default:
+      return null
+  }
+}
+
 /** Stable identity for a route, used to detect page changes. */
 export function routeKey(route: Route): string {
   if (route.name === 'policy') return `policy:${route.slug}`
