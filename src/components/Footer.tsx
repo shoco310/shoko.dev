@@ -6,8 +6,13 @@ import { IconLine, SocialIcon } from './icons'
 
 const ext = { target: '_blank', rel: 'noopener noreferrer' } as const
 
-/** The main pages, without the dropdown (its pages have their own column). */
-const siteLinks = mainNav.filter(item => !item.children)
+/**
+ * The main pages for the サイト column. V2MOM・政策 has its own column; the
+ * 活動 menu is listed as its two pages.
+ */
+const siteLinks = mainNav.flatMap(item =>
+  !item.children ? [item] : item.label === '活動' ? item.children : [],
+)
 
 /**
  * Compact dark footer: brand and SNS, three link columns, contact details

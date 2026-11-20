@@ -1,5 +1,5 @@
 import './ActivitySection.css'
-import { REPORT_KIND_LABELS, reportHref, type ReportRow } from '../shared/reports'
+import { REPORT_CATEGORY_LABELS, REPORT_KIND_LABELS, reportHref, type ReportRow } from '../shared/reports'
 import { formatJaDate } from '../lib/inPage'
 
 const LINK_LABELS: Record<ReportRow['kind'], string> = {
@@ -10,9 +10,9 @@ const LINK_LABELS: Record<ReportRow['kind'], string> = {
 }
 
 /**
- * One activity report as a list row: date, kind, title and an arrow; the
- * whole row is the link. `compact` (top page) leaves out the summary and
- * photo. Also used by the dashboard preview.
+ * One activity report as a list row: date, category, kind, title, summary,
+ * thumbnail and an arrow; the whole row is the link. `compact` (top page)
+ * leaves out the summary and photo. Also used by the dashboard preview.
  */
 export function ActivityCard({ item, compact = false }: { item: ReportRow; compact?: boolean }) {
   const href = reportHref(item)
@@ -26,6 +26,9 @@ export function ActivityCard({ item, compact = false }: { item: ReportRow; compa
       >
         <span className="activity-row__meta">
           <time dateTime={item.report_date}>{formatJaDate(item.report_date)}</time>
+          {item.category ? (
+            <span className="activity-row__category">{REPORT_CATEGORY_LABELS[item.category]}</span>
+          ) : null}
           <span className="activity-row__kind">{REPORT_KIND_LABELS[item.kind]}</span>
         </span>
         <span className="activity-row__main">

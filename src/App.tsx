@@ -20,6 +20,8 @@ import IssuesPage from './pages/IssuesPage'
 import IssueDetailPage from './pages/IssueDetailPage'
 import ChangesPage from './pages/ChangesPage'
 import ReportPage from './pages/ReportPage'
+import EventsPage from './pages/EventsPage'
+import EventDetailPage from './pages/EventDetailPage'
 import TakePartSection from './components/TakePartSection'
 import { ActivityTeaser, PolicyTeaser, VisionTeaser } from './components/HomeSections'
 import { issuesEnabled, voiceEnabled, volunteerEnabled } from './data/features'
@@ -34,14 +36,15 @@ const pageTitles: Partial<Record<Route['name'], string>> = {
   policies: '4つの重点政策',
   research: '政策調査',
   data: '数字で見る宇部',
-  activity: '活動',
+  activity: 'これまでの活動',
   about: 'このサイトについて',
   privacy: 'プライバシーポリシー',
   voice: '困りごと・ご意見を送る',
   join: '一緒に活動する',
   issues: '市民の声',
   changes: '政策の変更履歴',
-  events: '活動予定',
+  events: 'イベント・活動予定',
+  event: 'イベント',
   report: '活動報告',
   issue: '課題',
   notFound: 'ページが見つかりません',
@@ -181,7 +184,9 @@ function renderPage(route: Route, policy: Policy | undefined) {
     case 'changes':
       return <ChangesPage />
     case 'events':
-      return <ActivityPage initialFilter="events" />
+      return <EventsPage />
+    case 'event':
+      return <EventDetailPage slug={route.slug} />
     case 'report':
       return <ReportPage slug={route.slug} />
     case 'issue':

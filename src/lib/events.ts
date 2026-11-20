@@ -61,3 +61,20 @@ export function formatEventDate(e: EventItem): { day: string; time: string | nul
 export function reportLink(e: EventItem): string | null {
   return e.reportUrl ?? null
 }
+
+/**
+ * Upcoming events grouped by month ('2026-12' → events), in date order.
+ * The list view renders these groups; a month or week calendar can use the
+ * same grouping later.
+ */
+export function groupByMonth(list: EventItem[]): { month: string; label: string; events: EventItem[] }[] {
+  const groups = new Map<string, EventItem[]>()
+  for (const e of [...list].sort((a, b) => startsAt(a) - startsAt(b))) {
+    const key = e.date.slice(0, 7)
+    groups.set(key, [...(groups.get(key) ?? []), e])
+  }
+  return [...groups].map(([month, events]) => {
+    const [y, m] = month.split('-').map(Number)
+    return { month, label: `${y}年${m}月`, events }
+  })
+}

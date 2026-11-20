@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { EventItem } from '../src/shared/events'
-import { endsAt, eventState, formatEventDate, splitEvents, startsAt } from '../src/lib/events'
+import { endsAt, eventState, formatEventDate, groupByMonth, splitEvents, startsAt } from '../src/lib/events'
 
 const base: EventItem = { id: '2026-12-05-test', title: 'テスト', date: '2026-12-05', description: 'x' }
 const at = (iso: string) => Date.parse(iso)
@@ -54,5 +54,23 @@ describe('event dates (Japan time)', () => {
   it('formats the date with the weekday', () => {
     expect(formatEventDate({ ...base, start: '14:00', end: '15:30' })).toEqual({ day: '2026年12月5日（土）', time: '14:00〜15:30' })
     expect(formatEventDate({ ...base, date: '2026-11-20' }).day).toBe('2026年11月20日（金）')
+  })
+})
+
+describe('upcoming events by month', () => {
+  it('groups in date order with a Japanese month label', () => {
+    const list = [
+      { ...base, id: '2027-01-10-b', date: '2027-01-10' },
+      { ...base, id: '2026-12-20-a', date: '2026-12-20' },
+      { ...base, id: '2026-12-05-c', date: '2026-12-05' },
+    ]
+    const groups = groupByMonth(list)
+    expect(groups.map(g => g.label)).toEqual(['2026年12月', '2027年1月'])
+    expect(groups[0].events.map(e => e.id)).toEqual(['2026-12-05-c', '2026-12-20-a'])
+  })
+  it('ended events are not upcoming (judged by end time)', () => {
+    const e = { ...base, start: '14:00', end: '15:30' }
+    expect(splitEvents([e], at('2026-12-05T15:31:00+09:00')).upcoming).toHaveLength(0)
+    expect(splitEvents([e], at('2026-12-05T15:29:00+09:00')).upcoming).toHaveLength(1)
   })
 })

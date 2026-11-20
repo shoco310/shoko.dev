@@ -29,6 +29,7 @@ export type Route =
   | { name: 'changes' }
   | { name: 'events' }
   | { name: 'report'; slug: string }
+  | { name: 'event'; slug: string }
   | { name: 'issue'; id: number }
   | { name: 'notFound' }
 
@@ -54,6 +55,9 @@ export function parseHash(hash: string): Route {
     case 'policy':
       // '#/policy' alone used to be a dead end; it now means the policy list.
       return second ? { name: 'policy', slug: second } : { name: 'policies' }
+    case 'events':
+      if (!second) return { name: 'events' }
+      return /^\d{4}-\d{2}-\d{2}-[a-z0-9-]+$/.test(second) ? { name: 'event', slug: second } : { name: 'notFound' }
     case 'reports':
       return second && /^\d{4}-\d{2}-\d{2}-[a-z0-9-]+$/.test(second) ? { name: 'report', slug: second } : { name: 'notFound' }
     case 'issues':
@@ -64,7 +68,6 @@ export function parseHash(hash: string): Route {
     case 'policies':
     case 'research':
     case 'changes':
-    case 'events':
     case 'data':
     case 'activity':
     case 'about':
@@ -89,6 +92,8 @@ export function routeHref(route: LinkableRoute): string {
       return `#/issues/${route.id}`
     case 'report':
       return `#/reports/${route.slug}`
+    case 'event':
+      return `#/events/${route.slug}`
     default:
       return `#/${route.name}`
   }
@@ -123,6 +128,7 @@ export function routeKey(route: Route): string {
   if (route.name === 'policy') return `policy:${route.slug}`
   if (route.name === 'issue') return `issue:${route.id}`
   if (route.name === 'report') return `report:${route.slug}`
+  if (route.name === 'event') return `event:${route.slug}`
   return route.name
 }
 
