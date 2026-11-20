@@ -81,8 +81,20 @@ export default function App() {
 
   return (
     <MotionConfig reducedMotion="user">
+      {/* Hash routing: move focus instead of following '#…', which would change the route. */}
+      <a
+        className="skip-link"
+        href="#main-content"
+        onClick={e => {
+          e.preventDefault()
+          mainRef.current?.focus()
+          mainRef.current?.scrollIntoView()
+        }}
+      >
+        本文へ移動
+      </a>
       <Header />
-      <main ref={mainRef} tabIndex={-1} className="site-main">
+      <main ref={mainRef} id="main-content" tabIndex={-1} className="site-main">
         {renderPage(route, policy)}
       </main>
       <Footer />

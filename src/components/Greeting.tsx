@@ -145,7 +145,7 @@ export default function Greeting() {
 
           <Block>
             <div>
-              <img src="images/more-challenge.png"></img>
+              <img src="/images/more-challenge.png" alt="誰もが挑戦できる宇部へ。" loading="lazy" />
             </div>
           </Block>
 
