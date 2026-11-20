@@ -1,38 +1,20 @@
 [
   {
-    "slug": "2025-10-16-engineer-community-talk",
-    "title": "「エンジニア×地域コミュニティ〜宇部のこれから〜」に登壇",
-    "event_date": "2025-10-16",
-    "start_time": null,
-    "end_time": null,
-    "place": null,
+    "slug": "2026-11-25-event-g1fw",
+    "title": "FMきらら「UBE NEXT」第5回｜宇部の夜を彩る、光とアートの舞台裏",
+    "event_date": "2026-11-25",
+    "start_time": "20:00:00",
+    "end_time": "21:00:00",
+    "place": "FMきらら",
     "place_url": null,
-    "description": "エンジニアの視点から、地域コミュニティと宇部のこれからについてお話ししました。",
+    "description": "今回のテーマは、「宇部の夜を彩る、光とアートの舞台裏」 ✨\nゲストは、TOKIWAナイトミュージアム2026の企画・制作に携わる 藤津俊和さん！\n\n約20年にわたりイルミネーションに携わり、宇部の冬を彩る光の演出を手がけてきた藤津さん。\n今年は新たにプロジェクションマッピングにも挑戦！植物館の魅力を引き出すため、企画から制作まで、さまざまな工夫を重ねてこられました。\n\nなぜ、そこまでこだわるのか？\n新しい技術への挑戦や、光の演出に込めた想い、制作の舞台裏についてお話を伺います😊\n\n宇部の冬の風物詩を、また違った視点から楽しめる時間になれば嬉しいです！\n\n📻 FMきらら（80.4MHz）\n🗓 11月25日（水）20:00〜\n🎙️ パーソナリティ：さとうしょうこ\n🎤 ゲスト：藤津俊和さん\n\nぜひお聴きください！✨",
     "audience": null,
     "how_to_join": null,
     "apply_url": null,
     "status_override": null,
-    "report_activity_id": "6",
+    "report_activity_id": null,
     "report_url": null,
-    "published_at": "2026-11-20T08:31:06.084252+00:00",
-    "updated_at": "2026-11-20T08:54:12.863892+00:00"
-  },
-  {
-    "slug": "2026-04-18-genai-event",
-    "title": "生成AIを「基礎 → 実践」まで体験するイベント",
-    "event_date": "2026-04-18",
-    "start_time": null,
-    "end_time": null,
-    "place": null,
-    "place_url": null,
-    "description": "講演とワークショップの形式で、生成AIを基礎から実践まで体験していただきました。",
-    "audience": null,
-    "how_to_join": null,
-    "apply_url": null,
-    "status_override": null,
-    "report_activity_id": "2",
-    "report_url": null,
-    "published_at": "2026-11-20T08:31:06.084252+00:00",
-    "updated_at": "2026-11-20T08:54:12.863892+00:00"
+    "published_at": "2026-11-20T15:50:00.144868+00:00",
+    "updated_at": "2026-11-20T15:51:10.703763+00:00"
   }
 ]
