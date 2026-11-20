@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from
 import type { Session } from '@supabase/supabase-js'
 import { supabase, supabaseConfigured } from './supabase'
 import Dashboard from './Dashboard'
+import VolunteerDashboard from './VolunteerDashboard'
 
 type Phase =
   | { name: 'loading' }
@@ -86,7 +87,7 @@ export default function AdminApp() {
         </AdminFrame>
       )
     case 'ready':
-      return <Dashboard displayName={phase.displayName} onSignOut={signOut} />
+      return <AdminShell displayName={phase.displayName} onSignOut={signOut} />
   }
 }
 
@@ -201,5 +202,35 @@ function Mfa({
         </button>
       </form>
     </AdminFrame>
+  )
+}
+
+function AdminShell({ displayName, onSignOut }: { displayName: string; onSignOut: () => void }) {
+  const [view, setView] = useState<'voices' | 'volunteers'>('voices')
+  return (
+    <div className="admin">
+      <header className="admin-header">
+        <p className="admin-header__title">審査画面</p>
+        <nav className="admin-views" aria-label="表示する情報">
+          <button className={`admin-view${view === 'voices' ? ' is-active' : ''}`} aria-pressed={view === 'voices'} onClick={() => setView('voices')}>
+            困りごと・ご意見
+          </button>
+          <button
+            className={`admin-view${view === 'volunteers' ? ' is-active' : ''}`}
+            aria-pressed={view === 'volunteers'}
+            onClick={() => setView('volunteers')}
+          >
+            ボランティア（後援会）
+          </button>
+        </nav>
+        <div className="admin-header__user">
+          <span>{displayName}</span>
+          <button className="admin-link admin-link--light" onClick={onSignOut}>
+            ログアウト
+          </button>
+        </div>
+      </header>
+      {view === 'voices' ? <Dashboard /> : <VolunteerDashboard />}
+    </div>
   )
 }

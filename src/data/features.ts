@@ -5,3 +5,10 @@
  * privacy policy is revised and the production database is ready).
  */
 export const voiceEnabled = import.meta.env.VITE_VOICE_ENABLED === 'true'
+
+/**
+ * Volunteer sign-up page (#/join) for さとうしょうこ後援会. Switched on per
+ * environment with VITE_VOLUNTEER_ENABLED=true, independently of the
+ * citizen submission form.
+ */
+export const volunteerEnabled = import.meta.env.VITE_VOLUNTEER_ENABLED === 'true'

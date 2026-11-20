@@ -1,6 +1,6 @@
 import PageLayout, { PageSection } from '../components/PageLayout'
 import { operator, privacyPolicyDate, supportersAssociation } from '../data/site'
-import { voiceEnabled } from '../data/features'
+import { voiceEnabled, volunteerEnabled } from '../data/features'
 
 function formatDate(iso: string) {
   const [y, m, d] = iso.split('-').map(Number)
@@ -19,23 +19,25 @@ const services = [
     use: 'このサイトの配信、投稿の受付処理、アクセスログの記録',
     where: '投稿の受付処理は東京リージョンで行います。アクセスログは同社のシステムで管理され、日本国外で保存・処理される場合があります。',
   },
-  ...(voiceEnabled
+  ...(voiceEnabled || volunteerEnabled
     ? [
         {
           name: 'Supabase（Supabase Inc.・米国）',
-          use: '投稿内容・連絡先の保存、運営者のログイン管理',
+          use: [voiceEnabled && '投稿内容・連絡先の保存', volunteerEnabled && 'ボランティア登録情報の保存', '運営者のログイン管理']
+            .filter(Boolean)
+            .join('、'),
           where: 'データは東京リージョン（Amazon Web Services の日本国内のデータセンター）に保存します。同社による保守・障害対応のため、日本国外からアクセスされる可能性があります。',
         },
         {
           name: 'Cloudflare Turnstile（Cloudflare, Inc.・米国）',
-          use: '投稿フォームでの、ロボットによる送信かどうかの判定',
+          use: 'フォームでの、ロボットによる送信かどうかの判定',
           where: 'ブラウザや端末の情報が、同社の日本国外を含む設備で処理されます。',
         },
       ]
     : []),
   {
     name: 'Google アナリティクス（Google LLC・米国）',
-    use: 'アクセス解析（投稿フォームのページでは使用しません）',
+    use: 'アクセス解析（投稿フォーム・ボランティア登録のページでは使用しません）',
     where: '収集された情報は、日本国外を含む同社の設備で保存・処理されます。',
   },
   {
@@ -80,7 +82,7 @@ export default function PrivacyPage() {
             <dt>アクセス解析（Google アナリティクス）</dt>
             <dd>
               サイトの改善のため、Google アナリティクスを利用しています。Cookie を使って、閲覧したページ、ブラウザや端末の種類、おおよその地域などの情報が Google に送られます。この情報には、お名前やメールアドレスなど個人を直接特定する情報は含まれません。
-              {voiceEnabled && '投稿フォームのページでは、Google アナリティクスを読み込みません。'}
+              {(voiceEnabled || volunteerEnabled) && '個人情報を入力するフォームのページ（投稿フォーム・ボランティア登録）では、Google アナリティクスを読み込みません。'}
               Google によるデータの扱いは「
               <a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener noreferrer">
                 Google のサービスを使用するサイトやアプリから収集した情報の Google による使用
@@ -174,6 +176,44 @@ export default function PrivacyPage() {
           後援会の入会フォーム（Google フォーム）は、{supportersAssociation}（代表：{operator.name}）が運営しています。入力された情報は、{supportersAssociation}が、後援会の運営と会員の方へのご連絡のために利用します。
         </p>
       </PageSection>
+
+      {volunteerEnabled && (
+        <PageSection title="ボランティア登録について">
+          <dl className="info-list info-list--stacked">
+            <div>
+              <dt>取り扱う者</dt>
+              <dd>
+                「一緒に活動する」ページのボランティア登録は、{supportersAssociation}（届出済みの政治団体。代表：{operator.name}）が受け付けています。登録情報を見ることができるのは、代表の{operator.name}だけです。
+              </dd>
+            </div>
+            <div>
+              <dt>お預かりする情報</dt>
+              <dd>
+                お名前、メールアドレス、18歳以上かどうか、参加できる頻度。任意で、電話番号、お住まいの地域（地区名まで）、興味のある活動、得意なこと・協力できること、自由記述、後援会への入会案内の希望。あわせて、いたずらや大量送信を防ぐため、送信元の IP アドレスを元に戻せない形に変換した値を記録します。
+              </dd>
+            </div>
+            <div>
+              <dt>利用目的</dt>
+              <dd>
+                <p>ボランティア活動のご案内、ご連絡、活動の調整のために利用します。ご連絡は、必要に応じて個別に行います。</p>
+                <p>
+                  「18歳以上かどうか」は、公職選挙法で18歳未満の方は選挙運動に参加できないため、活動をご案内する際の確認にだけ利用します。後援会への入会の案内は、希望された方にだけお送りします。ボランティア登録をしても、後援会に入会したことにはなりません。
+                </p>
+              </dd>
+            </div>
+            <div>
+              <dt>保存期間</dt>
+              <dd>
+                最後にご連絡・対応をした日から2年後に削除します。登録の取り消しをお申し出いただいた場合は、その時点で削除します。
+              </dd>
+            </div>
+            <div>
+              <dt>お問い合わせ・取り消し</dt>
+              <dd>登録内容の確認・変更・取り消しは、下記のメールアドレスまでご連絡ください。</dd>
+            </div>
+          </dl>
+        </PageSection>
+      )}
 
       <PageSection title="個人情報の管理責任者・お問い合わせ窓口">
         <dl className="info-list">

@@ -6,6 +6,8 @@ interface ImportMetaEnv {
   readonly VITE_TURNSTILE_SITE_KEY?: string
   /** 'true' only where the submission feature is switched on (local, preview; production after launch) */
   readonly VITE_VOICE_ENABLED?: string
+  /** 'true' where the volunteer sign-up page (#/join) is switched on */
+  readonly VITE_VOLUNTEER_ENABLED?: string
 }
 interface ImportMeta {
   readonly env: ImportMetaEnv
