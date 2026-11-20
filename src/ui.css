@@ -1,0 +1,279 @@
+/* ===== Design system components (src/components/ui) =====
+   Reads the tokens at the top of styles.css. Loaded after styles.css. */
+
+/* ----- Section ----- */
+.ui-section {
+  padding-block: var(--section-gap);
+  background: var(--white);
+}
+.ui-section--surface {
+  background: var(--surface);
+}
+
+/* ----- Section heading ----- */
+.ui-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  margin-bottom: var(--space-5);
+}
+.ui-heading__text {
+  max-width: var(--measure);
+}
+.ui-heading__kicker {
+  display: block;
+  font-family: var(--font-en);
+  font-size: var(--fs-kicker);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pink-dark);
+  margin-bottom: var(--space-1);
+}
+.ui-heading__title {
+  margin: 0;
+  font-weight: var(--fw-heading);
+  line-height: var(--lh-heading);
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+.ui-heading__title--h2 {
+  font-size: var(--fs-h2);
+}
+.ui-heading__title--h3 {
+  font-size: var(--fs-h3);
+}
+.ui-heading__lead {
+  margin: var(--space-2) 0 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--gray);
+}
+
+/* ----- Text link (button variant "text") ----- */
+.ui-textlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--tap);
+  font-weight: 800;
+  color: var(--pink-dark);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+}
+.ui-textlink:hover {
+  color: var(--pink-deep);
+}
+.ui-textlink span {
+  transition: transform 0.2s ease;
+}
+.ui-textlink:hover span {
+  transform: translateX(3px);
+}
+
+/* ----- Card ----- */
+.ui-card-grid {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .ui-card-grid--2,
+  .ui-card-grid--3,
+  .ui-card-grid--4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1000px) {
+  .ui-card-grid--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .ui-card-grid--4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.ui-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  border: var(--line-w) solid var(--line-soft);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.ui-card--link:hover {
+  border-color: var(--pink);
+  box-shadow: var(--shadow-md);
+}
+.ui-card__media img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+.ui-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--space-1);
+  padding: var(--space-3);
+}
+.ui-card__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+.ui-card__meta {
+  font-size: var(--fs-sm);
+  color: var(--gray);
+}
+.ui-card__title {
+  margin: 0;
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-heading);
+  line-height: var(--lh-heading);
+  color: var(--ink);
+}
+.ui-card__link {
+  color: inherit;
+}
+/* Whole card is the hit area; the link stays the only tab stop. */
+.ui-card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.ui-card__link:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+.ui-card--link:has(.ui-card__link:focus-visible) {
+  outline: 3px solid var(--pink-dark);
+  outline-offset: 3px;
+}
+.ui-card__text {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--gray);
+}
+.ui-card__text > :first-child {
+  margin-top: 0;
+}
+.ui-card__text > :last-child {
+  margin-bottom: 0;
+}
+.ui-card__more {
+  margin-top: auto;
+  padding-top: var(--space-1);
+  font-weight: 800;
+  color: var(--pink-dark);
+}
+
+/* ----- Badge ----- */
+.ui-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.ui-badge--pink {
+  background: var(--pink-dark);
+  color: var(--white);
+}
+.ui-badge--gray {
+  background: var(--gray-light);
+  color: var(--ink);
+}
+.ui-badge--outline {
+  border: var(--line-w) solid currentColor;
+  color: var(--pink-dark);
+  padding: 2px 9px;
+}
+
+/* ----- Notice ----- */
+.ui-notice {
+  max-width: var(--measure);
+  padding: var(--space-3);
+  border-radius: 0 var(--radius-card) var(--radius-card) 0;
+  background: var(--surface);
+  border-left: 4px solid var(--gray);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+.ui-notice--caution {
+  background: #fdf0f5;
+  border-left-color: var(--pink-dark);
+}
+.ui-notice__title {
+  margin: 0 0 var(--space-1);
+  font-weight: 800;
+}
+.ui-notice__body > :first-child {
+  margin-top: 0;
+}
+.ui-notice__body > :last-child {
+  margin-bottom: 0;
+}
+
+/* ----- Breadcrumb ----- */
+.ui-breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+.ui-breadcrumb li {
+  display: inline-flex;
+  align-items: center;
+}
+.ui-breadcrumb li + li::before {
+  content: "›";
+  margin: 0 10px;
+  opacity: 0.7;
+}
+.ui-breadcrumb a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.ui-breadcrumb [aria-current="page"] {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+}
+.ui-breadcrumb--light {
+  color: var(--gray);
+}
+.ui-breadcrumb--light a {
+  color: var(--pink-dark);
+}
+.ui-breadcrumb--dark {
+  color: rgba(255, 255, 255, 0.9);
+}
+.ui-breadcrumb--dark a {
+  color: var(--white);
+}
+.page__hero .ui-breadcrumb {
+  margin-bottom: var(--space-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-card,
+  .ui-textlink span {
+    transition: none;
+  }
+}

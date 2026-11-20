@@ -8,8 +8,11 @@
   --pink-deep: #9a1048;
   --white: #ffffff;
   --ink: #181818;
-  --gray: #666666;
+  /* Supporting text: 7:1 on white (was #666, 5.7:1). */
+  --gray: #595959;
   --gray-light: #f2f2f2;
+  /* Quiet panel behind cards and notices. */
+  --surface: #f7f7f8;
 
   /* Aliases */
   --text: var(--ink);
@@ -36,6 +39,40 @@
   --container-max: 1320px;
   --section-pad: clamp(80px, 9vw, 132px);
   --section-pad-lg: clamp(100px, 12vw, 168px);
+
+  /* ----- Design system tokens (renewal 2026-11) -----
+     New and shared components use these; older sections move over to them
+     page by page. */
+  /* Type scale: body 16px (mobile) to 17px (PC), H1-H3 fixed steps. */
+  --fs-sm: 0.875rem; /* 14px: the minimum on the site */
+  --fs-body: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
+  --fs-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.125rem);
+  --fs-h3: clamp(1.1875rem, 1.1rem + 0.3vw, 1.25rem);
+  --fs-h2: clamp(1.5rem, 1.3rem + 0.9vw, 1.75rem);
+  --fs-h1: clamp(2rem, 1.6rem + 1.6vw, 2.5rem);
+  --fs-kicker: 0.875rem;
+  --lh-body: 1.75;
+  --lh-heading: 1.4;
+  --fw-heading: 900;
+  /* Long text: at most about 40 Japanese characters per line. */
+  --measure: 40em;
+
+  /* Spacing on an 8px grid. */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 40px;
+  --space-6: 48px;
+  --space-8: 64px;
+  --space-12: 96px;
+  --section-gap: clamp(64px, 4rem + 4vw, 96px);
+
+  /* Shapes */
+  --radius-card: 16px;
+  --line-w: 1.5px;
+  --line-soft: #e6e6e9;
+  --tap: 44px;
 }
 
 /* ===== Reset & Base ===== */
@@ -55,7 +92,7 @@ body {
   font-family: var(--font-jp);
   color: var(--text);
   font-size: 1rem;
-  line-height: 1.85;
+  line-height: var(--lh-body);
   background: var(--white);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -3456,11 +3493,12 @@ button {
 .page__body .join-intro p,
 .participate__intro,
 .policy-intro {
-  max-width: 42em;
+  max-width: var(--measure);
 }
-.policy-detail__section > p {
-  font-size: 1.0625rem;
-  line-height: 2;
+.policy-detail__section > p,
+.page__body > p {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
 }
 @media (max-width: 720px) {
   .policy-detail__section > p,
