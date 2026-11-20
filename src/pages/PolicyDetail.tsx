@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { policies, type Policy, type SourceItem } from '../data/policy'
 import DataCard from '../components/DataCard'
+import ChangeEntry from '../components/ChangeEntry'
 import { routeHref } from '../router'
 import { PolicyIssues } from '../components/PolicyIssues'
 import { issuesEnabled } from '../data/features'
@@ -35,11 +36,6 @@ const sourceTypeLabel: Record<SourceItem['type'], string> = {
   primary: '一次資料',
   report: '報道',
   reference: '参考・他自治体事例',
-}
-
-function formatDate(iso: string) {
-  const [y, m, d] = iso.split('-').map(Number)
-  return `${y}年${m}月${d}日`
 }
 
 export default function PolicyDetail({ policy }: { policy: Policy }) {
@@ -255,37 +251,16 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
           <Block>
             <section className="policy-detail__section">
               <h2 className="policy-detail__heading">更新履歴</h2>
-              <ol className="changelog">
-                {policy.changelog.map((c, i) => (
-                  <li key={i} className="changelog__item">
-                    <time className="changelog__date" dateTime={c.date}>
-                      {formatDate(c.date)}
-                    </time>
-                    <div className="changelog__body">
-                      <p className="changelog__summary">{c.summary}</p>
-                      {c.reason && <p className="changelog__reason">理由：{c.reason}</p>}
-                      {issuesEnabled && c.relatedIssues && c.relatedIssues.length > 0 && (
-                        <p className="changelog__reason">
-                          きっかけになった課題：
-                          {c.relatedIssues.map((id, j) => (
-                            <span key={id}>
-                              {j > 0 && '、'}
-                              <a href={routeHref({ name: 'issue', id })}>課題 #{id}</a>
-                            </span>
-                          ))}
-                        </p>
-                      )}
-                    </div>
-                  </li>
+              <p>この政策を、いつ・なぜ・何をもとに変えたのかを記録しています。</p>
+              <ol className="changes">
+                {policy.changelog.map(c => (
+                  <ChangeEntry key={c.id} change={c} />
                 ))}
               </ol>
-              <p className="changelog__note">
-                政策は、調査の結果やいただいたご意見をもとに見直していきます。変更の詳しい記録は
-                {' '}
-                <a href="https://github.com/shoco310/shoko.dev/commits/main/src/data/policy.ts" target="_blank" rel="noopener noreferrer">
-                  GitHub の変更履歴
+              <p className="page__more">
+                <a href={routeHref({ name: 'changes' })} className="btn btn--secondary">
+                  すべての政策の変更履歴を見る →
                 </a>
-                {' '}でも公開しています。
               </p>
             </section>
           </Block>

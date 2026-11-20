@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { voiceEnabled, volunteerEnabled } from '../data/features'
 
 export const navLinks = [
-  { href: '#message', label: 'ごあいさつ' },
   { href: '#policy', label: '政策' },
   ...(voiceEnabled ? [{ href: '#participate', label: '声を届ける' }] : []),
   ...(volunteerEnabled ? [{ href: '#/join', label: '一緒に活動する' }] : []),
+  { href: '#/events', label: '活動予定' },
   { href: '#activity', label: '活動報告' },
   { href: '#profile', label: 'プロフィール' },
   { href: '#support', label: '後援会' },

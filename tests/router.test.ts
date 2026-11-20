@@ -21,7 +21,7 @@ describe('router', () => {
   })
 
   it('parses every static page to itself (regression: case fall-through)', () => {
-    for (const name of ['data', 'activity', 'about', 'privacy', 'voice', 'join'] as const) {
+    for (const name of ['data', 'activity', 'about', 'privacy', 'voice', 'join', 'changes', 'events'] as const) {
       expect(parseHash(`#/${name}`)).toEqual({ name })
       expect(parseHash(`#/${name}/x`)).toEqual({ name: 'notFound' })
     }

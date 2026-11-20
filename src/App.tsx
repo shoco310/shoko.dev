@@ -20,6 +20,9 @@ import VoicePage from './pages/VoicePage'
 import JoinPage from './pages/JoinPage'
 import IssuesPage from './pages/IssuesPage'
 import IssueDetailPage from './pages/IssueDetailPage'
+import ChangesPage from './pages/ChangesPage'
+import EventsPage from './pages/EventsPage'
+import UpcomingEventsSection from './components/UpcomingEventsSection'
 import TakePartSection from './components/TakePartSection'
 import { issuesEnabled, voiceEnabled, volunteerEnabled } from './data/features'
 import { getPolicyBySlug, type Policy } from './data/policy'
@@ -35,6 +38,8 @@ const pageTitles: Partial<Record<Route['name'], string>> = {
   voice: '困りごと・ご意見を送る',
   join: '一緒に活動する',
   issues: 'みんなの声から見えた課題',
+  changes: '政策の変更履歴',
+  events: '活動予定',
   issue: '課題',
   notFound: 'ページが見つかりません',
 }
@@ -55,7 +60,9 @@ export default function App() {
   const policy = route.name === 'policy' ? getPolicyBySlug(route.slug) : undefined
   const key = routeKey(route)
   const mainRef = useRef<HTMLElement>(null)
-  const isFirstRender = useRef(true)
+  // Previous page key; compared instead of a 'first render' flag so the
+  // effect is idempotent (React StrictMode runs effects twice in dev).
+  const prevKey = useRef<string | null>(null)
 
   useEffect(() => {
     document.title = titleFor(route, policy)
@@ -66,8 +73,10 @@ export default function App() {
   // at the top. Move focus to <main> so screen readers announce the new
   // page. Hash changes within the top page are left to the browser.
   useEffect(() => {
-    const first = isFirstRender.current
-    isFirstRender.current = false
+    const first = prevKey.current === null
+    const same = prevKey.current === key
+    prevKey.current = key
+    if (same) return
 
     if (route.name === 'home' && route.anchor) {
       const id = route.anchor
@@ -111,6 +120,7 @@ function renderPage(route: Route, policy: Policy | undefined) {
           <Greeting />
           <PolicySection />
           {voiceEnabled && <ParticipateSection />}
+          <UpcomingEventsSection />
           <ActivitySection />
           <ProfileSection />
           {(voiceEnabled || volunteerEnabled) && <TakePartSection />}
@@ -134,6 +144,10 @@ function renderPage(route: Route, policy: Policy | undefined) {
       return volunteerEnabled ? <JoinPage /> : <NotFoundPage />
     case 'issues':
       return issuesEnabled ? <IssuesPage /> : <NotFoundPage />
+    case 'changes':
+      return <ChangesPage />
+    case 'events':
+      return <EventsPage />
     case 'issue':
       return issuesEnabled ? <IssueDetailPage id={route.id} /> : <NotFoundPage />
     case 'notFound':
