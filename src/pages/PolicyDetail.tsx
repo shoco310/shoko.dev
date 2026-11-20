@@ -1,9 +1,6 @@
 import type { ReactNode } from 'react'
 import { policies, type Policy, type SourceItem } from '../data/policy'
 import DataCard from '../components/DataCard'
-import ChangeEntry from '../components/ChangeEntry'
-import { listPublishedChanges } from '../lib/publicContent'
-import { useAsync } from '../lib/useAsync'
 import { routeHref } from '../router'
 import { PolicyIssues } from '../components/PolicyIssues'
 import { ResearchStatusList } from '../components/ResearchStatus'
@@ -21,9 +18,10 @@ const sourceTypeLabel: Record<SourceItem['type'], string> = {
 }
 
 /**
- * One policy, in six blocks shared by all four pages:
+ * One policy, in five blocks shared by all four pages:
  * 目指す未来 / 現状と課題 / 具体的な政策・提案 / 根拠となるデータや資料 /
- * 調査・検討状況 / 更新履歴. The text itself comes unchanged from
+ * 調査・検討状況, then a link to the full change history (#/changes).
+ * The text itself comes unchanged from
  * src/data/policy.ts; only the order and block headings are shared.
  */
 export default function PolicyDetail({ policy }: { policy: Policy }) {
@@ -43,7 +41,6 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
     { id: 'proposals', title: '具体的な政策・提案' },
     { id: 'evidence', title: '根拠となるデータや資料' },
     { id: 'research', title: '調査・検討状況' },
-    { id: 'history', title: '更新履歴' },
   ]
 
   return (
@@ -252,7 +249,11 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
           {issuesEnabled && <PolicyIssues slug={policy.slug} level={3} />}
         </Block>
 
-        <PolicyChanges slug={policy.slug} />
+        <p className="policy-detail__history-link">
+          <a href={routeHref({ name: 'changes' })} className="btn btn--secondary">
+            すべての政策の変更履歴を見る →
+          </a>
+        </p>
 
         <div className="policy-detail__cta">
           <a href={lineUrl} target="_blank" rel="noopener noreferrer" className="btn btn--primary btn--lg">
@@ -296,27 +297,5 @@ function Block({ id, n, title, children }: { id: string; n: number; title: strin
       </h2>
       {children}
     </section>
-  )
-}
-
-/** 6. 更新履歴 for one policy, from the published policy_changes records. */
-function PolicyChanges({ slug }: { slug: string }) {
-  const { data, error } = useAsync(listPublishedChanges, [])
-  const mine = (data ?? []).filter(e => e.slugs.includes(slug))
-  return (
-    <Block id="history" n={6} title="更新履歴">
-      <p>この政策を、いつ・なぜ・何をもとに変えたのかを記録しています。</p>
-      {error && <p className="page__muted">更新履歴を読み込めませんでした。</p>}
-      <ol className="changes">
-        {mine.map(e => (
-          <ChangeEntry key={e.change.id} change={e.change} />
-        ))}
-      </ol>
-      <p className="page__more">
-        <a href={routeHref({ name: 'changes' })} className="btn btn--secondary">
-          すべての政策の変更履歴を見る →
-        </a>
-      </p>
-    </Block>
   )
 }

@@ -1078,3 +1078,7 @@ body {
 .research-group__block {
   padding: 10px;
 }
+
+.policy-detail__history-link {
+  margin: 0 0 var(--space-5);
+}
