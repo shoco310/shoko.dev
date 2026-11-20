@@ -5,6 +5,7 @@ import Hero from './components/Hero'
 import Greeting from './components/Greeting'
 import ActivitySection from './components/ActivitySection'
 import PolicySection from './components/PolicySection'
+import ParticipateSection from './components/ParticipateSection'
 import ProfileSection from './components/ProfileSection'
 import SupportSection from './components/SupportSection'
 import ContactSection from './components/ContactSection'
@@ -88,6 +89,7 @@ function renderPage(route: Route, policy: Policy | undefined) {
           <Hero />
           <Greeting />
           <PolicySection />
+          {voiceEnabled && <ParticipateSection />}
           <ActivitySection />
           <ProfileSection />
           <SupportSection />

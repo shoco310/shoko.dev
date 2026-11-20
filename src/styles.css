@@ -2668,6 +2668,104 @@ button {
   }
 }
 
+/* ===== Top page: "声を届ける" loop section ===== */
+.participate__intro {
+  max-width: 640px;
+  margin: -28px auto clamp(40px, 5vw, 56px);
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--gray);
+  line-height: 1.9;
+}
+.participate__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(28px, 4vw, 48px);
+}
+.participate__step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 28px 28px;
+  background: var(--white);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-md);
+}
+.participate__num {
+  font-family: var(--font-en);
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--pink);
+  letter-spacing: -0.02em;
+}
+.participate__title {
+  margin: 12px 0 10px;
+  font-size: 1.3rem;
+  font-weight: 900;
+}
+.participate__desc {
+  margin: 0 0 22px;
+  line-height: 1.95;
+  flex-grow: 1;
+}
+.participate__links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.participate__links .btn {
+  white-space: normal;
+  text-align: left;
+}
+.participate__arrow {
+  position: absolute;
+  top: 50%;
+  right: calc(-1 * clamp(28px, 4vw, 48px) / 2);
+  transform: translate(50%, -50%);
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--pink);
+  color: var(--white);
+  font-weight: 800;
+  z-index: 1;
+}
+.participate__loop {
+  margin: clamp(32px, 4vw, 44px) auto 0;
+  text-align: center;
+  font-weight: 800;
+  color: var(--pink-dark);
+}
+.participate__note {
+  max-width: 760px;
+  margin: 18px auto 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--gray);
+  line-height: 1.8;
+}
+
+@media (max-width: 860px) {
+  .participate__steps {
+    grid-template-columns: 1fr;
+  }
+  .participate__arrow {
+    top: auto;
+    right: auto;
+    bottom: calc(-1 * clamp(28px, 4vw, 48px) / 2);
+    left: 50%;
+    transform: translate(-50%, 50%) rotate(90deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { voiceEnabled } from '../data/features'
 
 export const navLinks = [
   { href: '#message', label: 'ごあいさつ' },
   { href: '#policy', label: '政策' },
+  ...(voiceEnabled ? [{ href: '#participate', label: '声を届ける' }] : []),
   { href: '#activity', label: '活動報告' },
   { href: '#profile', label: 'プロフィール' },
   { href: '#support', label: '後援会' },
