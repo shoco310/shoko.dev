@@ -114,6 +114,8 @@ export interface PolicyChange {
   summary: string
   /** Why it changed (e.g. new research, a correction, citizen input) */
   reason?: string
+  /** Published issue numbers (#/issues/<id>) that led to this change */
+  relatedIssues?: number[]
 }
 
 export interface Policy {

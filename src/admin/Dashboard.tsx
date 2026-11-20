@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { AGE_OPTIONS } from '../shared/voice'
 import { supabase, statusLabels, statusOrder, type Contact, type Submission, type SubmissionStatus } from './supabase'
+import type { PendingSource } from './IssuesDashboard'
 
 type Filter = SubmissionStatus | 'all'
 
@@ -11,7 +12,7 @@ function formatDateTime(iso: string) {
   return new Date(iso).toLocaleString('ja-JP', { dateStyle: 'medium', timeStyle: 'short' })
 }
 
-export default function Dashboard() {
+export default function Dashboard({ onCreateIssue }: { onCreateIssue: (source: PendingSource) => void }) {
   const [filter, setFilter] = useState<Filter>('received')
   const [items, setItems] = useState<Submission[]>([])
   const [counts, setCounts] = useState<Partial<Record<SubmissionStatus, number>>>({})
@@ -96,6 +97,7 @@ export default function Dashboard() {
             <Detail
               key={selected.id}
               item={selected}
+              onCreateIssue={() => onCreateIssue({ submissionId: selected.id, receiptNo: selected.receipt_no, body: selected.body })}
               onSaved={msg => {
                 setFlash(msg)
                 load()
@@ -110,7 +112,15 @@ export default function Dashboard() {
   )
 }
 
-function Detail({ item, onSaved }: { item: Submission; onSaved: (message: string) => void }) {
+function Detail({
+  item,
+  onSaved,
+  onCreateIssue,
+}: {
+  item: Submission
+  onSaved: (message: string) => void
+  onCreateIssue: () => void
+}) {
   const [status, setStatus] = useState<SubmissionStatus>(item.status)
   const [note, setNote] = useState(item.reviewer_note ?? '')
   const [saving, setSaving] = useState(false)
@@ -166,6 +176,14 @@ function Detail({ item, onSaved }: { item: Submission; onSaved: (message: string
           <dd>{AGE_OPTIONS.find(a => a.value === item.age_range)?.label ?? '—'}</dd>
         </div>
       </dl>
+
+      <div className="admin-panel">
+        <h2>課題として公開する</h2>
+        <p className="admin-muted">この投稿をもとに、個人が特定できないよう書き直した「課題」の下書きを作ります。公開には承認が必要です。</p>
+        <button className="btn btn--secondary" onClick={onCreateIssue}>
+          この投稿から課題を作る
+        </button>
+      </div>
 
       <div className="admin-panel">
         <h2>連絡先</h2>

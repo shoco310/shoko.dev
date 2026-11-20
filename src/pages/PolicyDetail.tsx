@@ -2,6 +2,8 @@ import { motion } from 'framer-motion'
 import { policies, type Policy, type SourceItem } from '../data/policy'
 import DataCard from '../components/DataCard'
 import { routeHref } from '../router'
+import { PolicyIssues } from '../components/PolicyIssues'
+import { issuesEnabled } from '../data/features'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -243,6 +245,12 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
           </section>
         </Block>
 
+        {issuesEnabled && (
+          <Block>
+            <PolicyIssues slug={policy.slug} />
+          </Block>
+        )}
+
         {policy.changelog && policy.changelog.length > 0 && (
           <Block>
             <section className="policy-detail__section">
@@ -256,6 +264,17 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
                     <div className="changelog__body">
                       <p className="changelog__summary">{c.summary}</p>
                       {c.reason && <p className="changelog__reason">理由：{c.reason}</p>}
+                      {issuesEnabled && c.relatedIssues && c.relatedIssues.length > 0 && (
+                        <p className="changelog__reason">
+                          きっかけになった課題：
+                          {c.relatedIssues.map((id, j) => (
+                            <span key={id}>
+                              {j > 0 && '、'}
+                              <a href={routeHref({ name: 'issue', id })}>課題 #{id}</a>
+                            </span>
+                          ))}
+                        </p>
+                      )}
                     </div>
                   </li>
                 ))}

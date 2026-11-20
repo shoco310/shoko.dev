@@ -2930,6 +2930,224 @@ button {
   }
 }
 
+/* ===== Public issues (#/issues) ===== */
+.page__body .page__muted {
+  color: var(--gray);
+  font-size: 0.95rem;
+}
+.issues-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-bottom: 20px;
+}
+.issues-filters label {
+  display: grid;
+  gap: 4px;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+.issues-filters select {
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 8px 12px;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  min-width: 200px;
+}
+.issues-filters select:focus-visible {
+  outline: 3px solid var(--pink);
+  outline-offset: 2px;
+}
+.issue-list {
+  display: grid;
+  gap: 16px;
+  margin: 16px 0 32px;
+}
+.issue-list--grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+.issue-card {
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.issue-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.page__body .issue-card__link,
+.issue-card__link {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  padding: 20px 24px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.issue-card__link:focus-visible {
+  outline: 3px solid var(--pink);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
+}
+.issue-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.issue-card__num {
+  font-family: var(--font-en);
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--gray);
+}
+.issue-card__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 900;
+  line-height: 1.5;
+}
+.page__body .issue-card__summary,
+.issue-card__summary {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.85;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.issue-card__foot {
+  display: grid;
+  gap: 2px;
+  font-size: 0.82rem;
+  color: var(--gray);
+  margin-top: auto;
+}
+.issue-card__themes {
+  color: var(--pink-dark);
+  font-weight: 700;
+}
+.issue-progress {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 800;
+  border: 1.5px solid var(--ink);
+  background: var(--white);
+  color: var(--ink);
+}
+.issue-progress--researching,
+.issue-progress--proposing {
+  background: var(--ink);
+  color: var(--white);
+}
+.issue-progress--in_policy {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: var(--white);
+}
+.issue-progress--closed {
+  color: var(--gray);
+  border-color: var(--gray);
+}
+.issue-back {
+  margin: 0 0 24px;
+}
+.issue-steps {
+  list-style: none;
+  margin: 0 0 clamp(40px, 5vw, 56px);
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+.issue-steps__item {
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 10px 4px;
+  border-radius: var(--radius-sm);
+  background: var(--gray-light);
+  color: var(--gray);
+}
+.issue-steps__item.is-done {
+  background: rgba(255, 22, 128, 0.12);
+  color: var(--pink-dark);
+}
+.issue-steps__item.is-current {
+  background: var(--pink);
+  color: var(--white);
+}
+.page__body .issue-summary {
+  white-space: pre-wrap;
+  font-size: 1.05rem;
+  line-height: 2;
+}
+.issue-policies {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.issue-policies li {
+  display: grid;
+  gap: 2px;
+  padding: 14px 18px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+.issue-policies a {
+  font-weight: 800;
+}
+.issue-policies span {
+  color: var(--gray);
+  font-size: 0.92rem;
+}
+.page__body .issue-update {
+  font-weight: 500;
+  white-space: pre-wrap;
+}
+.issues-note {
+  margin-top: 24px;
+}
+.latest-issues {
+  margin-top: clamp(40px, 5vw, 56px);
+}
+.latest-issues__title {
+  font-size: 1.2rem;
+  font-weight: 900;
+  margin: 0 0 4px;
+}
+.latest-issues__more {
+  text-align: center;
+  margin: 0;
+}
+
+@media (max-width: 860px) {
+  .issue-list--grid {
+    grid-template-columns: 1fr;
+  }
+  .issue-steps {
+    grid-template-columns: 1fr;
+  }
+  .issue-steps__item {
+    text-align: left;
+    padding: 8px 14px;
+  }
+  .issues-filters label,
+  .issues-filters select {
+    width: 100%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

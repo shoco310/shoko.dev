@@ -3,6 +3,7 @@ import type { Session } from '@supabase/supabase-js'
 import { supabase, supabaseConfigured } from './supabase'
 import Dashboard from './Dashboard'
 import VolunteerDashboard from './VolunteerDashboard'
+import IssuesDashboard, { type PendingSource } from './IssuesDashboard'
 
 type Phase =
   | { name: 'loading' }
@@ -10,7 +11,7 @@ type Phase =
   | { name: 'enroll'; factorId: string; qr: string; secret: string }
   | { name: 'verify'; factorId: string }
   | { name: 'notStaff' }
-  | { name: 'ready'; session: Session; displayName: string }
+  | { name: 'ready'; session: Session; displayName: string; isAdmin: boolean }
 
 export default function AdminApp() {
   const [phase, setPhase] = useState<Phase>({ name: 'loading' })
@@ -44,9 +45,9 @@ export default function AdminApp() {
       return setPhase({ name: 'enroll', factorId: enrolled.id, qr: enrolled.totp.qr_code, secret: enrolled.totp.secret })
     }
 
-    const { data: staff } = await supabase.from('staff').select('display_name').eq('user_id', session.user.id).maybeSingle()
+    const { data: staff } = await supabase.from('staff').select('display_name, role').eq('user_id', session.user.id).maybeSingle()
     if (!staff) return setPhase({ name: 'notStaff' })
-    setPhase({ name: 'ready', session, displayName: staff.display_name })
+    setPhase({ name: 'ready', session, displayName: staff.display_name, isAdmin: staff.role === 'admin' })
   }, [])
 
   useEffect(() => {
@@ -87,7 +88,7 @@ export default function AdminApp() {
         </AdminFrame>
       )
     case 'ready':
-      return <AdminShell displayName={phase.displayName} onSignOut={signOut} />
+      return <AdminShell displayName={phase.displayName} isAdmin={phase.isAdmin} onSignOut={signOut} />
   }
 }
 
@@ -205,8 +206,9 @@ function Mfa({
   )
 }
 
-function AdminShell({ displayName, onSignOut }: { displayName: string; onSignOut: () => void }) {
-  const [view, setView] = useState<'voices' | 'volunteers'>('voices')
+function AdminShell({ displayName, isAdmin, onSignOut }: { displayName: string; isAdmin: boolean; onSignOut: () => void }) {
+  const [view, setView] = useState<'voices' | 'issues' | 'volunteers'>('voices')
+  const [pendingSource, setPendingSource] = useState<PendingSource | null>(null)
   return (
     <div className="admin">
       <header className="admin-header">
@@ -214,6 +216,9 @@ function AdminShell({ displayName, onSignOut }: { displayName: string; onSignOut
         <nav className="admin-views" aria-label="表示する情報">
           <button className={`admin-view${view === 'voices' ? ' is-active' : ''}`} aria-pressed={view === 'voices'} onClick={() => setView('voices')}>
             困りごと・ご意見
+          </button>
+          <button className={`admin-view${view === 'issues' ? ' is-active' : ''}`} aria-pressed={view === 'issues'} onClick={() => setView('issues')}>
+            課題（公開）
           </button>
           <button
             className={`admin-view${view === 'volunteers' ? ' is-active' : ''}`}
@@ -230,7 +235,18 @@ function AdminShell({ displayName, onSignOut }: { displayName: string; onSignOut
           </button>
         </div>
       </header>
-      {view === 'voices' ? <Dashboard /> : <VolunteerDashboard />}
+      {view === 'voices' && (
+        <Dashboard
+          onCreateIssue={source => {
+            setPendingSource(source)
+            setView('issues')
+          }}
+        />
+      )}
+      {view === 'issues' && (
+        <IssuesDashboard isAdmin={isAdmin} pendingSource={pendingSource} onPendingUsed={() => setPendingSource(null)} />
+      )}
+      {view === 'volunteers' && <VolunteerDashboard />}
     </div>
   )
 }

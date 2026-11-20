@@ -18,8 +18,10 @@ import PrivacyPage from './pages/PrivacyPage'
 import NotFoundPage from './pages/NotFoundPage'
 import VoicePage from './pages/VoicePage'
 import JoinPage from './pages/JoinPage'
+import IssuesPage from './pages/IssuesPage'
+import IssueDetailPage from './pages/IssueDetailPage'
 import TakePartSection from './components/TakePartSection'
-import { voiceEnabled, volunteerEnabled } from './data/features'
+import { issuesEnabled, voiceEnabled, volunteerEnabled } from './data/features'
 import { getPolicyBySlug, type Policy } from './data/policy'
 import { routeKey, useRoute, type Route } from './router'
 
@@ -32,6 +34,8 @@ const pageTitles: Partial<Record<Route['name'], string>> = {
   privacy: 'プライバシーポリシー',
   voice: '困りごと・ご意見を送る',
   join: '一緒に活動する',
+  issues: 'みんなの声から見えた課題',
+  issue: '課題',
   notFound: 'ページが見つかりません',
 }
 
@@ -39,6 +43,7 @@ function titleFor(route: Route, policy: Policy | undefined): string {
   if (route.name === 'home') return SITE_TITLE
   if (route.name === 'voice' && !voiceEnabled) return `${pageTitles.notFound} | さとうしょうこ`
   if (route.name === 'join' && !volunteerEnabled) return `${pageTitles.notFound} | さとうしょうこ`
+  if ((route.name === 'issues' || route.name === 'issue') && !issuesEnabled) return `${pageTitles.notFound} | さとうしょうこ`
   if (route.name === 'policy') {
     return policy ? `${policy.name} | さとうしょうこ` : `${pageTitles.notFound} | さとうしょうこ`
   }
@@ -115,6 +120,10 @@ function renderPage(route: Route, policy: Policy | undefined) {
       return voiceEnabled ? <VoicePage /> : <NotFoundPage />
     case 'join':
       return volunteerEnabled ? <JoinPage /> : <NotFoundPage />
+    case 'issues':
+      return issuesEnabled ? <IssuesPage /> : <NotFoundPage />
+    case 'issue':
+      return issuesEnabled ? <IssueDetailPage id={route.id} /> : <NotFoundPage />
     case 'notFound':
       return <NotFoundPage />
   }

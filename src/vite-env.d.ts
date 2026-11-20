@@ -8,6 +8,8 @@ interface ImportMetaEnv {
   readonly VITE_VOICE_ENABLED?: string
   /** 'true' where the volunteer sign-up page (#/join) is switched on */
   readonly VITE_VOLUNTEER_ENABLED?: string
+  /** 'true' where public issues (#/issues) are switched on */
+  readonly VITE_ISSUES_ENABLED?: string
 }
 interface ImportMeta {
   readonly env: ImportMetaEnv
