@@ -1,0 +1,99 @@
+[
+  {
+    "slug": "2026-06-17-first-publish",
+    "change_date": "2026-06-17",
+    "policy_slugs": [
+      "education",
+      "work",
+      "childcare",
+      "civic"
+    ],
+    "summary": "4つの政策を公開しました。",
+    "reason": null,
+    "evidence": [],
+    "diffs": [],
+    "related_issues": [],
+    "commits": [
+      "d96ed76"
+    ],
+    "corrects": null,
+    "published_at": "2026-11-20T08:54:12.863892+00:00"
+  },
+  {
+    "slug": "2026-09-26-detail-pages",
+    "change_date": "2026-09-26",
+    "policy_slugs": [
+      "education",
+      "work",
+      "childcare",
+      "civic"
+    ],
+    "summary": "政策ごとの詳細ページを新しく作り、背景・具体的な取り組み・必要な理由を掲載しました。",
+    "reason": null,
+    "evidence": [],
+    "diffs": [],
+    "related_issues": [],
+    "commits": [
+      "7ecad88"
+    ],
+    "corrects": null,
+    "published_at": "2026-11-20T08:54:12.863892+00:00"
+  },
+  {
+    "slug": "2026-09-27-research-data",
+    "change_date": "2026-09-27",
+    "policy_slugs": [
+      "education",
+      "work",
+      "childcare",
+      "civic"
+    ],
+    "summary": "「数字で見る宇部の現状」「調査結果から考えられること」「市民の声」「関連資料・出典」を追加しました。取り組みに付けていた表示と、一部の見出しも改めました。",
+    "reason": "宇部市の計画書・アンケート調査などの公式資料を確認し、出典を確認できたデータだけを掲載するためです。あわせて、調査の対象や母数の書き方を正確にし、「関連する既存制度あり」の表示が政策の進め方まで決めているように読めないよう表現を改めました。",
+    "evidence": [
+      {
+        "url": "https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/007/034/vision202503.pdf",
+        "label": "宇部市人口ビジョン【改訂版】（令和7年3月）"
+      },
+      {
+        "url": "https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/023/097/ubeshikodomokeikaku.pdf",
+        "label": "宇部市こども計画（令和7年3月）"
+      },
+      {
+        "url": "https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/005/423/9gaiyou.pdf",
+        "label": "第9期宇部市高齢者福祉計画【概要版】（令和6年3月）"
+      },
+      {
+        "url": "https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/023/525/2024-zenntai.pdf",
+        "label": "令和6年度 学童保育クラブ利用者アンケート結果（全体集計）"
+      },
+      {
+        "label": "宇部市のパブリックコメント実施結果（人口ビジョン・総合戦略の改訂素案）"
+      }
+    ],
+    "diffs": [
+      {
+        "after": "「関連する既存制度あり」（関係する制度が確認できた取り組みだけに表示）",
+        "label": "取り組みに付ける表示",
+        "before": "「既存制度の拡充」／「既存制度との関係を確認中」"
+      },
+      {
+        "after": "関連制度：…",
+        "label": "関連制度の書き方",
+        "before": "該当する既存制度：…"
+      },
+      {
+        "after": "（「なぜ、この政策が必要なのか」と「調査結果から考えられること」に整理）",
+        "label": "見出し",
+        "before": "既存制度と改善を検討する点"
+      }
+    ],
+    "related_issues": [],
+    "commits": [
+      "708e835",
+      "72ada07"
+    ],
+    "corrects": null,
+    "published_at": "2026-11-20T08:54:12.863892+00:00"
+  }
+]
