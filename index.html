@@ -40,11 +40,21 @@
       rel="stylesheet"
     />
 
-    <!-- LCP image (used as a CSS background-image on .hero__media) -->
+    <!-- LCP image (used as a CSS background-image on .hero__media).
+         styles.css swaps to hero-main-1000.jpg at max-width: 860px, so the
+         media conditions here must match that breakpoint. -->
     <link
       rel="preload"
       as="image"
       href="/images/hero-main.jpg"
+      media="(min-width: 861px)"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/images/hero-main-1000.jpg"
+      media="(max-width: 860px)"
       fetchpriority="high"
     />
 
