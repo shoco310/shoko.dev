@@ -2,7 +2,7 @@
 -- existing reports untouched.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(6);
+select plan(8);
 
 insert into auth.users (id, email, aud, role) values
   ('00000000-0000-0000-0000-0000000000c1', 'pgtap-cat-admin@example.test', 'authenticated', 'authenticated'),
@@ -32,6 +32,11 @@ select is((select category from public.activity_reports where slug = '2026-01-31
   'an admin can set a category');
 select throws_ok($$update public.activity_reports set category = 'campaign' where slug = '2026-01-31-forbes-women-in-tech'$$,
   '23514', null, 'only the five categories are allowed');
+select throws_ok($$update public.activity_reports set category = 'volunteer' where slug = '2026-01-31-forbes-women-in-tech'$$,
+  '23514', null, 'the old volunteer value is no longer accepted');
+update public.activity_reports set category = 'political' where slug = '2026-01-31-forbes-women-in-tech';
+select is((select category from public.activity_reports where slug = '2026-01-31-forbes-women-in-tech'), 'political',
+  'political (政治活動) is a category');
 update public.activity_reports set category = null where slug = '2026-01-31-forbes-women-in-tech';
 select is((select category from public.activity_reports where slug = '2026-01-31-forbes-women-in-tech'), null,
   'a category can be cleared again');

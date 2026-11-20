@@ -52,6 +52,7 @@ describe('activity and events URLs', async () => {
     expect(parseHash('#/activity?category=media')).toEqual({ name: 'activity' })
     expect(filterFromHash('#/activity?category=media')).toBe('media')
     expect(filterFromHash('#/activity?category=x')).toBeNull()
+    expect(filterFromHash('#/activity?category=volunteer')).toBe('political')
     expect(filterFromHash('#/activity')).toBeNull()
     expect(filterFromHash('#/activity?type=events')).toEqual({ redirect: '#/events' })
     expect(filterFromHash('#/activity?type=research')).toEqual({ redirect: '#/research' })
@@ -61,7 +62,7 @@ describe('activity and events URLs', async () => {
     const list = [{ category: null }, { category: 'media' as const }, { category: 'event' as const }]
     expect(filterReports(list, 'all')).toHaveLength(3)
     expect(filterReports(list, 'media')).toEqual([{ category: 'media' }])
-    expect(filterReports(list, 'volunteer')).toEqual([])
+    expect(filterReports(list, 'political')).toEqual([])
   })
 })
 

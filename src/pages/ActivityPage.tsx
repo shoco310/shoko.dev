@@ -26,7 +26,8 @@ export function filterFromHash(hash: string): ActivityFilter | { redirect: strin
   const type = q.get('type')
   if (type === 'events') return { redirect: routeHref({ name: 'events' }) }
   if (type === 'research') return { redirect: routeHref({ name: 'research' }) }
-  const category = q.get('category')
+  // 'volunteer' was renamed 'political' (政治活動) on 2026-11-21.
+  const category = q.get('category') === 'volunteer' ? 'political' : q.get('category')
   return filters.some(f => f.key === category) ? (category as ActivityFilter) : null
 }
 
