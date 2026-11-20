@@ -1,2 +1,12 @@
 .review-screenshots/
 .DS_Store
+
+# Build output / dependencies (built in CI and on Vercel)
+node_modules/
+dist/
+
+# Local env files and Vercel CLI state (never commit secrets)
+.env
+.env.*
+!.env.example
+.vercel
