@@ -228,7 +228,8 @@ export default function VisionPage() {
         </div>
         <p className="v2mom-related">
           関連：
-          <a href={routeHref({ name: 'data' })}>数字で見る宇部</a>
+          <a href={routeHref({ name: 'research' })}>政策調査</a>
+          ／<a href={routeHref({ name: 'data' })}>数字で見る宇部</a>
           ／<a href={routeHref({ name: 'changes' })}>政策の変更履歴</a>
           {issuesEnabled && (
             <>

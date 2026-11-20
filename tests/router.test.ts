@@ -21,7 +21,7 @@ describe('router', () => {
   })
 
   it('parses every static page to itself (regression: case fall-through)', () => {
-    for (const name of ['profile', 'vision', 'policies', 'data', 'activity', 'about', 'privacy', 'voice', 'join', 'changes', 'events'] as const) {
+    for (const name of ['profile', 'vision', 'policies', 'research', 'data', 'activity', 'about', 'privacy', 'voice', 'join', 'changes', 'events'] as const) {
       expect(parseHash(`#/${name}`)).toEqual({ name })
       expect(parseHash(`#/${name}/x`)).toEqual({ name: 'notFound' })
     }
@@ -44,6 +44,8 @@ describe('activity filter in the URL', async () => {
   const { filterFromHash } = await import('../src/pages/ActivityPage')
   it('reads ?type= and ignores unknown values', () => {
     expect(parseHash('#/activity?type=events')).toEqual({ name: 'activity' })
+    expect(filterFromHash('#/activity?type=reports')).toBe('reports')
+    // The old 政策調査 filter is recognised so the page can send it to #/research.
     expect(filterFromHash('#/activity?type=research')).toBe('research')
     expect(filterFromHash('#/activity?type=x')).toBeNull()
     expect(filterFromHash('#/activity')).toBeNull()
@@ -64,5 +66,16 @@ describe('legacy top-page anchors', () => {
     for (const a of ['top', 'policy', 'activity', 'take-part', 'contact']) {
       expect(legacyAnchorTarget(a, on)).toBeNull()
     }
+  })
+})
+
+describe('research page links', async () => {
+  const { researchHref, policyFromHash } = await import('../src/pages/ResearchPage')
+  it('links to one policy and reads it back', () => {
+    expect(researchHref()).toBe('#/research')
+    expect(researchHref('civic')).toBe('#/research?policy=civic')
+    expect(parseHash('#/research?policy=civic')).toEqual({ name: 'research' })
+    expect(policyFromHash('#/research?policy=civic')).toBe('civic')
+    expect(policyFromHash('#/research?policy=nope')).toBeNull()
   })
 })

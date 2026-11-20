@@ -17,6 +17,7 @@ export type Route =
   | { name: 'profile' }
   | { name: 'vision' }
   | { name: 'policies' }
+  | { name: 'research' }
   | { name: 'policy'; slug: string }
   | { name: 'data' }
   | { name: 'activity' }
@@ -61,6 +62,7 @@ export function parseHash(hash: string): Route {
     case 'profile':
     case 'vision':
     case 'policies':
+    case 'research':
     case 'changes':
     case 'events':
     case 'data':

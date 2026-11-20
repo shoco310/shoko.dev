@@ -7,6 +7,7 @@ import PolicyDetail from './pages/PolicyDetail'
 import ProfilePage from './pages/ProfilePage'
 import VisionPage from './pages/VisionPage'
 import PoliciesPage from './pages/PoliciesPage'
+import ResearchPage from './pages/ResearchPage'
 import DataPage from './pages/DataPage'
 import ActivityPage from './pages/ActivityPage'
 import AboutPage from './pages/AboutPage'
@@ -30,6 +31,7 @@ const pageTitles: Partial<Record<Route['name'], string>> = {
   profile: '私について',
   vision: 'V2MOM（目指す未来）',
   policies: '4つの重点政策',
+  research: '政策調査',
   data: '数字で見る宇部',
   activity: '活動',
   about: 'このサイトについて',
@@ -156,6 +158,8 @@ function renderPage(route: Route, policy: Policy | undefined) {
       return <VisionPage />
     case 'policies':
       return <PoliciesPage />
+    case 'research':
+      return <ResearchPage />
     case 'policy':
       return policy ? <PolicyDetail policy={policy} /> : <NotFoundPage />
     case 'data':

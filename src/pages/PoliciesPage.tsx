@@ -45,6 +45,9 @@ export default function PoliciesPage() {
           <ButtonLink href={routeHref({ name: 'vision' })} variant="text">
             V2MOM（目指す未来）
           </ButtonLink>
+          <ButtonLink href={routeHref({ name: 'research' })} variant="text">
+            政策調査
+          </ButtonLink>
           <ButtonLink href={routeHref({ name: 'data' })} variant="text">
             数字で見る宇部
           </ButtonLink>

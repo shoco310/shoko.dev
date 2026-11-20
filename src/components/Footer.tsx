@@ -6,33 +6,59 @@ import { IconLine, SocialIcon } from './icons'
 
 const ext = { target: '_blank', rel: 'noopener noreferrer' } as const
 
+/** The main pages, without the dropdown (its pages have their own column). */
+const siteLinks = mainNav.filter(item => !item.children)
+
 /**
- * Footer: site map, ways to take part, contact details of the supporters'
- * association (moved here from the top page) and the legal pages.
+ * Compact dark footer: brand and SNS, three link columns, contact details
+ * of the supporters' association, then the legal line. 「ページの先頭へ」
+ * returns to the top of the current page.
  */
 export default function Footer() {
+  const toTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    document.querySelector<HTMLElement>('.site-header__logo')?.focus({ preventScroll: true })
+  }
+
   return (
     <footer className="site-footer">
       <div className="container">
-        <div className="site-footer__brand">
-          <a href={mainNav[0].href} className="site-footer__logo">
-            さとうしょうこ
-          </a>
-          <p className="site-footer__tagline">誰もが挑戦できる宇部へ。</p>
+        <div className="site-footer__top">
+          <div className="site-footer__brand">
+            <a href={siteLinks[0].href} className="site-footer__logo">
+              さとうしょうこ
+            </a>
+            <p className="site-footer__tagline">誰もが挑戦できる宇部へ。</p>
+          </div>
+          <ul className="site-footer__sns" aria-label="SNS・LINE">
+            <li>
+              <a href={lineUrl} {...ext} aria-label="LINE公式アカウント" title="LINE">
+                <IconLine size={16} />
+              </a>
+            </li>
+            {socialLinks.map(s => (
+              <li key={s.key}>
+                <a href={s.href} {...ext} aria-label={s.label} title={s.label}>
+                  <SocialIcon name={s.key} size={16} />
+                </a>
+              </li>
+            ))}
+          </ul>
+          <button type="button" className="site-footer__totop" onClick={toTop}>
+            ページの先頭へ
+            <span aria-hidden="true">↑</span>
+          </button>
         </div>
 
         <div className="site-footer__grid">
           <nav aria-labelledby="footer-site">
             <h2 id="footer-site" className="site-footer__heading">サイト</h2>
             <ul>
-              {mainNav.map(item => (
-                <li key={item.label}>
-                  <a href={item.href}>{item.label}</a>
+              {siteLinks.map(l => (
+                <li key={l.href}>
+                  <a href={l.href}>{l.label}</a>
                 </li>
               ))}
-              <li>
-                <a href={routeHref({ name: 'events' })}>活動予定</a>
-              </li>
             </ul>
           </nav>
 
@@ -83,23 +109,6 @@ export default function Footer() {
           </section>
         </div>
 
-        <ul className="site-footer__sns" aria-label="SNS・LINE">
-          <li>
-            <a href={lineUrl} {...ext}>
-              <IconLine size={18} />
-              LINE
-            </a>
-          </li>
-          {socialLinks.map(s => (
-            <li key={s.key}>
-              <a href={s.href} {...ext}>
-                <SocialIcon name={s.key} size={18} />
-                {s.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-
         <div className="site-footer__bottom">
           <ul className="site-footer__legal">
             <li>
@@ -109,10 +118,10 @@ export default function Footer() {
               <a href={routeHref({ name: 'privacy' })}>プライバシーポリシー</a>
             </li>
           </ul>
+          <p className="site-footer__copy">© {supportersAssociation}</p>
           <p className="site-footer__disclaimer">
             このサイトは{operator.displayName}が運営する、個人の政治活動・政策発信のためのウェブサイトです。宇部市の公式サイト・行政サービスではありません。
           </p>
-          <p className="site-footer__copy">© {supportersAssociation}</p>
         </div>
       </div>
     </footer>
