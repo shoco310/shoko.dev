@@ -7,7 +7,8 @@ export type ReportCategory = 'event' | 'community' | 'volunteer' | 'media' | 'ot
 export const REPORT_CATEGORY_LABELS: Record<ReportCategory, string> = {
   event: 'イベント',
   community: '地域活動',
-  volunteer: 'ボランティア',
+  // Key stays 'volunteer' (DB value); shown as 政治活動 since 2026-11-21.
+  volunteer: '政治活動',
   media: 'メディア出演',
   other: 'その他',
 }
