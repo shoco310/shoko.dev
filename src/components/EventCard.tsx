@@ -55,8 +55,13 @@ export default function EventCard({ event, headingLevel = 3 }: { event: EventIte
           </a>
         )}
         {state === 'ended' && report && (
-          <a href={report} target="_blank" rel="noopener noreferrer" className="event-card__report">
-            活動報告を読む →<span className="visually-hidden">（{event.title}、新しいタブで開きます）</span>
+          <a
+            href={report}
+            className="event-card__report"
+            {...(report.startsWith('https://') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+          >
+            活動報告を読む →
+            {report.startsWith('https://') && <span className="visually-hidden">（{event.title}、新しいタブで開きます）</span>}
           </a>
         )}
       </div>

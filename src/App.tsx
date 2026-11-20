@@ -22,6 +22,7 @@ import IssuesPage from './pages/IssuesPage'
 import IssueDetailPage from './pages/IssueDetailPage'
 import ChangesPage from './pages/ChangesPage'
 import EventsPage from './pages/EventsPage'
+import ReportPage from './pages/ReportPage'
 import UpcomingEventsSection from './components/UpcomingEventsSection'
 import TakePartSection from './components/TakePartSection'
 import { issuesEnabled, voiceEnabled, volunteerEnabled } from './data/features'
@@ -40,6 +41,7 @@ const pageTitles: Partial<Record<Route['name'], string>> = {
   issues: 'みんなの声から見えた課題',
   changes: '政策の変更履歴',
   events: '活動予定',
+  report: '活動報告',
   issue: '課題',
   notFound: 'ページが見つかりません',
 }
@@ -148,6 +150,8 @@ function renderPage(route: Route, policy: Policy | undefined) {
       return <ChangesPage />
     case 'events':
       return <EventsPage />
+    case 'report':
+      return <ReportPage slug={route.slug} />
     case 'issue':
       return issuesEnabled ? <IssueDetailPage id={route.id} /> : <NotFoundPage />
     case 'notFound':

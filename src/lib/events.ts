@@ -1,4 +1,3 @@
-import { activities } from '../data/activity'
 import type { EventItem } from '../shared/events'
 
 /**
@@ -60,7 +59,5 @@ export function formatEventDate(e: EventItem): { day: string; time: string | nul
 
 /** Link to the report written after the event, if any. */
 export function reportLink(e: EventItem): string | null {
-  if (e.reportUrl) return e.reportUrl
-  if (e.reportActivityId) return activities.find(a => a.id === e.reportActivityId)?.url ?? null
-  return null
+  return e.reportUrl ?? null
 }

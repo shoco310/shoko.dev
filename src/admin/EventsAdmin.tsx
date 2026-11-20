@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import EventCard from '../components/EventCard'
-import { activities } from '../data/activity'
 import { eventState, splitEvents, stateLabels } from '../lib/events'
 import { PUBLIC_EVENT_COLUMNS, rowToEvent, type EventRow, type EventStatusOverride } from '../shared/events'
 import { supabase } from './supabase'
+import { clearDraft, loadDraft, saveDraft } from './draftStorage'
 
 /**
  * 活動予定の管理（admin only — enforced by RLS). Drafts vs published;
@@ -26,7 +26,7 @@ interface Form {
   how_to_join: string
   apply_url: string
   status_override: '' | EventStatusOverride
-  report_activity_id: string
+  report_id: string
   report_url: string
 }
 
@@ -42,7 +42,7 @@ const emptyForm: Form = {
   how_to_join: '',
   apply_url: '',
   status_override: '',
-  report_activity_id: '',
+  report_id: '',
   report_url: '',
 }
 
@@ -58,7 +58,7 @@ const rowToForm = (r: EventRow): Form => ({
   how_to_join: r.how_to_join ?? '',
   apply_url: r.apply_url ?? '',
   status_override: r.status_override ?? '',
-  report_activity_id: r.report_activity_id ?? '',
+  report_id: r.report_id ?? '',
   report_url: r.report_url ?? '',
 })
 
@@ -106,34 +106,15 @@ function formToPayload(f: Form) {
     how_to_join: nullIfEmpty(f.how_to_join),
     apply_url: nullIfEmpty(f.apply_url),
     status_override: f.status_override || null,
-    report_activity_id: nullIfEmpty(f.report_activity_id),
+    report_id: f.report_id || null,
     report_url: nullIfEmpty(f.report_url),
   }
 }
 
-const storageKey = (id: string | 'new') => `shoko-admin:event-form:${id}`
-function loadLocal(id: string | 'new'): Form | null {
-  try {
-    const raw = localStorage.getItem(storageKey(id))
-    return raw ? { ...emptyForm, ...(JSON.parse(raw) as Partial<Form>) } : null
-  } catch {
-    return null
-  }
-}
-function saveLocal(id: string | 'new', f: Form) {
-  try {
-    localStorage.setItem(storageKey(id), JSON.stringify(f))
-  } catch {
-    /* storage unavailable: nothing to do */
-  }
-}
-function clearLocal(id: string | 'new') {
-  try {
-    localStorage.removeItem(storageKey(id))
-  } catch {
-    /* ignore */
-  }
-}
+const storageKey = (id: string | 'new') => `event-form:${id}`
+const loadLocal = (id: string | 'new') => loadDraft(storageKey(id), emptyForm)
+const saveLocal = (id: string | 'new', f: Form) => saveDraft(storageKey(id), f)
+const clearLocal = (id: string | 'new') => clearDraft(storageKey(id))
 
 export default function EventsAdmin({ isAdmin }: { isAdmin: boolean }) {
   const [tab, setTab] = useState<Tab>('upcoming')
@@ -146,7 +127,7 @@ export default function EventsAdmin({ isAdmin }: { isAdmin: boolean }) {
     const { data, error } = await supabase.from('events').select(PUBLIC_EVENT_COLUMNS).order('event_date', { ascending: false })
     if (error) return setError('活動予定を読み込めませんでした。ログインし直してください。')
     setError(null)
-    setRows((data ?? []) as EventRow[])
+    setRows((data ?? []) as unknown as EventRow[])
   }, [])
 
   useEffect(() => {
@@ -248,6 +229,14 @@ export default function EventsAdmin({ isAdmin }: { isAdmin: boolean }) {
 }
 
 function EventEditor({ row, onDone }: { row: EventRow | null; onDone: (id: string | null, message: string) => void }) {
+  const [reports, setReports] = useState<{ id: string; title: string; report_date: string; visibility: string }[]>([])
+  useEffect(() => {
+    supabase
+      .from('activity_reports')
+      .select('id, title, report_date, visibility')
+      .order('report_date', { ascending: false })
+      .then(({ data }) => setReports((data ?? []) as typeof reports))
+  }, [])
   const key = row?.id ?? 'new'
   const serverForm = row ? rowToForm(row) : emptyForm
   const restored = loadLocal(key)
@@ -395,13 +384,14 @@ function EventEditor({ row, onDone }: { row: EventRow | null; onDone: (id: strin
           </select>,
         )}
         {field(
-          'report_activity_id',
+          'report_id',
           '関連する活動報告',
-          <select id="ev-report_activity_id" value={form.report_activity_id} onChange={e => set('report_activity_id', e.target.value)}>
+          <select id="ev-report_id" value={form.report_id} onChange={e => set('report_id', e.target.value)}>
             <option value="">なし</option>
-            {activities.map(a => (
-              <option key={a.id} value={a.id}>
-                {a.date} {a.title}
+            {reports.map(r => (
+              <option key={r.id} value={r.id}>
+                {r.report_date} {r.title}
+                {r.visibility === 'draft' ? '（下書き）' : ''}
               </option>
             ))}
           </select>,

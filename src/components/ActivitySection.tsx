@@ -1,22 +1,19 @@
 import { motion } from 'framer-motion'
-import { activities, type Activity, type ActivityType } from '../data/activity'
+import { REPORT_KIND_LABELS, reportHref, type ReportKind, type ReportRow } from '../shared/reports'
+import { listPublishedReports } from '../lib/publicContent'
+import { useAsync } from '../lib/useAsync'
 import { routeHref } from '../router'
 
-const TYPE_LABELS: Record<ActivityType, string> = {
-  note: 'note',
-  instagram: 'Instagram',
-  event: 'イベント',
-  report: '活動報告',
-}
+const TYPE_LABELS = REPORT_KIND_LABELS
 
-const TYPE_ICONS: Record<ActivityType, string> = {
+const TYPE_ICONS: Record<ReportKind, string> = {
   note: '📝',
   instagram: '📷',
   event: '📅',
   report: '📋',
 }
 
-const TYPE_LINKS: Record<ActivityType, string> = {
+const TYPE_LINKS: Record<ReportKind, string> = {
   note: '記事を読む',
   instagram: '投稿を見る',
   event: '詳細を見る',
@@ -38,8 +35,10 @@ function formatDate(dateStr: string) {
   return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
 }
 
-export function ActivityCard({ item }: { item: Activity }) {
-  const isExternal = item.url !== '#'
+export function ActivityCard({ item }: { item: ReportRow }) {
+  const href = reportHref(item)
+  const isExternal = href.startsWith('https://')
+  const type = item.kind
   return (
     <motion.article
       className="activity-card"
@@ -47,34 +46,34 @@ export function ActivityCard({ item }: { item: Activity }) {
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
     >
       <div className="activity-card__thumb">
-        {item.thumbnail ? (
-          <img src={item.thumbnail} alt={item.title} loading="lazy" />
+        {item.photo_url ? (
+          <img src={item.photo_url} alt={item.photo_alt || item.title} loading="lazy" />
         ) : (
           <span className="activity-card__thumb-icon" aria-hidden="true">
-            {TYPE_ICONS[item.type]}
+            {TYPE_ICONS[type]}
           </span>
         )}
       </div>
 
       <div className="activity-card__body">
         <div className="activity-card__meta">
-          <span className={`badge badge--${item.type}`}>{TYPE_LABELS[item.type]}</span>
-          <time className="activity-card__date" dateTime={item.date}>
-            {formatDate(item.date)}
+          <span className={`badge badge--${type}`}>{TYPE_LABELS[type]}</span>
+          <time className="activity-card__date" dateTime={item.report_date}>
+            {formatDate(item.report_date)}
           </time>
         </div>
 
         <h3 className="activity-card__title">{item.title}</h3>
-        <p className="activity-card__desc">{item.description}</p>
+        <p className="activity-card__desc">{item.summary}</p>
 
         <a
-          href={item.url}
+          href={href}
           className="activity-card__link"
           {...(isExternal
             ? { target: '_blank', rel: 'noopener noreferrer' }
             : {})}
         >
-          {TYPE_LINKS[item.type]}
+          {TYPE_LINKS[type]}
           <span aria-hidden="true">→</span>
         </a>
       </div>
@@ -83,6 +82,7 @@ export function ActivityCard({ item }: { item: Activity }) {
 }
 
 export default function ActivitySection() {
+  const { data: reports } = useAsync(listPublishedReports, [])
   return (
     <section id="activity" className="section section--tint">
       <div className="container">
@@ -99,7 +99,7 @@ export default function ActivitySection() {
           </motion.div>
 
           <motion.div className="activity-grid" variants={stagger}>
-            {activities.map(item => (
+            {(reports ?? []).slice(0, 6).map(item => (
               <ActivityCard key={item.id} item={item} />
             ))}
           </motion.div>

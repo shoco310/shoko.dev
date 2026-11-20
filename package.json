@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/check-env.mjs && vitest run tests/data.test.ts && tsc && vite build",
+    "build": "node scripts/check-env.mjs && tsc && vite build",
     "preview": "vite preview",
-    "db:start": "supabase start -x studio,imgproxy,realtime,storage-api,edge-runtime,logflare,vector,supavisor,postgres-meta,mailpit",
+    "db:start": "supabase start -x studio,realtime,edge-runtime,logflare,vector,supavisor,postgres-meta,mailpit",
     "db:test": "supabase test db",
     "test": "vitest run",
     "ogp": "node scripts/ogp/render.mjs public/images/ogp-v2.jpg"
