@@ -107,7 +107,7 @@ export default function ResearchPage() {
                 if (items.length === 0) return null
                 return (
                   <div className="research-block" key={status}>
-                    <h3 className="research-block__title">{groupHeading[status]}</h3>
+                    <h3 className={`research-block__title research-block__title--${status}`}>{groupHeading[status]}</h3>
                     <ul className="research-items">
                       {items.map(item => (
                         <ResearchRow key={item.title} item={item} />
@@ -157,7 +157,6 @@ export default function ResearchPage() {
 function ResearchRow({ item }: { item: ResearchItem }) {
   return (
     <li className="research-items__row">
-      <span className={`research-status research-status--${item.status}`}>{researchStatusLabel[item.status]}</span>
       <span className="research-items__body">
         <strong>{item.title}</strong>
         {item.detail && <span>{item.detail}</span>}
