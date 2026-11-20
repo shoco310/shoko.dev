@@ -117,7 +117,8 @@ const saveLocal = (id: string | 'new', f: Form) => saveDraft(storageKey(id), f)
 const clearLocal = (id: string | 'new') => clearDraft(storageKey(id))
 
 export default function EventsAdmin({ isAdmin }: { isAdmin: boolean }) {
-  const [tab, setTab] = useState<Tab>('upcoming')
+  // Open on すべて so past events are visible too (これから is empty most of the time).
+  const [tab, setTab] = useState<Tab>('all')
   const [rows, setRows] = useState<EventRow[]>([])
   const [selected, setSelected] = useState<string | 'new' | null>(null)
   const [flash, setFlash] = useState<string | null>(null)

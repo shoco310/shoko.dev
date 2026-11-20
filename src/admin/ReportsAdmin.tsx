@@ -358,7 +358,7 @@ function ReportEditor({ row, onDone }: { row: ReportRow | null; onDone: (id: str
         </div>
         <div className="ev-field">
           <label htmlFor="rp-event_id">関連するイベント</label>
-          <select id="rp-event_id" value={form.event_id} onChange={e => set('event_id', e.target.value)}>
+          <select id="rp-event_id" aria-describedby="rp-event_id-hint" value={form.event_id} onChange={e => set('event_id', e.target.value)}>
             <option value="">なし</option>
             {events.map(ev => (
               <option key={ev.id} value={ev.id}>
@@ -366,6 +366,9 @@ function ReportEditor({ row, onDone }: { row: ReportRow | null; onDone: (id: str
               </option>
             ))}
           </select>
+          <p className="admin-muted" id="rp-event_id-hint">
+            「活動予定」に登録したイベントから選びます。該当するものがなければ「なし」のままで大丈夫です。
+          </p>
         </div>
       </div>
 
