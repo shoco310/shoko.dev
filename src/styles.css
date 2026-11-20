@@ -910,8 +910,8 @@ button {
   flex-shrink: 0;
 }
 .policy-detail__section p {
-  font-size: 1.0625rem;
-  line-height: 2;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
   color: var(--ink);
   margin: 0 0 20px;
 }

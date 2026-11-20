@@ -13,6 +13,7 @@ export default function PageLayout({
   title,
   lead,
   breadcrumb,
+  bare = false,
   children,
 }: {
   en: string
@@ -20,6 +21,8 @@ export default function PageLayout({
   lead?: ReactNode
   /** Parent pages, nearest last. ホーム and the current title are added automatically. */
   breadcrumb?: Crumb[]
+  /** Children bring their own full-width sections instead of the narrow column. */
+  bare?: boolean
   children: ReactNode
 }) {
   const home = routeHref({ name: 'home', anchor: null })
@@ -44,7 +47,7 @@ export default function PageLayout({
           {lead && <p className="page__lead">{lead}</p>}
         </div>
       </header>
-      <div className="container container--narrow page__body">{children}</div>
+      {bare ? children : <div className="container container--narrow page__body">{children}</div>}
     </article>
   )
 }

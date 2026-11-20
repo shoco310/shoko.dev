@@ -50,15 +50,18 @@ function Block({
   )
 }
 
-export default function Greeting() {
+export default function Greeting({
+  en = 'GREETING',
+  title = 'ごあいさつ',
+}: { en?: string; title?: string } = {}) {
   return (
     <section id="message" className="section section--tint">
       <div className="container">
 
         <Block variants={fadeUp}>
           <div className="section-heading">
-            <span className="section-heading__en">GREETING</span>
-            <h2 className="section-heading__ja">ごあいさつ</h2>
+            <span className="section-heading__en" aria-hidden="true">{en}</span>
+            <h2 className="section-heading__ja">{title}</h2>
             <div className="section-heading__line" />
           </div>
         </Block>

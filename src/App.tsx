@@ -9,6 +9,9 @@ import ParticipateSection from './components/ParticipateSection'
 import ProfileSection from './components/ProfileSection'
 import Footer from './components/Footer'
 import PolicyDetail from './pages/PolicyDetail'
+import ProfilePage from './pages/ProfilePage'
+import VisionPage from './pages/VisionPage'
+import PoliciesPage from './pages/PoliciesPage'
 import DataPage from './pages/DataPage'
 import ActivityPage from './pages/ActivityPage'
 import AboutPage from './pages/AboutPage'
@@ -30,6 +33,9 @@ import { routeKey, useRoute, type Route } from './router'
 const SITE_TITLE = 'さとうしょうこ | 誰もが挑戦できる宇部へ'
 
 const pageTitles: Partial<Record<Route['name'], string>> = {
+  profile: '私について',
+  vision: 'V2MOM（目指す未来）',
+  policies: '4つの重点政策',
   data: '数字で見る宇部',
   activity: '活動・調査の状況',
   about: 'このサイトについて',
@@ -126,6 +132,12 @@ function renderPage(route: Route, policy: Policy | undefined) {
           {(voiceEnabled || volunteerEnabled) && <TakePartSection />}
         </>
       )
+    case 'profile':
+      return <ProfilePage />
+    case 'vision':
+      return <VisionPage />
+    case 'policies':
+      return <PoliciesPage />
     case 'policy':
       return policy ? <PolicyDetail policy={policy} /> : <NotFoundPage />
     case 'data':
