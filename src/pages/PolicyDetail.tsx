@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
 import { policies, type Policy, type SourceItem } from '../data/policy'
+import DataCard from '../components/DataCard'
+import { routeHref } from '../router'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -33,6 +35,11 @@ const sourceTypeLabel: Record<SourceItem['type'], string> = {
   reference: '参考・他自治体事例',
 }
 
+function formatDate(iso: string) {
+  const [y, m, d] = iso.split('-').map(Number)
+  return `${y}年${m}月${d}日`
+}
+
 export default function PolicyDetail({ policy }: { policy: Policy }) {
   const others = policies.filter(p => p.slug !== policy.slug)
   const hasVoice = !!policy.voice && policy.voice.length > 0
@@ -50,7 +57,7 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
           <img src={policy.image} alt={policy.name} />
         </div>
         <div className="container">
-          <a href="#policy" className="policy-detail__back">
+          <a href={routeHref({ name: 'home', anchor: 'policy' })} className="policy-detail__back">
             ← 4つの政策一覧に戻る
           </a>
           <span className="policy-detail__num" aria-hidden="true">
@@ -134,89 +141,9 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
               </p>
               {policy.dataNote && <p className="policy-detail__data-note">⚠️ {policy.dataNote}</p>}
               <div className="policy-detail__data-list">
-                {policy.dataPoints!.map((d, i) => {
-                  const isMultiStat = !!d.stats && d.stats.length > 1
-                  const isSingleStat = !d.highlight && !isMultiStat && (!!d.value || (!!d.stats && d.stats.length === 1))
-                  const singleStat = d.stats && d.stats.length === 1 ? d.stats[0] : undefined
-                  return (
-                    <div className={`data-card ${isSingleStat ? '' : 'data-card--stacked'}`} key={i}>
-                      {isSingleStat && (
-                        <div className="data-card__figure">
-                          {singleStat ? (
-                            <>
-                              <p className="data-card__value">{singleStat.value}</p>
-                              {typeof singleStat.barPct === 'number' && (
-                                <div className="data-card__bar">
-                                  <div className="data-card__bar-fill" style={{ width: `${singleStat.barPct}%` }} />
-                                </div>
-                              )}
-                            </>
-                          ) : (
-                            d.value && <p className="data-card__value">{d.value}</p>
-                          )}
-                        </div>
-                      )}
-
-                      <div className="data-card__body">
-                        <div className="data-card__head">
-                          <p className="data-card__label">{d.label}</p>
-                          <p className="data-card__meta">{d.survey}</p>
-                        </div>
-
-                        {d.highlight && <p className="data-card__highlight">{d.value}</p>}
-
-                        {isMultiStat && (
-                          <div
-                            className="data-card__stats"
-                            style={{ '--stat-cols': Math.min(d.stats!.length, 3) } as React.CSSProperties}
-                          >
-                            {d.stats!.map((s, j) => (
-                              <div className="data-card__stat" key={j}>
-                                <p className="data-card__stat-label">{s.label}</p>
-                                <p className="data-card__stat-value">{s.value}</p>
-                                {typeof s.barPct === 'number' && (
-                                  <div className="data-card__bar">
-                                    <div className="data-card__bar-fill" style={{ width: `${s.barPct}%` }} />
-                                  </div>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        )}
-
-                        {d.description && <p className="data-card__description">{d.description}</p>}
-
-                        {d.breakdown && (
-                          <ul className={`data-card__breakdown ${d.chartable ? 'data-card__breakdown--chart' : ''}`}>
-                            {d.breakdown.map((b, j) => (
-                              <li key={j}>
-                                <div className="data-card__breakdown-row">
-                                  <span>{b.label}</span>
-                                  <strong>{b.value}</strong>
-                                </div>
-                                {d.chartable && typeof b.barPct === 'number' && (
-                                  <div className="data-card__bar">
-                                    <div className="data-card__bar-fill" style={{ width: `${b.barPct}%` }} />
-                                  </div>
-                                )}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                        {d.note && <p className="data-card__note">{d.note}</p>}
-                      </div>
-
-                      <div className="data-card__source">
-                        <span>{d.source}</span>
-                        {d.sourceUrl && (
-                          <a href={d.sourceUrl} target="_blank" rel="noopener noreferrer">
-                            原本を見る →
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  )
-                })}
+                {policy.dataPoints!.map((d, i) => (
+                  <DataCard key={i} d={d} />
+                ))}
               </div>
             </section>
           </Block>
@@ -316,6 +243,35 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
           </section>
         </Block>
 
+        {policy.changelog && policy.changelog.length > 0 && (
+          <Block>
+            <section className="policy-detail__section">
+              <h2 className="policy-detail__heading">更新履歴</h2>
+              <ol className="changelog">
+                {policy.changelog.map((c, i) => (
+                  <li key={i} className="changelog__item">
+                    <time className="changelog__date" dateTime={c.date}>
+                      {formatDate(c.date)}
+                    </time>
+                    <div className="changelog__body">
+                      <p className="changelog__summary">{c.summary}</p>
+                      {c.reason && <p className="changelog__reason">理由：{c.reason}</p>}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <p className="changelog__note">
+                政策は、調査の結果やいただいたご意見をもとに見直していきます。変更の詳しい記録は
+                {' '}
+                <a href="https://github.com/shoco310/shoko.dev/commits/main/src/data/policy.ts" target="_blank" rel="noopener noreferrer">
+                  GitHub の変更履歴
+                </a>
+                {' '}でも公開しています。
+              </p>
+            </section>
+          </Block>
+        )}
+
         <Block>
           <div className="policy-detail__cta">
             <a
@@ -344,7 +300,7 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
           <h2 className="policy-detail__others-heading">他の政策も見る</h2>
           <div className="policy-detail__others-grid">
             {others.map(p => (
-              <a key={p.slug} href={`#/policy/${p.slug}`} className="policy-detail__other-card">
+              <a key={p.slug} href={routeHref({ name: 'policy', slug: p.slug })} className="policy-detail__other-card">
                 <span aria-hidden="true">{p.number}</span>
                 <div>
                   <strong>{p.name}</strong>

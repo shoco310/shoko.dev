@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { policies } from '../data/policy'
+import { routeHref } from '../router'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -80,7 +81,7 @@ export default function PolicySection() {
                   </h3>
                   <p className="policy-row__tagline">{policy.tagline}</p>
                   <p className="policy-row__desc">{policy.summary}</p>
-                  <a href={`#/policy/${policy.slug}`} className="btn btn--secondary">
+                  <a href={routeHref({ name: 'policy', slug: policy.slug })} className="btn btn--secondary">
                     政策の詳細を見る
                     <span aria-hidden="true">→</span>
                   </a>

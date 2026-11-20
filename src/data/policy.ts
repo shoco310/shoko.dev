@@ -101,6 +101,21 @@ export interface SourceItem {
   type: 'primary' | 'report' | 'reference'
 }
 
+/**
+ * One entry in a policy's public change history (newest first in the
+ * array). Every entry should correspond to a commit that changed that
+ * policy's content, so git history remains the detailed record and this list
+ * is the plain-language summary for readers.
+ */
+export interface PolicyChange {
+  /** YYYY-MM-DD */
+  date: string
+  /** What changed, in plain language */
+  summary: string
+  /** Why it changed (e.g. new research, a correction, citizen input) */
+  reason?: string
+}
+
 export interface Policy {
   slug: string
   number: string
@@ -122,7 +137,31 @@ export interface Policy {
   /** Evidence-labeled findings shown alongside (not replacing) the existing challenges/existingSystems prose */
   issuesEvidence?: PolicyIssues
   sourceList?: SourceItem[]
+  /** Public change history, newest first */
+  changelog?: PolicyChange[]
 }
+
+/**
+ * Site-wide revisions that touched all four policies alike. Policy-specific
+ * entries go before these in each policy's own `changelog`.
+ */
+const sharedChangelog: PolicyChange[] = [
+  {
+    date: '2026-09-27',
+    summary:
+      '「数字で見る宇部の現状」「調査結果から考えられること」「市民の声」「関連資料・出典」を追加しました。',
+    reason:
+      '宇部市の計画書・アンケート調査などの公式資料を確認し、出典を確認できたデータだけを掲載するためです。あわせて、調査の対象や母数の書き方を正確にし、「関連する既存制度あり」の表示が政策の進め方まで決めているように読めないよう表現を改めました。',
+  },
+  {
+    date: '2026-09-26',
+    summary: '政策ごとの詳細ページを新しく作り、背景・具体的な取り組み・必要な理由を掲載しました。',
+  },
+  {
+    date: '2026-06-17',
+    summary: '4つの政策を公開しました。',
+  },
+]
 
 export const policies: Policy[] = [
   {
@@ -230,6 +269,7 @@ export const policies: Policy[] = [
       { label: '第9期宇部市高齢者福祉計画【概要版】（令和6年3月）', url: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/005/423/9gaiyou.pdf', type: 'primary' },
       { label: '不登校、コロナ禍に急増 市教委「校内ふれあい教室」を拡充【宇部】｜宇部日報デジタルSARATTO', url: 'https://ubenippo.co.jp/2024/03/01/3327969/', type: 'report' },
     ],
+    changelog: sharedChangelog,
   },
   {
     slug: 'work',
@@ -353,6 +393,7 @@ export const policies: Policy[] = [
       { label: '令和8年度 宇部市中小企業等DX推進事業費補助金｜宇部市公式ウェブサイト', url: 'https://www.city.ube.yamaguchi.jp/shisei/hojyojyosei/1010994/1028886.html', type: 'primary' },
       { label: '中小企業DX支援――北九州市DX推進ラボ', url: 'https://local-iot-lab.ipa.go.jp/lab/editor/article/2024040900800.html', type: 'reference' },
     ],
+    changelog: sharedChangelog,
   },
   {
     slug: 'childcare',
@@ -460,6 +501,7 @@ export const policies: Policy[] = [
       { label: '令和6年度学童保育クラブ利用者アンケート結果（全体集計）', url: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/023/525/2024-zenntai.pdf', type: 'primary' },
       { label: '宇部市こども計画（令和7年3月）', url: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/023/097/ubeshikodomokeikaku.pdf', type: 'primary' },
     ],
+    changelog: sharedChangelog,
   },
   {
     slug: 'civic',
@@ -553,6 +595,7 @@ export const policies: Policy[] = [
       { label: 'DX推進｜宇部市公式ウェブサイト', url: 'https://www.city.ube.yamaguchi.jp/shisei/keikaku/1021095/index.html', type: 'primary' },
       { label: '加古川市版Decidimについて', url: 'https://kakogawa.diycities.jp/pages/kakogawa-decidim?format=html&locale=ja', type: 'reference' },
     ],
+    changelog: sharedChangelog,
   },
 ]
 

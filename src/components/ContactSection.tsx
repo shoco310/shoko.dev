@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { operator } from '../data/site'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -29,17 +30,17 @@ export default function ContactSection() {
           <motion.div className="contact-list" variants={stagger}>
             <motion.div className="contact-item" variants={fadeUp}>
               <span className="contact-item__label">団体名</span>
-              <span className="contact-item__value">さとうしょうこ後援会</span>
+              <span className="contact-item__value">{operator.name}</span>
             </motion.div>
 
             <motion.div className="contact-item" variants={fadeUp}>
               <span className="contact-item__label">所在地</span>
-              <span className="contact-item__value">山口県宇部市大字東岐波5188-1</span>
+              <span className="contact-item__value">{operator.address}</span>
             </motion.div>
 
             <motion.div className="contact-item" variants={fadeUp}>
               <span className="contact-item__label">メール</span>
-              <span className="contact-item__value">shoko.sato.office[アット]gmail.com</span>
+              <span className="contact-item__value">{operator.emailDisplay}</span>
             </motion.div>
 
             <motion.div className="contact-item" variants={fadeUp}>
