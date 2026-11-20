@@ -1073,3 +1073,12 @@ body {
 .policy-detail__heading-num {
   display: inline;
 }
+
+/* Breathing room around each 確認済み／次に確認すること／今後の課題 group. */
+.research-group__block {
+  padding: 10px;
+}
+
+.policy-detail__history-link {
+  margin: 0 0 var(--space-5);
+}
