@@ -3,7 +3,7 @@
 -- Every test runs inside a transaction that is rolled back.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(31);
+select plan(34);
 
 -- ---------------------------------------------------------------------------
 -- Fixtures: one staff member (operator), one signed-in non-staff user
@@ -121,6 +121,18 @@ select lives_ok($$select public.submit_voice('3件目', '2026-11-20', 'pgtap-has
 select throws_ok($$select public.submit_voice('4件目', '2026-11-20', 'pgtap-hash')$$, 'P0001', 'rate_limited',
   '4th submission from the same sender within an hour is rejected');
 reset role;
+
+-- ---------------------------------------------------------------------------
+-- Retention: submission text is removed 5 years after the last action
+-- ---------------------------------------------------------------------------
+insert into public.submissions (receipt_no, body, privacy_version, created_at, updated_at)
+values ('UB-OLD0-0001', '古い投稿', '2026-11-20', now() - interval '6 years', now() - interval '5 years 1 day'),
+       ('UB-NEW0-0001', '最近の投稿', '2026-11-20', now() - interval '6 years', now() - interval '4 years');
+select ok(public.purge_old_submissions() >= 1, 'purge_old_submissions deletes something');
+select is((select count(*)::int from public.submissions where receipt_no = 'UB-OLD0-0001'), 0,
+  'a submission untouched for over 5 years is deleted');
+select is((select count(*)::int from public.submissions where receipt_no = 'UB-NEW0-0001'), 1,
+  'a submission acted on within 5 years is kept');
 
 select * from finish();
 rollback;

@@ -7,12 +7,50 @@ function formatDate(iso: string) {
   return `${y}年${m}月${d}日`
 }
 
+/**
+ * Keep this page in step with what the code and services actually do:
+ * - retention: supabase/migrations (purge_expired_contacts / purge_old_submissions)
+ * - analytics: src/analytics.ts (not loaded on the submission page)
+ * - services: vercel.json, api/submit.ts, src/components/Turnstile.tsx
+ */
+const services = [
+  {
+    name: 'Vercel（Vercel Inc.・米国）',
+    use: 'このサイトの配信、投稿の受付処理、アクセスログの記録',
+    where: '投稿の受付処理は東京リージョンで行います。アクセスログは同社のシステムで管理され、日本国外で保存・処理される場合があります。',
+  },
+  ...(voiceEnabled
+    ? [
+        {
+          name: 'Supabase（Supabase Inc.・米国）',
+          use: '投稿内容・連絡先の保存、運営者のログイン管理',
+          where: 'データは東京リージョン（Amazon Web Services の日本国内のデータセンター）に保存します。同社による保守・障害対応のため、日本国外からアクセスされる可能性があります。',
+        },
+        {
+          name: 'Cloudflare Turnstile（Cloudflare, Inc.・米国）',
+          use: '投稿フォームでの、ロボットによる送信かどうかの判定',
+          where: 'ブラウザや端末の情報が、同社の日本国外を含む設備で処理されます。',
+        },
+      ]
+    : []),
+  {
+    name: 'Google アナリティクス（Google LLC・米国）',
+    use: 'アクセス解析（投稿フォームのページでは使用しません）',
+    where: '収集された情報は、日本国外を含む同社の設備で保存・処理されます。',
+  },
+  {
+    name: 'Gmail（Google LLC・米国）',
+    use: 'お問い合わせメールの受信・保管',
+    where: 'メールは、日本国外を含む同社の設備で保存されます。',
+  },
+]
+
 export default function PrivacyPage() {
   return (
     <PageLayout
       en="PRIVACY"
       title="プライバシーポリシー"
-      lead={`このサイトの運営者である${operator.displayName}（以下「運営者」）は、このサイトを通じて得た個人情報を、個人情報の保護に関する法律その他の法令を守って取り扱います。`}
+      lead={`このサイトの運営者である${operator.name}（さとうしょうこ。以下「運営者」）は、このサイトを通じて得た個人情報を、個人情報の保護に関する法律その他の法令を守って取り扱います。`}
     >
       <PageSection title="1. 取得する情報と利用目的">
         <dl className="info-list info-list--stacked">
@@ -20,12 +58,6 @@ export default function PrivacyPage() {
             <dt>お問い合わせ（メール・LINE・SNS）</dt>
             <dd>
               お名前、連絡先、お問い合わせの内容をいただくことがあります。お問い合わせへの返信・対応のために利用します。
-            </dd>
-          </div>
-          <div>
-            <dt>後援会の入会フォーム（Google フォーム）</dt>
-            <dd>
-              フォームに入力された情報を、{supportersAssociation}の運営と、会員の方へのご連絡のために利用します。{supportersAssociation}の代表は運営者が務めており、運営者が管理します。
             </dd>
           </div>
           {voiceEnabled && (
@@ -36,13 +68,10 @@ export default function PrivacyPage() {
                   投稿内容と、任意で入力いただいたテーマ・地区・年代・お名前・メールアドレス・返信の希望をお預かりします。あわせて、いたずらや大量送信を防ぐため、送信元の IP アドレスを元に戻せない形に変換した値（ハッシュ値）を記録します。IP アドレスそのものは保存しません。
                 </p>
                 <p>
-                  利用目的は、政策づくりの参考にすること、内容の確認やご希望の方への返信、不正な送信の防止です。投稿は運営者が確認します。原文を公開することはありません。参考にさせていただく場合は、個人が特定できる内容を除いて要約し、課題としてこのサイトで紹介することがあります。
+                  利用目的は、政策の検討・改善の参考にすること、内容の確認やご希望の方への返信、不正な送信の防止です。投稿を読み、審査するのは運営者本人です。選挙での投票のお願いや、選挙運動のための連絡先の収集には利用しません。
                 </p>
                 <p>
-                  お名前・メールアドレスなどの連絡先は、投稿内容とは分けて保管し、対応を終えてから6か月後（最長でも受け付けから1年後）に削除します。投稿内容は、政策検討の記録として保管します。
-                </p>
-                <p>
-                  投稿の保管には Supabase（データは日本国内の東京リージョンに保存）を、不正な送信の防止には Cloudflare の Turnstile を利用しています。Turnstile は、ロボットによる送信かどうかを判定するため、ブラウザや端末の情報を Cloudflare に送信します。
+                  投稿の原文は公開しません。政策の検討に活かす場合は、運営者本人が内容を確認したうえで、個人が特定できる内容を除いて要約し、課題としてこのサイトで紹介することがあります。
                 </p>
               </dd>
             </div>
@@ -50,7 +79,9 @@ export default function PrivacyPage() {
           <div>
             <dt>アクセス解析（Google アナリティクス）</dt>
             <dd>
-              サイトの改善のため、Google アナリティクスを利用しています。Cookie を使って、閲覧したページ、ブラウザや端末の種類、おおよその地域などの情報が Google に送られます。この情報には、お名前やメールアドレスなど個人を直接特定する情報は含まれません。Google によるデータの扱いは「
+              サイトの改善のため、Google アナリティクスを利用しています。Cookie を使って、閲覧したページ、ブラウザや端末の種類、おおよその地域などの情報が Google に送られます。この情報には、お名前やメールアドレスなど個人を直接特定する情報は含まれません。
+              {voiceEnabled && '投稿フォームのページでは、Google アナリティクスを読み込みません。'}
+              Google によるデータの扱いは「
               <a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener noreferrer">
                 Google のサービスを使用するサイトやアプリから収集した情報の Google による使用
               </a>
@@ -64,33 +95,83 @@ export default function PrivacyPage() {
           <div>
             <dt>アクセスログ</dt>
             <dd>
-              このサイトは Vercel Inc. のサービスで公開しています。サイトの運用と安全の確保のため、IP アドレス、アクセスした日時・ページ、ブラウザの種類などがサーバーに記録されます。
+              サイトの運用と安全の確保のため、IP アドレス、アクセスした日時・ページ、ブラウザの種類などが、サイトを配信しているサーバー（Vercel）に記録されます。
             </dd>
           </div>
         </dl>
       </PageSection>
 
-      <PageSection title="2. 第三者への提供">
+      {voiceEnabled && (
+        <PageSection title="2. 保存期間">
+          <dl className="info-list info-list--stacked">
+            <div>
+              <dt>連絡先（お名前・メールアドレス・返信の希望）</dt>
+              <dd>
+                投稿内容とは分けて保管し、対応を終えてから6か月後に削除します。対応が終わっていない場合でも、受け付けから1年後には削除します。
+              </dd>
+            </div>
+            <div>
+              <dt>投稿の原文</dt>
+              <dd>
+                最後に対応した日から5年を上限として保管し、その後に削除します。このサイトで公開する課題の要約（政策検討の記録）は、原文とは分けて管理します。
+              </dd>
+            </div>
+          </dl>
+        </PageSection>
+      )}
+
+      <PageSection title={`${voiceEnabled ? 3 : 2}. 第三者への提供`}>
         <p>
-          ご本人の同意がある場合、または法令に基づく場合を除き、個人情報を第三者に提供することはありません。
+          ご本人の同意がある場合、または法令に基づく場合を除き、個人情報を第三者に提供することはありません。次の項目の外部サービスには、サイトの運営に必要な範囲で、情報の保管や処理を任せています。
         </p>
       </PageSection>
 
-      <PageSection title="3. 安全管理">
+      <PageSection title={`${voiceEnabled ? 4 : 3}. 利用している外部サービスと、外国にある事業者について`}>
         <p>
-          個人情報は、必要な人だけが扱えるようにし、漏えいや紛失がないよう管理します。利用目的を達成し、保管する必要がなくなった情報は削除します。
+          このサイトでは、次の外部サービスを利用しています。いずれも米国の事業者です。
+        </p>
+        <dl className="info-list info-list--stacked">
+          {services.map(s => (
+            <div key={s.name}>
+              <dt>{s.name}</dt>
+              <dd>
+                <p>用途：{s.use}</p>
+                <p>保存・処理の場所：{s.where}</p>
+              </dd>
+            </div>
+          ))}
+        </dl>
+        <p>
+          米国には、日本の個人情報保護法に相当する、すべての分野に共通する連邦法はありません。分野ごとの連邦法や、州の法律（カリフォルニア州消費者プライバシー法など）によって個人情報が保護されています。各事業者による情報の扱いは、それぞれのプライバシーポリシーをご確認ください。
         </p>
       </PageSection>
 
-      <PageSection title="4. 開示・訂正・削除のご請求">
+      <PageSection title={`${voiceEnabled ? 5 : 4}. 安全管理`}>
         <p>
-          運営者が保有するご自身の個人情報について、開示・訂正・利用停止・削除をご希望の場合は、下記の窓口までご連絡ください。ご本人であることを確認したうえで対応します。
+          個人情報は、運営者本人だけが扱えるようにし、漏えいや紛失がないよう管理します。
+          {voiceEnabled &&
+            '投稿を確認する管理画面は、パスワードと二段階認証でログインした運営者本人だけが使え、連絡先を表示した記録や対応の記録を残しています。通信はすべて暗号化しています。'}
+          利用目的を達成し、保管する必要がなくなった情報は削除します。
         </p>
       </PageSection>
 
-      <PageSection title="5. このポリシーの改定">
+      <PageSection title={`${voiceEnabled ? 6 : 5}. 開示・訂正・削除のご請求`}>
         <p>
-          このポリシーは、必要に応じて改定することがあります。今後、ご意見の投稿やお知らせのメール配信などの機能を追加する際には、取り扱う情報と利用目的をこのページに追記したうえで公開します。
+          運営者が保有するご自身の個人情報について、開示・訂正・利用停止・削除をご希望の場合は、下記のメールアドレスまでご連絡ください。
+          {voiceEnabled && '投稿についてのご請求の際は、受付番号をお知らせいただくと確認がスムーズです。'}
+          ご本人であることを確認したうえで対応します。
+        </p>
+      </PageSection>
+
+      <PageSection title={`${voiceEnabled ? 7 : 6}. このポリシーの改定`}>
+        <p>
+          このポリシーは、必要に応じて改定することがあります。改定した場合は、このページでお知らせします。
+        </p>
+      </PageSection>
+
+      <PageSection title="後援会の入会フォームについて">
+        <p>
+          後援会の入会フォーム（Google フォーム）は、{supportersAssociation}（代表：{operator.name}）が運営しています。入力された情報は、{supportersAssociation}が、後援会の運営と会員の方へのご連絡のために利用します。
         </p>
       </PageSection>
 
