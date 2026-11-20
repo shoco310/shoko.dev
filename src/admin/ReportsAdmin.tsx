@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ActivityCard } from '../components/ActivitySection'
-import { PUBLIC_REPORT_COLUMNS, REPORT_KIND_LABELS, type ReportKind, type ReportRow } from '../shared/reports'
+import {
+  PUBLIC_REPORT_COLUMNS,
+  REPORT_CATEGORIES,
+  REPORT_CATEGORY_LABELS,
+  REPORT_KIND_LABELS,
+  type ReportCategory,
+  type ReportKind,
+  type ReportRow,
+} from '../shared/reports'
 import { clearDraft, loadDraft, saveDraft } from './draftStorage'
 import { supabase } from './supabase'
 import { uploadPhoto } from './uploadPhoto'
@@ -15,6 +23,8 @@ const tabLabels: Record<Tab, string> = { published: '公開中', draft: '下書�
 
 interface Form {
   kind: ReportKind
+  /** '' = 未設定 */
+  category: ReportCategory | ''
   title: string
   report_date: string
   summary: string
@@ -27,6 +37,7 @@ interface Form {
 
 const emptyForm: Form = {
   kind: 'report',
+  category: '',
   title: '',
   report_date: '',
   summary: '',
@@ -39,6 +50,7 @@ const emptyForm: Form = {
 
 const rowToForm = (r: ReportRow): Form => ({
   kind: r.kind,
+  category: r.category ?? '',
   title: r.title,
   report_date: r.report_date,
   summary: r.summary,
@@ -67,6 +79,7 @@ function validate(f: Form): Partial<Record<keyof Form, string>> {
 const nullIfEmpty = (s: string) => (s.trim() ? s.trim() : null)
 const toPayload = (f: Form) => ({
   kind: f.kind,
+  category: f.category || null,
   title: f.title.trim(),
   report_date: f.report_date,
   summary: f.summary.trim(),
@@ -93,7 +106,7 @@ export default function ReportsAdmin({ isAdmin }: { isAdmin: boolean }) {
     const { data, error } = await supabase.from('activity_reports').select(PUBLIC_REPORT_COLUMNS).order('report_date', { ascending: false })
     if (error) return setError('活動報告を読み込めませんでした。ログインし直してください。')
     setError(null)
-    setRows((data ?? []) as ReportRow[])
+    setRows((data ?? []) as unknown as ReportRow[])
   }, [])
 
   useEffect(() => {
@@ -286,6 +299,17 @@ function ReportEditor({ row, onDone }: { row: ReportRow | null; onDone: (id: str
               {(Object.keys(REPORT_KIND_LABELS) as ReportKind[]).map(k => (
                 <option key={k} value={k}>
                   {REPORT_KIND_LABELS[k]}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="ev-field">
+            <label htmlFor="rp-category">カテゴリ（公開ページの絞り込み）</label>
+            <select id="rp-category" value={form.category} onChange={e => set('category', e.target.value as ReportCategory | '')}>
+              <option value="">未設定（「すべて」にだけ表示）</option>
+              {REPORT_CATEGORIES.map(c => (
+                <option key={c} value={c}>
+                  {REPORT_CATEGORY_LABELS[c]}
                 </option>
               ))}
             </select>

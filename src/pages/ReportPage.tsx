@@ -4,7 +4,8 @@ import NotFoundPage from './NotFoundPage'
 import { getPublishedReport } from '../lib/publicContent'
 import { useAsync } from '../lib/useAsync'
 import { routeHref } from '../router'
-import { REPORT_KIND_LABELS } from '../shared/reports'
+import { REPORT_CATEGORY_LABELS, REPORT_KIND_LABELS } from '../shared/reports'
+import '../components/ActivitySection.css'
 
 function formatDate(iso: string) {
   const [y, m, d] = iso.split('-').map(Number)
@@ -27,9 +28,10 @@ export default function ReportPage({ slug }: { slug: string }) {
   return (
     <PageLayout en="REPORT" title={data.title}>
       <p className="page__more issue-back">
-        <a href={routeHref({ name: 'activity' })}>← 活動・調査の状況へ</a>
+        <a href={routeHref({ name: 'activity' })}>← これまでの活動へ</a>
       </p>
       <p className="report-meta">
+        {data.category && <span className="activity-row__category">{REPORT_CATEGORY_LABELS[data.category]}</span>}
         <span className={`badge badge--${data.kind}`}>{REPORT_KIND_LABELS[data.kind]}</span>
         <time dateTime={data.report_date}>{formatDate(data.report_date)}</time>
       </p>
@@ -48,8 +50,14 @@ export default function ReportPage({ slug }: { slug: string }) {
           </a>
         </p>
       )}
+      {data.event && (
+        <p className="report-event">
+          このイベントの記録です：
+          <a href={routeHref({ name: 'event', slug: data.event.slug })}>{data.event.title} →</a>
+        </p>
+      )}
       <p className="page__more">
-        <a href={routeHref({ name: 'events' })}>活動予定を見る →</a>
+        <a href={routeHref({ name: 'events' })}>イベント・活動予定を見る →</a>
       </p>
     </PageLayout>
   )

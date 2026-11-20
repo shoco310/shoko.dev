@@ -28,7 +28,7 @@ const exports = {
   ),
   'issue-updates.json': await get('issue_updates?select=id,issue_id,body,published_at&order=id.asc'),
   'reports.json': await get(
-    'activity_reports?select=slug,kind,title,report_date,summary,body,photo_url,photo_alt,external_url,event_id,published_at,updated_at&order=report_date.asc,slug.asc',
+    'activity_reports?select=slug,kind,title,report_date,summary,body,photo_url,photo_alt,external_url,event_id,category,published_at,updated_at&order=report_date.asc,slug.asc',
   ),
   'policy-changes.json': await get(
     'policy_changes?select=slug,change_date,policy_slugs,summary,reason,evidence,diffs,related_issues,commits,corrects,published_at&order=change_date.asc,slug.asc',

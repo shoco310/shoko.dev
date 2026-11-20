@@ -1,70 +1,75 @@
 import { useEffect, useState } from 'react'
 import PageLayout from '../components/PageLayout'
 import { ActivityCard } from '../components/ActivitySection'
-import EventCard from '../components/EventCard'
-import { Notice, SectionHeading } from '../components/ui'
 import { listPublishedReports } from '../lib/publicContent'
 import { listPublishedEvents } from '../lib/publicEvents'
-import { splitEvents } from '../lib/events'
+import { formatEventDate, splitEvents } from '../lib/events'
 import { useAsync } from '../lib/useAsync'
-import { volunteerEnabled } from '../data/features'
-import { lineUrl, socialLinks } from '../data/social'
+import { REPORT_CATEGORIES, REPORT_CATEGORY_LABELS, type ReportCategory } from '../shared/reports'
+import { socialLinks } from '../data/social'
 import { routeHref } from '../router'
 
-export type ActivityFilter = 'all' | 'reports' | 'events'
+export type ActivityFilter = 'all' | ReportCategory
 
 const filters: { key: ActivityFilter; label: string }[] = [
   { key: 'all', label: 'すべて' },
-  { key: 'reports', label: '活動報告' },
-  { key: 'events', label: 'イベント' },
+  ...REPORT_CATEGORIES.map(c => ({ key: c as ActivityFilter, label: REPORT_CATEGORY_LABELS[c] })),
 ]
 
 /**
- * Read ?type= from the hash ('#/activity?type=events'). 'research' is the
- * old 政策調査 filter, now its own page (#/research).
+ * What the URL asks for: '#/activity?category=media' → 'media'. Old links
+ * from before the split: ?type=events → the events page, ?type=research →
+ * the research page, ?type=reports → everything.
  */
-export function filterFromHash(hash: string): ActivityFilter | 'research' | null {
-  const q = hash.split('?')[1]
-  const type = q ? new URLSearchParams(q).get('type') : null
-  if (type === 'research') return 'research'
-  return filters.some(f => f.key === type) ? (type as ActivityFilter) : null
+export function filterFromHash(hash: string): ActivityFilter | { redirect: string } | null {
+  const q = new URLSearchParams(hash.split('?')[1] ?? '')
+  const type = q.get('type')
+  if (type === 'events') return { redirect: routeHref({ name: 'events' }) }
+  if (type === 'research') return { redirect: routeHref({ name: 'research' }) }
+  const category = q.get('category')
+  return filters.some(f => f.key === category) ? (category as ActivityFilter) : null
+}
+
+/** Reports in the chosen category; uncategorised ones appear under すべて only. */
+export function filterReports<T extends { category: ReportCategory | null }>(list: T[], filter: ActivityFilter): T[] {
+  return filter === 'all' ? list : list.filter(r => r.category === filter)
 }
 
 /**
- * 活動: reports, events and policy research in one place. Data comes from
- * the existing events / activity_reports tables and src/data/research.ts —
- * nothing new is stored. #/events opens this page filtered to events.
+ * これまでの活動: published activity reports, newest first, filterable by
+ * category. An event shows up here once a report about it is published —
+ * the event itself stays on its own page.
  */
-export default function ActivityPage({ initialFilter = 'all' }: { initialFilter?: ActivityFilter }) {
+export default function ActivityPage() {
   const fromUrl = filterFromHash(window.location.hash)
-  const [filter, setFilter] = useState<ActivityFilter>(() =>
-    fromUrl && fromUrl !== 'research' ? fromUrl : initialFilter,
-  )
-  // Old link to the research filter: open the research page instead.
+  const [filter, setFilter] = useState<ActivityFilter>(() => (typeof fromUrl === 'string' ? fromUrl : 'all'))
   useEffect(() => {
-    if (fromUrl === 'research') window.location.replace(routeHref({ name: 'research' }))
+    if (fromUrl && typeof fromUrl === 'object') window.location.replace(fromUrl.redirect)
   }, [fromUrl])
+
   const reports = useAsync(listPublishedReports, [])
   const events = useAsync(listPublishedEvents, [])
-  const { upcoming, past } = splitEvents(events.data ?? [])
+  const upcoming = splitEvents(events.data ?? []).upcoming
+  const shown = filterReports(reports.data ?? [], filter)
 
   const choose = (key: ActivityFilter) => {
     setFilter(key)
-    // Keep the choice in the URL (shareable) without a route change.
-    history.replaceState(null, '', key === 'all' ? '#/activity' : `#/activity?type=${key}`)
+    history.replaceState(null, '', key === 'all' ? '#/activity' : `#/activity?category=${key}`)
   }
 
-  const show = (key: ActivityFilter) => filter === 'all' || filter === key
-
   return (
-    <PageLayout
-      en="ACTIVITY"
-      title="活動"
-      lead="活動報告と、意見交換会などの予定をお知らせします。"
-      bare
-    >
+    <PageLayout en="ACTIVITY" title="これまでの活動" lead="これまでに行った活動を、新しい順に掲載しています。" bare>
       <div className="container container--narrow activity-page">
-        <div className="filter-bar" role="group" aria-label="表示する活動の種類">
+        {upcoming.length > 0 && (
+          <a href={routeHref({ name: 'events' })} className="home-next-event activity-upcoming">
+            <span className="home-next-event__label">これからの予定 {upcoming.length}件</span>
+            <span className="home-next-event__date">{formatEventDate(upcoming[0]).day}</span>
+            <span className="home-next-event__title">{upcoming[0].title}</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        )}
+
+        <div className="filter-bar filter-bar--scroll" role="group" aria-label="活動のカテゴリ">
           {filters.map(f => (
             <button
               key={f.key}
@@ -78,76 +83,38 @@ export default function ActivityPage({ initialFilter = 'all' }: { initialFilter?
           ))}
         </div>
 
-        {show('events') && (
-          <section className="activity-block" aria-labelledby="act-upcoming">
-            <SectionHeading id="act-upcoming" title="これからの予定" />
-            {events.loading && <p className="page__muted" aria-live="polite">読み込んでいます…</p>}
-            {events.error && <p className="page__muted">活動予定を読み込めませんでした。時間をおいて、もう一度お試しください。</p>}
-            {!events.loading && !events.error && upcoming.length === 0 && (
-              <Notice>
-                <p>いまお知らせできる予定はありません。決まりしだい、このページと LINE 公式アカウントでお知らせします。</p>
-                <p>
-                  <a href={lineUrl} target="_blank" rel="noopener noreferrer">
-                    LINE公式に登録する →
-                  </a>
-                </p>
-              </Notice>
-            )}
-            {upcoming.length > 0 && (
-              <div className="event-list">
-                {upcoming.map(e => (
-                  <EventCard key={e.id} event={e} />
-                ))}
-              </div>
-            )}
-            {volunteerEnabled && (
-              <p className="activity-block__more">
-                運営のお手伝いも募集しています。<a href={routeHref({ name: 'join' })}>一緒に活動する →</a>
-              </p>
-            )}
-          </section>
-        )}
-
-        {show('reports') && (
-          <section className="activity-block" aria-labelledby="act-reports">
-            <SectionHeading id="act-reports" title="活動報告" />
-            {reports.error && <p className="page__muted">活動報告を読み込めませんでした。時間をおいて、もう一度お試しください。</p>}
-            {reports.data && reports.data.length === 0 && <p>まだありません。</p>}
-            <div className="activity-list">
-              {(reports.data ?? []).map(item => (
-                <ActivityCard key={item.id} item={item} />
-              ))}
-            </div>
-            <p className="activity-block__more">
-              <a
-                href={socialLinks.find(s => s.key === 'instagram')!.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Instagramでもっとみる →
-              </a>
+        <div aria-live="polite">
+          {reports.loading && <p className="page__muted">読み込んでいます…</p>}
+          {reports.error && <p className="page__muted">活動報告を読み込めませんでした。時間をおいて、もう一度お試しください。</p>}
+          {reports.data && (
+            <p className="page__muted activity-count">
+              {shown.length}件{filter !== 'all' && `（全${reports.data.length}件）`}
             </p>
-          </section>
-        )}
+          )}
+        </div>
 
-        {filter === 'events' && (
-          <section className="activity-block" aria-labelledby="act-past">
-            <SectionHeading id="act-past" title="終了した活動" />
-            {past.length === 0 ? (
-              <p>まだありません。</p>
-            ) : (
-              <div className="event-list event-list--past">
-                {past.map(e => (
-                  <EventCard key={e.id} event={e} />
-                ))}
-              </div>
-            )}
-          </section>
+        {reports.data && shown.length === 0 && (
+          <p className="activity-empty">このカテゴリの活動報告は、まだありません。</p>
         )}
+        <div className="activity-list">
+          {shown.map(item => (
+            <ActivityCard key={item.id} item={item} />
+          ))}
+        </div>
 
-        <p className="activity-research-link">
-          政策づくりのための調査の進み具合は、<a href={routeHref({ name: 'research' })}>政策調査</a>のページにまとめています。
-        </p>
+        <div className="activity-links">
+          <p>
+            <a href={routeHref({ name: 'events' })}>イベント・活動予定を見る →</a>
+          </p>
+          <p>
+            <a href={socialLinks.find(s => s.key === 'instagram')!.href} target="_blank" rel="noopener noreferrer">
+              Instagramでもっとみる →
+            </a>
+          </p>
+          <p className="activity-research-link">
+            政策づくりのための調査の進み具合は、<a href={routeHref({ name: 'research' })}>政策調査</a>のページにまとめています。
+          </p>
+        </div>
       </div>
     </PageLayout>
   )

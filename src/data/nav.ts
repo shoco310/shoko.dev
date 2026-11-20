@@ -32,6 +32,12 @@ export const policyMenu: NavLink[] = [
   { label: '政策の変更履歴', href: routeHref({ name: 'changes' }), match: ['changes'] },
 ]
 
+/** "活動" menu: past activities and upcoming events are separate pages. */
+export const activityMenu: NavLink[] = [
+  { label: 'これまでの活動', href: routeHref({ name: 'activity' }), match: ['activity', 'report'] },
+  { label: 'イベント・活動予定', href: routeHref({ name: 'events' }), match: ['events', 'event'] },
+]
+
 /** Header order: ホーム｜私について｜V2MOM・政策｜活動｜市民の声 */
 export const mainNav: NavItem[] = [
   { label: 'ホーム', href: routeHref({ name: 'home', anchor: null }), match: ['home'] },
@@ -42,7 +48,12 @@ export const mainNav: NavItem[] = [
     match: ['vision', 'policies', 'policy', 'research', 'data', 'changes'],
     children: policyMenu,
   },
-  { label: '活動', href: routeHref({ name: 'activity' }), match: ['activity', 'events', 'report'] },
+  {
+    label: '活動',
+    href: routeHref({ name: 'activity' }),
+    match: ['activity', 'events', 'event', 'report'],
+    children: activityMenu,
+  },
   {
     label: '市民の声',
     // The public list is the hub; without it, the form is the only voice page.

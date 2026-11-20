@@ -403,7 +403,7 @@ function EventEditor({ row, onDone }: { row: EventRow | null; onDone: (id: strin
       <div className="admin-panel">
         <h2>プレビュー（サイトでの見え方）</h2>
         <div className="ev-preview">
-          <EventCard event={preview} />
+          <EventCard event={preview} detail={false} />
         </div>
       </div>
 

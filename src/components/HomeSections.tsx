@@ -100,7 +100,7 @@ export function ActivityTeaser() {
         }
       />
       {next && (
-        <a href={routeHref({ name: 'events' })} className="home-next-event">
+        <a href={routeHref({ name: 'event', slug: next.id })} className="home-next-event">
           <span className="home-next-event__label">次の予定</span>
           <span className="home-next-event__date">
             {formatEventDate(next).day}

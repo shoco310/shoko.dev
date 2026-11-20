@@ -21,7 +21,7 @@ describe('router', () => {
   })
 
   it('parses every static page to itself (regression: case fall-through)', () => {
-    for (const name of ['profile', 'vision', 'policies', 'research', 'data', 'activity', 'about', 'privacy', 'voice', 'join', 'changes', 'events'] as const) {
+    for (const name of ['profile', 'vision', 'policies', 'research', 'data', 'activity', 'about', 'privacy', 'voice', 'join', 'changes'] as const) {
       expect(parseHash(`#/${name}`)).toEqual({ name })
       expect(parseHash(`#/${name}/x`)).toEqual({ name: 'notFound' })
     }
@@ -40,32 +40,28 @@ describe('router', () => {
   })
 })
 
-describe('activity filter in the URL', async () => {
-  const { filterFromHash } = await import('../src/pages/ActivityPage')
-  it('reads ?type= and ignores unknown values', () => {
-    expect(parseHash('#/activity?type=events')).toEqual({ name: 'activity' })
-    expect(filterFromHash('#/activity?type=reports')).toBe('reports')
-    // The old 政策調査 filter is recognised so the page can send it to #/research.
-    expect(filterFromHash('#/activity?type=research')).toBe('research')
-    expect(filterFromHash('#/activity?type=x')).toBeNull()
+describe('activity and events URLs', async () => {
+  const { filterFromHash, filterReports } = await import('../src/pages/ActivityPage')
+  it('parses the events list and an event page', () => {
+    expect(parseHash('#/events')).toEqual({ name: 'events' })
+    expect(parseHash('#/events/2026-12-05-voice-meeting')).toEqual({ name: 'event', slug: '2026-12-05-voice-meeting' })
+    expect(parseHash('#/events/x')).toEqual({ name: 'notFound' })
+    expect(routeHref({ name: 'event', slug: '2026-12-05-voice-meeting' })).toBe('#/events/2026-12-05-voice-meeting')
+  })
+  it('reads ?category= and sends old ?type= links to the new pages', () => {
+    expect(parseHash('#/activity?category=media')).toEqual({ name: 'activity' })
+    expect(filterFromHash('#/activity?category=media')).toBe('media')
+    expect(filterFromHash('#/activity?category=x')).toBeNull()
     expect(filterFromHash('#/activity')).toBeNull()
+    expect(filterFromHash('#/activity?type=events')).toEqual({ redirect: '#/events' })
+    expect(filterFromHash('#/activity?type=research')).toEqual({ redirect: '#/research' })
+    expect(filterFromHash('#/activity?type=reports')).toBeNull()
   })
-})
-
-describe('legacy top-page anchors', () => {
-  const on = { volunteerEnabled: true }
-  it('sends moved sections to their new place', () => {
-    expect(legacyAnchorTarget('message', on)).toEqual({ route: { name: 'profile' } })
-    expect(legacyAnchorTarget('profile', on)).toEqual({ route: { name: 'profile' } })
-    expect(legacyAnchorTarget('support', on)).toEqual({ route: { name: 'join' } })
-    expect(legacyAnchorTarget('support', { volunteerEnabled: false })).toEqual({ anchor: 'contact' })
-    expect(legacyAnchorTarget('participate', on)).toEqual({ anchor: 'take-part' })
-    expect(legacyAnchorTarget('events', on)).toEqual({ anchor: 'activity' })
-  })
-  it('leaves anchors that still exist alone', () => {
-    for (const a of ['top', 'policy', 'activity', 'take-part', 'contact']) {
-      expect(legacyAnchorTarget(a, on)).toBeNull()
-    }
+  it('shows uncategorised reports under すべて only', () => {
+    const list = [{ category: null }, { category: 'media' as const }, { category: 'event' as const }]
+    expect(filterReports(list, 'all')).toHaveLength(3)
+    expect(filterReports(list, 'media')).toEqual([{ category: 'media' }])
+    expect(filterReports(list, 'volunteer')).toEqual([])
   })
 })
 
