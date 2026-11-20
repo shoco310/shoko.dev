@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { routeHref } from '../router'
+import { Breadcrumb, type Crumb } from './ui'
 
 /**
  * Shared frame for simple subpages (data, activity, about, privacy):
@@ -11,20 +12,34 @@ export default function PageLayout({
   en,
   title,
   lead,
+  breadcrumb,
+  bare = false,
   children,
 }: {
   en: string
   title: string
   lead?: ReactNode
+  /** Parent pages, nearest last. ホーム and the current title are added automatically. */
+  breadcrumb?: Crumb[]
+  /** Children bring their own full-width sections instead of the narrow column. */
+  bare?: boolean
   children: ReactNode
 }) {
+  const home = routeHref({ name: 'home', anchor: null })
   return (
     <article className="page">
       <header className="page__hero">
         <div className="container container--narrow">
-          <a href={routeHref({ name: 'home', anchor: null })} className="page__back">
-            ← トップページへ
-          </a>
+          {breadcrumb ? (
+            <Breadcrumb
+              tone="dark"
+              items={[{ label: 'ホーム', href: home }, ...breadcrumb, { label: title }]}
+            />
+          ) : (
+            <a href={home} className="page__back">
+              ← トップページへ
+            </a>
+          )}
           <span className="page__en" aria-hidden="true">
             {en}
           </span>
@@ -32,7 +47,7 @@ export default function PageLayout({
           {lead && <p className="page__lead">{lead}</p>}
         </div>
       </header>
-      <div className="container container--narrow page__body">{children}</div>
+      {bare ? children : <div className="container container--narrow page__body">{children}</div>}
     </article>
   )
 }

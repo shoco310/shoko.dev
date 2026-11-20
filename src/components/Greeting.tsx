@@ -4,21 +4,16 @@ const fadeUp = {
   hidden: { opacity: 0, y: 28 },
   show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: 'easeOut' } },
 }
-const fromLeft = {
-  hidden: { opacity: 0, x: -36 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.65, ease: 'easeOut' } },
-}
-const fromRight = {
-  hidden: { opacity: 0, x: 36 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.65, ease: 'easeOut' } },
-}
+// Fade only: sideways entrances started off-screen and widened the page on phones.
+const fromLeft = fadeUp
+const fromRight = fadeUp
 const stagger = {
   hidden: {},
   show: { transition: { staggerChildren: 0.14 } },
 }
 const listItem = {
-  hidden: { opacity: 0, x: -20 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.42, ease: 'easeOut' } },
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { duration: 0.42, ease: 'easeOut' } },
 }
 const visionItem = {
   hidden: { opacity: 0, y: 20, scale: 0.95 },
@@ -50,15 +45,18 @@ function Block({
   )
 }
 
-export default function Greeting() {
+export default function Greeting({
+  en = 'GREETING',
+  title = 'ごあいさつ',
+}: { en?: string; title?: string } = {}) {
   return (
     <section id="message" className="section section--tint">
       <div className="container">
 
         <Block variants={fadeUp}>
           <div className="section-heading">
-            <span className="section-heading__en">GREETING</span>
-            <h2 className="section-heading__ja">ごあいさつ</h2>
+            <span className="section-heading__en" aria-hidden="true">{en}</span>
+            <h2 className="section-heading__ja">{title}</h2>
             <div className="section-heading__line" />
           </div>
         </Block>

@@ -1,114 +1,243 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { voiceEnabled, volunteerEnabled } from '../data/features'
+import { useEffect, useId, useState } from 'react'
+import { useRoute, type Route } from '../router'
+import { useDisclosure } from '../lib/useDisclosure'
+import {
+  isCurrent,
+  lineOption,
+  mainNav,
+  participateOptions,
+  type NavItem,
+  type ParticipateOption,
+} from '../data/nav'
+import { IconLine } from './icons'
 
-export const navLinks = [
-  { href: '#policy', label: '政策' },
-  ...(voiceEnabled ? [{ href: '#participate', label: '声を届ける' }] : []),
-  ...(volunteerEnabled ? [{ href: '#/join', label: '一緒に活動する' }] : []),
-  { href: '#/events', label: '活動予定' },
-  { href: '#activity', label: '活動報告' },
-  { href: '#profile', label: 'プロフィール' },
-  { href: '#support', label: '後援会' },
-  { href: '#contact', label: 'お問い合わせ' },
-]
-
+/**
+ * Site header: ホーム｜私について｜V2MOM・政策 ▾｜活動｜市民の声 and the
+ * 「参加する」 button. On phones the five items move into the menu, while
+ * 「参加する」 stays visible next to the menu button.
+ */
 export default function Header() {
+  const route = useRoute()
   const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
+  const menu = useDisclosure<HTMLDivElement>()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60)
+    onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const closeMenu = () => setMenuOpen(false)
-
   return (
-    <>
-      <motion.header
-        className={`header${scrolled ? ' header--scrolled' : ''}`}
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-      >
-        <a href="#top" className="header__logo" onClick={closeMenu}>
-          <span className="header__logo-name">さとうしょうこ</span>
+    <header className={`site-header${scrolled ? ' is-scrolled' : ''}`}>
+      <div className="site-header__bar">
+        <a href={mainNav[0].href} className="site-header__logo">
+          さとうしょうこ
         </a>
 
-        <nav className="header__nav" aria-label="メインナビゲーション">
-          {navLinks.map(link => (
-            <a key={link.href} href={link.href} className="header__nav-link">
-              {link.label}
-            </a>
-          ))}
+        <nav className="site-nav" aria-label="メインナビゲーション">
+          <ul className="site-nav__list">
+            {mainNav.map(item =>
+              item.children ? (
+                <NavDropdown key={item.label} item={item} route={route} />
+              ) : (
+                <li key={item.label}>
+                  <a
+                    href={item.href}
+                    className="site-nav__link"
+                    aria-current={isCurrent(item, route) ? 'page' : undefined}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ),
+            )}
+          </ul>
         </nav>
 
-        <a
-          href="https://lin.ee/Rgs1sYR3"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="header__cta btn btn--primary"
-        >
-          <IconLine />
-          LINE登録
-        </a>
-
-        <button
-          className={`header__hamburger${menuOpen ? ' is-open' : ''}`}
-          onClick={() => setMenuOpen(prev => !prev)}
-          aria-label={menuOpen ? 'メニューを閉じる' : 'メニューを開く'}
-          aria-expanded={menuOpen}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
-      </motion.header>
-
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            className="mobile-menu"
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-          >
-            <nav className="mobile-menu__nav" aria-label="モバイルナビゲーション">
-              {navLinks.map(link => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="mobile-menu__link"
-                  onClick={closeMenu}
-                >
-                  {link.label}
-                </a>
-              ))}
-              <a
-                href="https://lin.ee/Rgs1sYR3"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn--primary mobile-menu__cta"
-                onClick={closeMenu}
-              >
-                <IconLine />
-                LINE公式に登録する
-              </a>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+        <div className="site-header__actions">
+          <ParticipateMenu />
+          <div ref={menu.wrapperRef} className="site-header__menu">
+            <button
+              ref={menu.buttonRef}
+              type="button"
+              className={`site-header__hamburger${menu.open ? ' is-open' : ''}`}
+              onClick={menu.toggle}
+              aria-expanded={menu.open}
+              aria-controls="mobile-menu"
+              aria-label={menu.open ? 'メニューを閉じる' : 'メニューを開く'}
+            >
+              <span />
+              <span />
+              <span />
+            </button>
+            <div id="mobile-menu" className="mobile-nav" hidden={!menu.open}>
+              <MobileNav route={route} onNavigate={() => menu.close()} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
   )
 }
 
-function IconLine() {
+function NavDropdown({ item, route }: { item: NavItem; route: Route }) {
+  const d = useDisclosure<HTMLLIElement>()
+  const panelId = useId()
+  const current = isCurrent(item, route)
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314" />
+    <li ref={d.wrapperRef} className="site-nav__dropdown">
+      <button
+        ref={d.buttonRef}
+        type="button"
+        className={`site-nav__link site-nav__toggle${current ? ' is-current' : ''}`}
+        aria-expanded={d.open}
+        aria-controls={panelId}
+        onClick={d.toggle}
+      >
+        {item.label}
+        <Chevron />
+      </button>
+      <div id={panelId} className="site-nav__panel" hidden={!d.open}>
+        <ul>
+          {item.children!.map(child => (
+            <li key={child.href}>
+              <a
+                href={child.href}
+                className="site-nav__panel-link"
+                aria-current={child.match.includes(route.name) && !child.sub ? 'page' : undefined}
+                onClick={() => d.close()}
+              >
+                {child.label}
+              </a>
+              {child.sub && (
+                <ul className="site-nav__sub">
+                  {child.sub.map(s => (
+                    <li key={s.href}>
+                      <a
+                        href={s.href}
+                        aria-current={route.name === 'policy' && route.slug === s.slug ? 'page' : undefined}
+                        onClick={() => d.close()}
+                      >
+                        {s.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </li>
+  )
+}
+
+function ParticipateMenu() {
+  const d = useDisclosure<HTMLDivElement>()
+  const panelId = useId()
+  return (
+    <div ref={d.wrapperRef} className="participate-menu">
+      <button
+        ref={d.buttonRef}
+        type="button"
+        className="btn btn--primary participate-menu__button"
+        aria-expanded={d.open}
+        aria-controls={panelId}
+        onClick={d.toggle}
+      >
+        参加する
+        <Chevron />
+      </button>
+      <div id={panelId} className="participate-menu__panel" hidden={!d.open}>
+        <ParticipateList onNavigate={() => d.close()} />
+      </div>
+    </div>
+  )
+}
+
+/** The participation choices; shared by the header button and the footer. */
+export function ParticipateList({ onNavigate }: { onNavigate?: () => void }) {
+  return (
+    <ul className="participate-list">
+      {participateOptions.map(opt => (
+        <li key={opt.href}>
+          <OptionLink opt={opt} onNavigate={onNavigate} />
+        </li>
+      ))}
+      <li className="participate-list__line">
+        <a href={lineOption.href} target="_blank" rel="noopener noreferrer" onClick={onNavigate}>
+          <IconLine size={18} />
+          {lineOption.label}
+          <span className="visually-hidden">（外部サイト）</span>
+        </a>
+      </li>
+    </ul>
+  )
+}
+
+function OptionLink({ opt, onNavigate }: { opt: ParticipateOption; onNavigate?: () => void }) {
+  return (
+    <a
+      href={opt.href}
+      className="participate-list__option"
+      onClick={onNavigate}
+      {...(opt.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+    >
+      <span className="participate-list__label">
+        {opt.label}
+        <span aria-hidden="true"> →</span>
+      </span>
+      <span className="participate-list__desc">{opt.description}</span>
+    </a>
+  )
+}
+
+function MobileNav({ route, onNavigate }: { route: Route; onNavigate: () => void }) {
+  return (
+    <nav aria-label="メニュー">
+      <ul className="mobile-nav__list">
+        {mainNav.map(item => (
+          <li key={item.label}>
+            {item.children ? (
+              <>
+                <p className="mobile-nav__group">{item.label}</p>
+                <ul className="mobile-nav__children">
+                  {item.children.map(child => (
+                    <li key={child.href}>
+                      <a
+                        href={child.href}
+                        className="mobile-nav__link mobile-nav__link--child"
+                        aria-current={child.match.includes(route.name) && !child.sub ? 'page' : undefined}
+                        onClick={onNavigate}
+                      >
+                        {child.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <a
+                href={item.href}
+                className="mobile-nav__link"
+                aria-current={isCurrent(item, route) ? 'page' : undefined}
+                onClick={onNavigate}
+              >
+                {item.label}
+              </a>
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+function Chevron() {
+  return (
+    <svg className="chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+      <path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   )
 }

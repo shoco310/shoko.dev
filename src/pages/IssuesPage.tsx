@@ -7,6 +7,8 @@ import { listPublishedIssues } from '../lib/publicIssues'
 import { useAsync } from '../lib/useAsync'
 import { routeHref } from '../router'
 import { ISSUE_THEMES, PROGRESS_OPTIONS } from '../shared/issues'
+import VoiceLoop, { EmergencyNote } from '../components/VoiceLoop'
+import { ButtonLink, Notice, SectionHeading } from '../components/ui'
 
 export default function IssuesPage() {
   const { data, error, loading } = useAsync(listPublishedIssues, [])
@@ -30,10 +32,41 @@ export default function IssuesPage() {
 
   return (
     <PageLayout
-      en="ISSUES"
-      title="みんなの声から見えた課題"
+      en="VOICES"
+      title="市民の声"
       lead="寄せられた困りごとやご意見をもとに、個人が特定できないよう要約した課題と、その後の取り組みの状況を公開しています。"
     >
+      <Notice title="送られた声の扱い">
+        <p>
+          ここに載せている課題は、寄せられた声を運営者の佐藤祥子が読み、個人が特定できる内容を除いて要約したものです。原文は公開していません。政策の4つの分類に当てはまらない課題も、そのまま載せています。
+        </p>
+      </Notice>
+      {voiceEnabled && (
+        <p className="issues-cta">
+          <ButtonLink href={routeHref({ name: 'voice' })} size="lg">
+            困りごと・ご意見を送る
+          </ButtonLink>
+        </p>
+      )}
+
+      {data && data.length > 0 && (
+        <section className="issues-summary" aria-labelledby="issues-summary-h">
+          <SectionHeading id="issues-summary-h" title="対応状況のまとめ" lead={`公開している課題 ${data.length}件の内訳です。`} />
+          <ul className="issues-summary__list">
+            {PROGRESS_OPTIONS.map(o => (
+              <li key={o.value}>
+                <span className="issues-summary__label">{o.short}</span>
+                <span className="issues-summary__count">
+                  {data.filter(i => i.progress === o.value).length}
+                  <small>件</small>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <SectionHeading id="issues-list-h" title="公開している課題" />
       <div className="issues-filters" role="group" aria-label="課題の絞り込み">
         <label>
           <span>テーマ</span>
@@ -90,16 +123,11 @@ export default function IssuesPage() {
         ))}
       </div>
 
-      <div className="policy-detail__note page__notice issues-note">
-        <p>
-          ここに載せている課題は、寄せられた声を運営者の佐藤祥子が読み、個人が特定できる内容を除いて要約したものです。原文は公開していません。政策の4つの分類に当てはまらない課題も、そのまま載せています。
-        </p>
-        {voiceEnabled && (
-          <p>
-            <a href={routeHref({ name: 'voice' })}>困りごと・ご意見を送る →</a>
-          </p>
-        )}
-      </div>
+      <section className="issues-loop" aria-labelledby="issues-loop-h">
+        <SectionHeading id="issues-loop-h" title="声が政策になるまで" />
+        <VoiceLoop />
+        <EmergencyNote />
+      </section>
     </PageLayout>
   )
 }
