@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { activities, type Activity, type ActivityType } from '../data/activity'
+import { routeHref } from '../router'
 
 const TYPE_LABELS: Record<ActivityType, string> = {
   note: 'note',
@@ -37,7 +38,7 @@ function formatDate(dateStr: string) {
   return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
 }
 
-function ActivityCard({ item }: { item: Activity }) {
+export function ActivityCard({ item }: { item: Activity }) {
   const isExternal = item.url !== '#'
   return (
     <motion.article
@@ -111,6 +112,9 @@ export default function ActivitySection() {
               className="btn btn--secondary"
             >
               Instagramでもっとみる →
+            </a>
+            <a href={routeHref({ name: 'activity' })} className="btn btn--secondary">
+              活動・調査の状況を見る →
             </a>
           </motion.div>
         </motion.div>

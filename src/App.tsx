@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { MotionConfig } from 'framer-motion'
 import Header from './components/Header'
 import Hero from './components/Hero'
@@ -10,60 +10,97 @@ import SupportSection from './components/SupportSection'
 import ContactSection from './components/ContactSection'
 import Footer from './components/Footer'
 import PolicyDetail from './pages/PolicyDetail'
-import { getPolicyBySlug } from './data/policy'
+import DataPage from './pages/DataPage'
+import ActivityPage from './pages/ActivityPage'
+import AboutPage from './pages/AboutPage'
+import PrivacyPage from './pages/PrivacyPage'
+import NotFoundPage from './pages/NotFoundPage'
+import { getPolicyBySlug, type Policy } from './data/policy'
+import { routeKey, useRoute, type Route } from './router'
 
-/**
- * Minimal hash-based routing — no router dependency, so it deploys as-is on
- * GitHub Pages' static hosting (deep links to a path like /policy/education
- * would 404 there without server config; a hash fragment never touches the
- * server). Route shape: '#/policy/<slug>'. Any other hash (including plain
- * in-page anchors like '#message') falls through to the normal one-page
- * layout, and the browser's native anchor scrolling still applies.
- */
-function usePolicySlugFromHash() {
-  const parse = () => {
-    const hash = window.location.hash
-    const match = hash.match(/^#\/policy\/([^/?#]+)/)
-    return match ? match[1] : null
+const SITE_TITLE = 'さとうしょうこ | 誰もが挑戦できる宇部へ'
+
+const pageTitles: Partial<Record<Route['name'], string>> = {
+  data: '数字で見る宇部',
+  activity: '活動・調査の状況',
+  about: 'このサイトについて',
+  privacy: 'プライバシーポリシー',
+  notFound: 'ページが見つかりません',
+}
+
+function titleFor(route: Route, policy: Policy | undefined): string {
+  if (route.name === 'home') return SITE_TITLE
+  if (route.name === 'policy') {
+    return policy ? `${policy.name} | さとうしょうこ` : `${pageTitles.notFound} | さとうしょうこ`
   }
-  const [slug, setSlug] = useState<string | null>(parse)
-
-  useEffect(() => {
-    const onHashChange = () => setSlug(parse())
-    window.addEventListener('hashchange', onHashChange)
-    return () => window.removeEventListener('hashchange', onHashChange)
-  }, [])
-
-  return slug
+  return `${pageTitles[route.name]} | さとうしょうこ`
 }
 
 export default function App() {
-  const policySlug = usePolicySlugFromHash()
-  const policy = policySlug ? getPolicyBySlug(policySlug) : undefined
+  const route = useRoute()
+  const policy = route.name === 'policy' ? getPolicyBySlug(route.slug) : undefined
+  const key = routeKey(route)
+  const mainRef = useRef<HTMLElement>(null)
+  const isFirstRender = useRef(true)
 
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [policySlug])
+    document.title = titleFor(route, policy)
+  }, [key, policy])
+
+  // On page change: jump to the requested in-page anchor (e.g. "#policy"
+  // from a subpage's nav) once the top page has rendered, otherwise start
+  // at the top. Move focus to <main> so screen readers announce the new
+  // page. Hash changes within the top page are left to the browser.
+  useEffect(() => {
+    const first = isFirstRender.current
+    isFirstRender.current = false
+
+    if (route.name === 'home' && route.anchor) {
+      const id = route.anchor
+      requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView())
+      return
+    }
+    if (first) return
+    window.scrollTo({ top: 0, behavior: 'instant' })
+    mainRef.current?.focus({ preventScroll: true })
+  }, [key])
 
   return (
     <MotionConfig reducedMotion="user">
       <Header />
-      <main>
-        {policy ? (
-          <PolicyDetail policy={policy} />
-        ) : (
-          <>
-            <Hero />
-            <Greeting />
-            <PolicySection />
-            <ActivitySection />
-            <ProfileSection />
-            <SupportSection />
-            <ContactSection />
-          </>
-        )}
+      <main ref={mainRef} tabIndex={-1} className="site-main">
+        {renderPage(route, policy)}
       </main>
       <Footer />
     </MotionConfig>
   )
+}
+
+function renderPage(route: Route, policy: Policy | undefined) {
+  switch (route.name) {
+    case 'home':
+      return (
+        <>
+          <Hero />
+          <Greeting />
+          <PolicySection />
+          <ActivitySection />
+          <ProfileSection />
+          <SupportSection />
+          <ContactSection />
+        </>
+      )
+    case 'policy':
+      return policy ? <PolicyDetail policy={policy} /> : <NotFoundPage />
+    case 'data':
+      return <DataPage />
+    case 'activity':
+      return <ActivityPage />
+    case 'about':
+      return <AboutPage />
+    case 'privacy':
+      return <PrivacyPage />
+    case 'notFound':
+      return <NotFoundPage />
+  }
 }
