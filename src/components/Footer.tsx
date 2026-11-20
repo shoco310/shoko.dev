@@ -1,5 +1,5 @@
 import { navLinks } from './Header'
-import { operator } from '../data/site'
+import { operator, supportersAssociation } from '../data/site'
 import { routeHref } from '../router'
 
 const subLinks = [
@@ -31,10 +31,10 @@ export default function Footer() {
           ))}
         </nav>
         <p className="footer__disclaimer">
-          このサイトは{operator.name}が運営する政治活動のウェブサイトです。宇部市の公式サイト・行政サービスではありません。
+          このサイトは{operator.displayName}が運営する、個人の政治活動・政策発信のためのウェブサイトです。宇部市の公式サイト・行政サービスではありません。
         </p>
         <div className="footer__bottom">
-          <p>© {operator.name}</p>
+          <p>© {supportersAssociation}</p>
         </div>
       </div>
     </footer>
