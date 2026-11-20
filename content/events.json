@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "2025-10-16-engineer-community-talk",
+    "title": "「エンジニア×地域コミュニティ〜宇部のこれから〜」に登壇",
+    "event_date": "2025-10-16",
+    "start_time": null,
+    "end_time": null,
+    "place": null,
+    "place_url": null,
+    "description": "エンジニアの視点から、地域コミュニティと宇部のこれからについてお話ししました。",
+    "audience": null,
+    "how_to_join": null,
+    "apply_url": null,
+    "status_override": null,
+    "report_activity_id": "6",
+    "report_url": null,
+    "published_at": "2026-11-20T08:31:06.084252+00:00",
+    "updated_at": "2026-11-20T08:31:06.084252+00:00"
+  },
+  {
+    "slug": "2026-04-18-genai-event",
+    "title": "生成AIを「基礎 → 実践」まで体験するイベント",
+    "event_date": "2026-04-18",
+    "start_time": null,
+    "end_time": null,
+    "place": null,
+    "place_url": null,
+    "description": "講演とワークショップの形式で、生成AIを基礎から実践まで体験していただきました。",
+    "audience": null,
+    "how_to_join": null,
+    "apply_url": null,
+    "status_override": null,
+    "report_activity_id": "2",
+    "report_url": null,
+    "published_at": "2026-11-20T08:31:06.084252+00:00",
+    "updated_at": "2026-11-20T08:31:06.084252+00:00"
+  }
+]
