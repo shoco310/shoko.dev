@@ -2474,6 +2474,7 @@ button {
 }
 .voice-form input[type='text'],
 .voice-form input[type='email'],
+.voice-form input[type='tel'],
 .voice-form select,
 .voice-form textarea {
   width: 100%;
@@ -2665,6 +2666,267 @@ button {
   .form-actions .btn {
     width: 100%;
     justify-content: center;
+  }
+}
+
+/* ===== Top page: "声を届ける" loop section ===== */
+.participate__intro {
+  max-width: 640px;
+  margin: -28px auto clamp(40px, 5vw, 56px);
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--gray);
+  line-height: 1.9;
+}
+.participate__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(28px, 4vw, 48px);
+}
+.participate__step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 28px 28px;
+  background: var(--white);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-md);
+}
+.participate__num {
+  font-family: var(--font-en);
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--pink);
+  letter-spacing: -0.02em;
+}
+.participate__title {
+  margin: 12px 0 10px;
+  font-size: 1.3rem;
+  font-weight: 900;
+}
+.participate__desc {
+  margin: 0 0 22px;
+  line-height: 1.95;
+  flex-grow: 1;
+}
+.participate__links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.participate__links .btn {
+  white-space: normal;
+  text-align: left;
+}
+.participate__arrow {
+  position: absolute;
+  top: 50%;
+  right: calc(-1 * clamp(28px, 4vw, 48px) / 2);
+  transform: translate(50%, -50%);
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--pink);
+  color: var(--white);
+  font-weight: 800;
+  z-index: 1;
+}
+.participate__loop {
+  margin: clamp(32px, 4vw, 44px) auto 0;
+  text-align: center;
+  font-weight: 800;
+  color: var(--pink-dark);
+}
+.participate__note {
+  max-width: 760px;
+  margin: 18px auto 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--gray);
+  line-height: 1.8;
+}
+
+@media (max-width: 860px) {
+  .participate__steps {
+    grid-template-columns: 1fr;
+  }
+  .participate__arrow {
+    top: auto;
+    right: auto;
+    bottom: calc(-1 * clamp(28px, 4vw, 48px) / 2);
+    left: 50%;
+    transform: translate(-50%, 50%) rotate(90deg);
+  }
+}
+
+/* ===== Hero: secondary links under the participation buttons ===== */
+.hero__sublinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: -10px 0 24px;
+}
+.hero__sublinks a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--pink-dark);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.hero__sublinks a:hover {
+  color: var(--pink-deep);
+}
+
+/* ===== Top page: two ways to take part ===== */
+.take-part__cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(20px, 3vw, 36px);
+}
+.take-part__cards--1 {
+  grid-template-columns: minmax(0, 640px);
+  justify-content: center;
+}
+.take-part__card {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(28px, 3.5vw, 40px);
+  background: var(--white);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-lg);
+}
+.take-part__tag {
+  align-self: flex-start;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--ink);
+}
+.take-part__title {
+  margin: 14px 0 10px;
+  font-size: clamp(1.35rem, 2.4vw, 1.6rem);
+  font-weight: 900;
+}
+.take-part__text {
+  margin: 0 0 14px;
+  line-height: 1.95;
+}
+.take-part__notes {
+  margin: 0 0 24px;
+  padding-left: 1.2em;
+  color: var(--gray);
+  font-size: 0.92rem;
+  line-height: 1.9;
+  flex-grow: 1;
+}
+.take-part__cta {
+  align-self: flex-start;
+}
+
+/* ===== Volunteer page (#/join) ===== */
+.join-intro {
+  margin-bottom: clamp(48px, 6vw, 72px);
+}
+.join-intro__title {
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 900;
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+.page__body .join-intro p {
+  font-size: 1.05rem;
+  line-height: 2;
+  margin: 0 0 6px;
+}
+.join-points {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.join-points li {
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  background: var(--pink);
+  color: var(--white);
+  font-weight: 800;
+  font-size: 0.92rem;
+}
+.join-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.join-card {
+  padding: 24px 26px;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-md);
+  background: var(--white);
+}
+.join-card__num {
+  font-family: var(--font-en);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--pink);
+}
+.join-card__title {
+  margin: 8px 0 10px;
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+.join-card__items {
+  margin: 0;
+  padding-left: 1.2em;
+  line-height: 1.95;
+}
+.join-done__title {
+  font-family: var(--font-jp);
+  letter-spacing: 0.02em;
+}
+.form-radios {
+  display: grid;
+  gap: 2px;
+}
+.form-radios .form-check {
+  margin-bottom: 8px;
+}
+.form-radios--inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 28px;
+}
+.join-association {
+  padding-bottom: 12px;
+}
+
+@media (max-width: 860px) {
+  .take-part__cards,
+  .join-cards {
+    grid-template-columns: 1fr;
+  }
+  .take-part__cta {
+    align-self: stretch;
   }
 }
 

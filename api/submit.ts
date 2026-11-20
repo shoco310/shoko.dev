@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
-import { handleSubmit, verifyTurnstileWithCloudflare } from './_lib/handleSubmit.js'
+import { handleSubmit } from './_lib/handleSubmit.js'
+import { KNOWN_DB_ERRORS, verifyTurnstileWithCloudflare } from './_lib/http.js'
 
 /**
  * Vercel Function: POST /api/submit (Node.js runtime, region hnd1 via vercel.json).
@@ -29,7 +30,7 @@ export async function POST(request: Request): Promise<Response> {
     callSubmitVoice: async args => {
       const { data, error } = await supabase.rpc('submit_voice', args)
       if (error) {
-        const known = ['rate_limited', 'invalid_email'].find(code => error.message === code)
+        const known = KNOWN_DB_ERRORS.find(code => error.message === code)
         return { error: known ?? error.code ?? 'unknown' }
       }
       return { receipt: data as string }

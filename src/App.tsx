@@ -5,6 +5,7 @@ import Hero from './components/Hero'
 import Greeting from './components/Greeting'
 import ActivitySection from './components/ActivitySection'
 import PolicySection from './components/PolicySection'
+import ParticipateSection from './components/ParticipateSection'
 import ProfileSection from './components/ProfileSection'
 import SupportSection from './components/SupportSection'
 import ContactSection from './components/ContactSection'
@@ -16,7 +17,9 @@ import AboutPage from './pages/AboutPage'
 import PrivacyPage from './pages/PrivacyPage'
 import NotFoundPage from './pages/NotFoundPage'
 import VoicePage from './pages/VoicePage'
-import { voiceEnabled } from './data/features'
+import JoinPage from './pages/JoinPage'
+import TakePartSection from './components/TakePartSection'
+import { voiceEnabled, volunteerEnabled } from './data/features'
 import { getPolicyBySlug, type Policy } from './data/policy'
 import { routeKey, useRoute, type Route } from './router'
 
@@ -28,12 +31,14 @@ const pageTitles: Partial<Record<Route['name'], string>> = {
   about: 'このサイトについて',
   privacy: 'プライバシーポリシー',
   voice: '困りごと・ご意見を送る',
+  join: '一緒に活動する',
   notFound: 'ページが見つかりません',
 }
 
 function titleFor(route: Route, policy: Policy | undefined): string {
   if (route.name === 'home') return SITE_TITLE
   if (route.name === 'voice' && !voiceEnabled) return `${pageTitles.notFound} | さとうしょうこ`
+  if (route.name === 'join' && !volunteerEnabled) return `${pageTitles.notFound} | さとうしょうこ`
   if (route.name === 'policy') {
     return policy ? `${policy.name} | さとうしょうこ` : `${pageTitles.notFound} | さとうしょうこ`
   }
@@ -88,8 +93,10 @@ function renderPage(route: Route, policy: Policy | undefined) {
           <Hero />
           <Greeting />
           <PolicySection />
+          {voiceEnabled && <ParticipateSection />}
           <ActivitySection />
           <ProfileSection />
+          {(voiceEnabled || volunteerEnabled) && <TakePartSection />}
           <SupportSection />
           <ContactSection />
         </>
@@ -106,6 +113,8 @@ function renderPage(route: Route, policy: Policy | undefined) {
       return <PrivacyPage />
     case 'voice':
       return voiceEnabled ? <VoicePage /> : <NotFoundPage />
+    case 'join':
+      return volunteerEnabled ? <JoinPage /> : <NotFoundPage />
     case 'notFound':
       return <NotFoundPage />
   }

@@ -20,6 +20,7 @@ export type Route =
   | { name: 'about' }
   | { name: 'privacy' }
   | { name: 'voice' }
+  | { name: 'join' }
   | { name: 'notFound' }
 
 export function parseHash(hash: string): Route {
@@ -48,6 +49,7 @@ export function parseHash(hash: string): Route {
     case 'about':
     case 'privacy':
     case 'voice':
+    case 'join':
       return second ? { name: 'notFound' } : { name: first }
     default:
       return { name: 'notFound' }

@@ -50,7 +50,9 @@ export function setAnalyticsAllowed(allowed: boolean) {
  * would record a page view for the submission page.
  */
 export function initAnalytics() {
-  const sync = () => setAnalyticsAllowed(parseHash(window.location.hash).name !== 'voice')
+  // No analytics on pages with forms that collect personal information.
+  const noAnalytics = new Set(['voice', 'join'])
+  const sync = () => setAnalyticsAllowed(!noAnalytics.has(parseHash(window.location.hash).name))
   window.addEventListener('popstate', sync)
   window.addEventListener('hashchange', sync)
   sync()

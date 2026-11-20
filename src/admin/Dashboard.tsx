@@ -11,7 +11,7 @@ function formatDateTime(iso: string) {
   return new Date(iso).toLocaleString('ja-JP', { dateStyle: 'medium', timeStyle: 'short' })
 }
 
-export default function Dashboard({ displayName, onSignOut }: { displayName: string; onSignOut: () => void }) {
+export default function Dashboard() {
   const [filter, setFilter] = useState<Filter>('received')
   const [items, setItems] = useState<Submission[]>([])
   const [counts, setCounts] = useState<Partial<Record<SubmissionStatus, number>>>({})
@@ -41,17 +41,7 @@ export default function Dashboard({ displayName, onSignOut }: { displayName: str
   const selected = items.find(i => i.id === selectedId) ?? null
 
   return (
-    <div className="admin">
-      <header className="admin-header">
-        <p className="admin-header__title">審査画面</p>
-        <div className="admin-header__user">
-          <span>{displayName}</span>
-          <button className="admin-link admin-link--light" onClick={onSignOut}>
-            ログアウト
-          </button>
-        </div>
-      </header>
-
+    <div>
       <nav className="admin-tabs" aria-label="状態で絞り込み">
         {[...statusOrder, 'all' as const].map(s => (
           <button

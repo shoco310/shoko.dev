@@ -1,4 +1,6 @@
 import { motion } from 'framer-motion'
+import { voiceEnabled, volunteerEnabled } from '../data/features'
+import { routeHref } from '../router'
 
 const container = {
   hidden: {},
@@ -41,25 +43,55 @@ export default function Hero() {
             挑戦できるまちを目指して活動しています。
           </motion.p>
 
-          <motion.div className="hero__btns" variants={item}>
-            <a
-              href="https://lin.ee/Rgs1sYR3"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn--primary btn--lg"
-            >
-              <IconLine />
-              LINE公式に登録する
-            </a>
-            <a
-              href="https://forms.gle/z3RQbWGoreoUCiZ4A"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn--secondary btn--lg"
-            >
-              後援会に入会する
-            </a>
-          </motion.div>
+          {voiceEnabled || volunteerEnabled ? (
+            <>
+              {/* Participation first; LINE and the join form stay one tap away
+                  (LINE is also in the header, joining in the 後援会 section). */}
+              <motion.div className="hero__btns" variants={item}>
+                {voiceEnabled && (
+                  <a href={routeHref({ name: 'voice' })} className="btn btn--primary btn--lg">
+                    <IconVoice />
+                    困りごと・ご意見を送る
+                  </a>
+                )}
+                {volunteerEnabled && (
+                  <a href={routeHref({ name: 'join' })} className={`btn ${voiceEnabled ? 'btn--secondary' : 'btn--primary'} btn--lg`}>
+                    <IconHands />
+                    一緒に活動する
+                  </a>
+                )}
+              </motion.div>
+              <motion.div className="hero__sublinks" variants={item}>
+                <a href="https://lin.ee/Rgs1sYR3" target="_blank" rel="noopener noreferrer">
+                  <IconLine />
+                  LINE公式に登録する
+                </a>
+                <a href="https://forms.gle/z3RQbWGoreoUCiZ4A" target="_blank" rel="noopener noreferrer">
+                  後援会に入会する
+                </a>
+              </motion.div>
+            </>
+          ) : (
+            <motion.div className="hero__btns" variants={item}>
+              <a
+                href="https://lin.ee/Rgs1sYR3"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn--primary btn--lg"
+              >
+                <IconLine />
+                LINE公式に登録する
+              </a>
+              <a
+                href="https://forms.gle/z3RQbWGoreoUCiZ4A"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn--secondary btn--lg"
+              >
+                後援会に入会する
+              </a>
+            </motion.div>
+          )}
 
           <motion.div className="hero__sns" variants={item}>
             <a
@@ -178,6 +210,26 @@ function IconX() {
   return (
     <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  )
+}
+
+function IconVoice() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12z" />
+      <path d="M8.5 11h7M8.5 14h4" />
+    </svg>
+  )
+}
+
+function IconHands() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="9" cy="7" r="3" />
+      <path d="M3 21v-2a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v2" />
+      <circle cx="17" cy="8" r="2.5" />
+      <path d="M17 13.5a4 4 0 0 1 4 4V21" />
     </svg>
   )
 }
