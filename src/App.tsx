@@ -99,9 +99,15 @@ export default function App() {
         if (!touched) go()
       }
       document.fonts?.ready.then(again)
-      // No cleanup: StrictMode re-runs this effect and would cancel it.
-      for (const ms of [400, 1000, 2000]) window.setTimeout(again, ms)
-      window.setTimeout(() => inputs.forEach(t => window.removeEventListener(t, stop)), 2500)
+      // Re-land whenever the page height changes (data can take a few
+      // seconds), for up to 5 s. No cleanup: StrictMode re-runs this
+      // effect and would cancel it.
+      const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(again)
+      ro?.observe(document.body)
+      window.setTimeout(() => {
+        ro?.disconnect()
+        inputs.forEach(t => window.removeEventListener(t, stop))
+      }, 5000)
       return
     }
     if (first) return
