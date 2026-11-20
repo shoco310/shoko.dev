@@ -89,15 +89,19 @@ export default function App() {
       const id = legacy?.anchor ?? route.anchor
       const go = () => document.getElementById(id)?.scrollIntoView()
       requestAnimationFrame(go)
-      // Events and reports above load afterwards and push sections down;
-      // land on the target again unless the reader has already scrolled.
-      const y = () => window.scrollY
-      let settled = 0
-      requestAnimationFrame(() => (settled = y()))
+      // Fonts, events and reports load afterwards and move sections down;
+      // land on the target again until the reader touches, scrolls or types.
+      let touched = false
+      const stop = () => (touched = true)
+      const inputs = ['wheel', 'touchstart', 'keydown', 'pointerdown'] as const
+      inputs.forEach(t => window.addEventListener(t, stop, { once: true, passive: true }))
+      const again = () => {
+        if (!touched) go()
+      }
+      document.fonts?.ready.then(again)
       // No cleanup: StrictMode re-runs this effect and would cancel it.
-      window.setTimeout(() => {
-        if (Math.abs(y() - settled) < 4) go()
-      }, 900)
+      for (const ms of [400, 1000, 2000]) window.setTimeout(again, ms)
+      window.setTimeout(() => inputs.forEach(t => window.removeEventListener(t, stop)), 2500)
       return
     }
     if (first) return
