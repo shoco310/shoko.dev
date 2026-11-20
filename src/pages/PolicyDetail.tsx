@@ -2,6 +2,8 @@ import { motion } from 'framer-motion'
 import { policies, type Policy, type SourceItem } from '../data/policy'
 import DataCard from '../components/DataCard'
 import ChangeEntry from '../components/ChangeEntry'
+import { listPublishedChanges } from '../lib/publicContent'
+import { useAsync } from '../lib/useAsync'
 import { routeHref } from '../router'
 import { PolicyIssues } from '../components/PolicyIssues'
 import { issuesEnabled } from '../data/features'
@@ -247,24 +249,9 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
           </Block>
         )}
 
-        {policy.changelog && policy.changelog.length > 0 && (
-          <Block>
-            <section className="policy-detail__section">
-              <h2 className="policy-detail__heading">更新履歴</h2>
-              <p>この政策を、いつ・なぜ・何をもとに変えたのかを記録しています。</p>
-              <ol className="changes">
-                {policy.changelog.map(c => (
-                  <ChangeEntry key={c.id} change={c} />
-                ))}
-              </ol>
-              <p className="page__more">
-                <a href={routeHref({ name: 'changes' })} className="btn btn--secondary">
-                  すべての政策の変更履歴を見る →
-                </a>
-              </p>
-            </section>
-          </Block>
-        )}
+        <Block>
+          <PolicyChanges slug={policy.slug} />
+        </Block>
 
         <Block>
           <div className="policy-detail__cta">
@@ -306,5 +293,28 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
         </div>
       </div>
     </article>
+  )
+}
+
+/** 更新履歴 for one policy, from the published policy_changes records. */
+function PolicyChanges({ slug }: { slug: string }) {
+  const { data, error } = useAsync(listPublishedChanges, [])
+  const mine = (data ?? []).filter(e => e.slugs.includes(slug))
+  return (
+    <section className="policy-detail__section">
+      <h2 className="policy-detail__heading">更新履歴</h2>
+      <p>この政策を、いつ・なぜ・何をもとに変えたのかを記録しています。</p>
+      {error && <p className="page__muted">更新履歴を読み込めませんでした。</p>}
+      <ol className="changes">
+        {mine.map(e => (
+          <ChangeEntry key={e.change.id} change={e.change} />
+        ))}
+      </ol>
+      <p className="page__more">
+        <a href={routeHref({ name: 'changes' })} className="btn btn--secondary">
+          すべての政策の変更履歴を見る →
+        </a>
+      </p>
+    </section>
   )
 }

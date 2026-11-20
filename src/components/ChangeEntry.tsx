@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { issuesEnabled } from '../data/features'
-import type { PolicyChange } from '../data/policy'
+import type { PolicyChange } from '../shared/changes'
 import { publishedIssueIds } from '../lib/publicIssues'
 import { routeHref } from '../router'
 
@@ -62,6 +62,11 @@ export default function ChangeEntry({
       <div className="change__body">
         {scope && <p className="change__scope">対象：{scope}</p>}
         <Heading className="change__summary">{change.summary}</Heading>
+        {change.corrects && (
+          <p className="change__corrects">
+            この記録は、<a href={`#change-${change.corrects}`}>以前の記録</a>の訂正です。
+          </p>
+        )}
 
         {change.reason && (
           <div className="change__block">

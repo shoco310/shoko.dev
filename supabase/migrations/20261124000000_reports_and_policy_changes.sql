@@ -19,7 +19,8 @@ create table public.activity_reports (
   report_date  date not null,
   summary      text not null check (char_length(btrim(summary)) between 1 and 400),
   body         text check (char_length(body) <= 20000),
-  photo_url    text check (photo_url ~ '^(https://|/images/)' and char_length(photo_url) <= 1000),
+  -- https URLs (Storage) or site images; http only for the local dev Storage.
+  photo_url    text check (photo_url ~ '^(https://|/images/|http://(127\.0\.0\.1|localhost):[0-9]+/)' and char_length(photo_url) <= 1000),
   photo_alt    text check (char_length(photo_alt) <= 200),
   external_url text check (external_url ~ '^https://' and char_length(external_url) <= 500),
   event_id     uuid references public.events (id) on delete set null,

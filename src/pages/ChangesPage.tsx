@@ -1,33 +1,20 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import PageLayout from '../components/PageLayout'
 import ChangeEntry from '../components/ChangeEntry'
-import { policies, type PolicyChange } from '../data/policy'
-
-/**
- * Every policy change in one place, newest first. A change shared by all
- * four policies (same id) is shown once with "4つの政策すべて".
- */
-export function allPolicyChanges(): { change: PolicyChange; slugs: string[] }[] {
-  const byId = new Map<string, { change: PolicyChange; slugs: string[] }>()
-  for (const p of policies) {
-    for (const c of p.changelog ?? []) {
-      const entry = byId.get(c.id) ?? { change: c, slugs: [] }
-      entry.slugs.push(p.slug)
-      byId.set(c.id, entry)
-    }
-  }
-  return [...byId.values()].sort((a, b) => b.change.date.localeCompare(a.change.date) || a.change.id.localeCompare(b.change.id))
-}
+import { policies } from '../data/policy'
+import { listPublishedChanges } from '../lib/publicContent'
+import { useAsync } from '../lib/useAsync'
 
 function scopeLabel(slugs: string[]) {
   if (slugs.length === policies.length) return '4つの政策すべて'
   return slugs.map(s => policies.find(p => p.slug === s)?.name ?? s).join('、')
 }
 
+/** Every published policy change, newest first. Past records are never deleted. */
 export default function ChangesPage() {
   const [policy, setPolicy] = useState('')
-  const all = useMemo(allPolicyChanges, [])
-  const shown = all.filter(e => !policy || e.slugs.includes(policy))
+  const { data, error, loading } = useAsync(listPublishedChanges, [])
+  const shown = (data ?? []).filter(e => !policy || e.slugs.includes(policy))
 
   return (
     <PageLayout
@@ -48,9 +35,11 @@ export default function ChangesPage() {
           </select>
         </label>
       </div>
-      <p className="page__muted" aria-live="polite">
-        {shown.length}件
-      </p>
+      <div aria-live="polite">
+        {loading && <p className="page__muted">読み込んでいます…</p>}
+        {error && <p className="page__muted">変更履歴を読み込めませんでした。時間をおいて、もう一度お試しください。</p>}
+        {data && <p className="page__muted">{shown.length}件</p>}
+      </div>
       <ol className="changes">
         {shown.map(e => (
           <ChangeEntry key={e.change.id} change={e.change} scope={scopeLabel(e.slugs)} headingLevel={3} />
@@ -58,7 +47,7 @@ export default function ChangesPage() {
       </ol>
       <div className="policy-detail__note page__notice">
         <p>
-          変更の詳しい記録は、すべて GitHub の履歴に残しています。各変更の「記録」から、実際に書き換えた内容を確認できます。
+          公開した記録は、あとから書き換えたり削除したりできない仕組みにしています。誤りがあった場合は、訂正の記録を新しく追加します。変更の詳しい内容は、各記録の「記録」から GitHub の履歴でも確認できます。
         </p>
       </div>
     </PageLayout>

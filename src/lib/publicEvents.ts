@@ -6,5 +6,5 @@ export async function listPublishedEvents(): Promise<EventItem[]> {
   const sb = await publicClient()
   const { data, error } = await sb.from('events').select(PUBLIC_EVENT_COLUMNS).order('event_date', { ascending: true })
   if (error) throw error
-  return ((data ?? []) as EventRow[]).map(rowToEvent)
+  return ((data ?? []) as unknown as EventRow[]).map(rowToEvent)
 }

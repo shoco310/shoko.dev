@@ -23,8 +23,7 @@ export interface EventItem {
   applyUrl?: string
   /** Manual override; upcoming → ended is automatic */
   status?: EventStatusOverride
-  /** id in src/data/activity.ts for the report written afterwards */
-  reportActivityId?: string
+  /** Link to the report written afterwards (external post or #/reports/<slug>) */
   reportUrl?: string
 }
 
@@ -45,13 +44,16 @@ export interface EventRow {
   status_override: EventStatusOverride | null
   report_activity_id: string | null
   report_url: string | null
+  report_id: string | null
+  /** Embedded published report (null when none or not published) */
+  report?: { slug: string; external_url: string | null } | null
   visibility: 'draft' | 'published'
   published_at: string | null
   updated_at: string
 }
 
 export const PUBLIC_EVENT_COLUMNS =
-  'id, slug, title, event_date, start_time, end_time, place, place_url, description, audience, how_to_join, apply_url, status_override, report_activity_id, report_url, visibility, published_at, updated_at'
+  'id, slug, title, event_date, start_time, end_time, place, place_url, description, audience, how_to_join, apply_url, status_override, report_activity_id, report_url, report_id, visibility, published_at, updated_at, report:activity_reports!events_report_id_fkey(slug, external_url)'
 
 const hhmm = (t: string | null) => (t ? t.slice(0, 5) : undefined)
 const opt = (s: string | null) => (s && s.trim() ? s : undefined)
@@ -70,7 +72,6 @@ export function rowToEvent(r: EventRow): EventItem {
     howToJoin: opt(r.how_to_join),
     applyUrl: opt(r.apply_url),
     status: r.status_override ?? undefined,
-    reportActivityId: opt(r.report_activity_id),
-    reportUrl: opt(r.report_url),
+    reportUrl: opt(r.report_url) ?? (r.report ? r.report.external_url ?? `#/reports/${r.report.slug}` : undefined),
   }
 }

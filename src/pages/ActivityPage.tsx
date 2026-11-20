@@ -1,6 +1,7 @@
 import PageLayout, { PageSection } from '../components/PageLayout'
 import { ActivityCard } from '../components/ActivitySection'
-import { activities } from '../data/activity'
+import { listPublishedReports } from '../lib/publicContent'
+import { useAsync } from '../lib/useAsync'
 import { policies } from '../data/policy'
 import { researchAsOf, researchGroups, researchStatusLabel, type ResearchStatus } from '../data/research'
 import { routeHref } from '../router'
@@ -13,7 +14,8 @@ function formatDate(iso: string) {
 }
 
 export default function ActivityPage() {
-  const sorted = [...activities].sort((a, b) => b.date.localeCompare(a.date))
+  const { data: reports, error } = useAsync(listPublishedReports, [])
+  const sorted = reports ?? []
 
   return (
     <PageLayout
@@ -61,6 +63,7 @@ export default function ActivityPage() {
       </PageSection>
 
       <PageSection title="活動報告">
+        {error && <p className="page__muted">活動報告を読み込めませんでした。時間をおいて、もう一度お試しください。</p>}
         <div className="activity-grid activity-grid--page">
           {sorted.map(item => (
             <ActivityCard key={item.id} item={item} />

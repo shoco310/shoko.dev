@@ -5,6 +5,8 @@ import Dashboard from './Dashboard'
 import VolunteerDashboard from './VolunteerDashboard'
 import IssuesDashboard, { type PendingSource } from './IssuesDashboard'
 import EventsAdmin from './EventsAdmin'
+import ReportsAdmin from './ReportsAdmin'
+import ChangesAdmin from './ChangesAdmin'
 
 type Phase =
   | { name: 'loading' }
@@ -68,7 +70,7 @@ export default function AdminApp() {
   if (!supabaseConfigured) {
     return (
       <AdminFrame>
-        <p className="admin-error">この環境では審査画面の設定が完了していません。</p>
+        <p className="admin-error">この環境ではダッシュボードの設定が完了していません。</p>
       </AdminFrame>
     )
   }
@@ -84,7 +86,7 @@ export default function AdminApp() {
     case 'notStaff':
       return (
         <AdminFrame>
-          <p className="admin-error">このアカウントには審査画面を使う権限がありません。</p>
+          <p className="admin-error">このアカウントにはダッシュボードを使う権限がありません。</p>
           <button className="btn btn--secondary" onClick={signOut}>ログアウト</button>
         </AdminFrame>
       )
@@ -97,7 +99,7 @@ function AdminFrame({ children }: { children: ReactNode }) {
   return (
     <main className="admin-auth">
       <div className="admin-auth__card">
-        <p className="admin-auth__brand">さとうしょうこ｜審査画面</p>
+        <p className="admin-auth__brand">さとうしょうこ｜ダッシュボード</p>
         {children}
       </div>
     </main>
@@ -208,12 +210,12 @@ function Mfa({
 }
 
 function AdminShell({ displayName, isAdmin, onSignOut }: { displayName: string; isAdmin: boolean; onSignOut: () => void }) {
-  const [view, setView] = useState<'voices' | 'issues' | 'volunteers' | 'events'>('voices')
+  const [view, setView] = useState<'voices' | 'issues' | 'volunteers' | 'events' | 'reports' | 'changes'>('voices')
   const [pendingSource, setPendingSource] = useState<PendingSource | null>(null)
   return (
     <div className="admin">
       <header className="admin-header">
-        <p className="admin-header__title">審査画面</p>
+        <p className="admin-header__title">ダッシュボード</p>
         <nav className="admin-views" aria-label="表示する情報">
           <button className={`admin-view${view === 'voices' ? ' is-active' : ''}`} aria-pressed={view === 'voices'} onClick={() => setView('voices')}>
             困りごと・ご意見
@@ -230,6 +232,12 @@ function AdminShell({ displayName, isAdmin, onSignOut }: { displayName: string; 
           </button>
           <button className={`admin-view${view === 'events' ? ' is-active' : ''}`} aria-pressed={view === 'events'} onClick={() => setView('events')}>
             活動予定
+          </button>
+          <button className={`admin-view${view === 'reports' ? ' is-active' : ''}`} aria-pressed={view === 'reports'} onClick={() => setView('reports')}>
+            活動報告
+          </button>
+          <button className={`admin-view${view === 'changes' ? ' is-active' : ''}`} aria-pressed={view === 'changes'} onClick={() => setView('changes')}>
+            政策変更履歴
           </button>
         </nav>
         <div className="admin-header__user">
@@ -252,6 +260,8 @@ function AdminShell({ displayName, isAdmin, onSignOut }: { displayName: string; 
       )}
       {view === 'volunteers' && <VolunteerDashboard />}
       {view === 'events' && <EventsAdmin isAdmin={isAdmin} />}
+      {view === 'reports' && <ReportsAdmin isAdmin={isAdmin} />}
+      {view === 'changes' && <ChangesAdmin isAdmin={isAdmin} />}
     </div>
   )
 }

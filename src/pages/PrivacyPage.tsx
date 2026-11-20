@@ -23,7 +23,7 @@ const services = [
     ? [
         {
           name: 'Supabase（Supabase Inc.・米国）',
-          use: [voiceEnabled && '投稿内容・連絡先の保存', volunteerEnabled && 'ボランティア登録情報の保存', '運営者のログイン管理']
+          use: [voiceEnabled && '投稿内容・連絡先の保存', volunteerEnabled && 'ボランティア登録情報の保存', '活動予定・活動報告（写真を含む）・政策の変更履歴などの公開情報の保存', '運営者のログイン管理']
             .filter(Boolean)
             .join('、'),
           where: 'データは東京リージョン（Amazon Web Services の日本国内のデータセンター）に保存します。同社による保守・障害対応のため、日本国外からアクセスされる可能性があります。',
