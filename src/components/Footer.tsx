@@ -7,6 +7,8 @@ const subLinks = [
   ...(voiceEnabled ? [{ href: routeHref({ name: 'voice' }), label: '困りごと・ご意見を送る' }] : []),
   ...(volunteerEnabled ? [{ href: routeHref({ name: 'join' }), label: '一緒に活動する（ボランティア）' }] : []),
   ...(issuesEnabled ? [{ href: routeHref({ name: 'issues' }), label: 'みんなの声から見えた課題' }] : []),
+  { href: routeHref({ name: 'events' }), label: '活動予定' },
+  { href: routeHref({ name: 'changes' }), label: '政策の変更履歴' },
   { href: routeHref({ name: 'data' }), label: '数字で見る宇部' },
   { href: routeHref({ name: 'activity' }), label: '活動・調査の状況' },
   { href: routeHref({ name: 'about' }), label: 'このサイトについて' },

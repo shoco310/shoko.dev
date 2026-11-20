@@ -61,15 +61,10 @@ export default function Hero() {
                   </a>
                 )}
               </motion.div>
-              <motion.div className="hero__sublinks" variants={item}>
-                <a href="https://lin.ee/Rgs1sYR3" target="_blank" rel="noopener noreferrer">
-                  <IconLine />
-                  LINE公式に登録する
-                </a>
-                <a href="https://forms.gle/z3RQbWGoreoUCiZ4A" target="_blank" rel="noopener noreferrer">
-                  後援会に入会する
-                </a>
-              </motion.div>
+              <motion.nav className="hero__sublinks" variants={item} aria-label="政策と活動">
+                <a href="#policy">4つの政策を見る</a>
+                <a href={routeHref({ name: 'events' })}>活動予定を見る</a>
+              </motion.nav>
             </>
           ) : (
             <motion.div className="hero__btns" variants={item}>
@@ -141,13 +136,6 @@ export default function Hero() {
             </a>
           </motion.div>
 
-          <motion.nav className="hero__nav" variants={item} aria-label="ページ内ナビゲーション">
-            <a href="#message">ごあいさつ</a>
-            <a href="#policy">4つの政策</a>
-            <a href="#activity">活動報告</a>
-            <a href="#profile">プロフィール</a>
-            <a href="#support">後援会</a>
-          </motion.nav>
         </motion.div>
       </div>
 

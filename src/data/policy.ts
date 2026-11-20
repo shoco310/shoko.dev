@@ -102,20 +102,45 @@ export interface SourceItem {
 }
 
 /**
- * One entry in a policy's public change history (newest first in the
- * array). Every entry should correspond to a commit that changed that
- * policy's content, so git history remains the detailed record and this list
- * is the plain-language summary for readers.
+ * One entry in a policy's public change history (newest first).
+ *
+ * Rules (2026-11-21):
+ *  - Record only changes that were actually made; every entry should point
+ *    to the commit(s) that made it (`commits`), so git stays the full record.
+ *  - Never delete or rewrite past entries; add a new entry instead.
+ *  - `relatedIssues` may only cite issues the operator has published; the
+ *    page also hides any that are not (or no longer) public.
+ *  - Never quote citizen submissions here.
  */
+export interface EvidenceRef {
+  label: string
+  url?: string
+}
+
+export interface PolicyDiff {
+  /** What part changed (e.g. a heading, a badge, a sentence) */
+  label: string
+  before: string
+  after: string
+}
+
 export interface PolicyChange {
+  /** Stable id, e.g. '2026-09-27-research-data' (used for anchors and dedup) */
+  id: string
   /** YYYY-MM-DD */
   date: string
   /** What changed, in plain language */
   summary: string
   /** Why it changed (e.g. new research, a correction, citizen input) */
   reason?: string
+  /** Public data or research the change rests on */
+  evidence?: EvidenceRef[]
   /** Published issue numbers (#/issues/<id>) that led to this change */
   relatedIssues?: number[]
+  /** Before/after wording, when showing it helps */
+  diffs?: PolicyDiff[]
+  /** Short commit hashes in shoco310/shoko.dev that made the change */
+  commits?: string[]
 }
 
 export interface Policy {
@@ -147,21 +172,63 @@ export interface Policy {
  * Site-wide revisions that touched all four policies alike. Policy-specific
  * entries go before these in each policy's own `changelog`.
  */
-const sharedChangelog: PolicyChange[] = [
+export const sharedChangelog: PolicyChange[] = [
   {
+    id: '2026-09-27-research-data',
     date: '2026-09-27',
     summary:
-      '「数字で見る宇部の現状」「調査結果から考えられること」「市民の声」「関連資料・出典」を追加しました。',
+      '「数字で見る宇部の現状」「調査結果から考えられること」「市民の声」「関連資料・出典」を追加しました。取り組みに付けていた表示と、一部の見出しも改めました。',
     reason:
       '宇部市の計画書・アンケート調査などの公式資料を確認し、出典を確認できたデータだけを掲載するためです。あわせて、調査の対象や母数の書き方を正確にし、「関連する既存制度あり」の表示が政策の進め方まで決めているように読めないよう表現を改めました。',
+    evidence: [
+      {
+        label: '宇部市人口ビジョン【改訂版】（令和7年3月）',
+        url: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/007/034/vision202503.pdf',
+      },
+      {
+        label: '宇部市こども計画（令和7年3月）',
+        url: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/023/097/ubeshikodomokeikaku.pdf',
+      },
+      {
+        label: '第9期宇部市高齢者福祉計画【概要版】（令和6年3月）',
+        url: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/005/423/9gaiyou.pdf',
+      },
+      {
+        label: '令和6年度 学童保育クラブ利用者アンケート結果（全体集計）',
+        url: 'https://www.city.ube.yamaguchi.jp/_res/projects/default_project/_page_/001/023/525/2024-zenntai.pdf',
+      },
+      { label: '宇部市のパブリックコメント実施結果（人口ビジョン・総合戦略の改訂素案）' },
+    ],
+    diffs: [
+      {
+        label: '取り組みに付ける表示',
+        before: '「既存制度の拡充」／「既存制度との関係を確認中」',
+        after: '「関連する既存制度あり」（関係する制度が確認できた取り組みだけに表示）',
+      },
+      {
+        label: '関連制度の書き方',
+        before: '該当する既存制度：…',
+        after: '関連制度：…',
+      },
+      {
+        label: '見出し',
+        before: '既存制度と改善を検討する点',
+        after: '（「なぜ、この政策が必要なのか」と「調査結果から考えられること」に整理）',
+      },
+    ],
+    commits: ['708e835', '72ada07'],
   },
   {
+    id: '2026-09-26-detail-pages',
     date: '2026-09-26',
     summary: '政策ごとの詳細ページを新しく作り、背景・具体的な取り組み・必要な理由を掲載しました。',
+    commits: ['7ecad88'],
   },
   {
+    id: '2026-06-17-first-publish',
     date: '2026-06-17',
     summary: '4つの政策を公開しました。',
+    commits: ['d96ed76'],
   },
 ]
 

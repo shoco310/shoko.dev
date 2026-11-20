@@ -22,6 +22,8 @@ export type Route =
   | { name: 'voice' }
   | { name: 'join' }
   | { name: 'issues' }
+  | { name: 'changes' }
+  | { name: 'events' }
   | { name: 'issue'; id: number }
   | { name: 'notFound' }
 
@@ -49,6 +51,8 @@ export function parseHash(hash: string): Route {
     case 'issues':
       if (!second) return { name: 'issues' }
       return /^[1-9][0-9]{0,8}$/.test(second) ? { name: 'issue', id: Number(second) } : { name: 'notFound' }
+    case 'changes':
+    case 'events':
     case 'data':
     case 'activity':
     case 'about':

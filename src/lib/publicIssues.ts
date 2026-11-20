@@ -59,3 +59,22 @@ export async function listIssuesForPolicy(slug: string): Promise<PublicIssue[]> 
   if (error) throw error
   return (data ?? []) as unknown as PublicIssue[]
 }
+
+let publishedIdsPromise: Promise<Set<number>> | null = null
+
+/** Ids of currently published issues (cached per page load). */
+export function publishedIssueIds(): Promise<Set<number>> {
+  if (!publishedIdsPromise) {
+    publishedIdsPromise = client()
+      .then(sb => sb.from('public_issues').select('id'))
+      .then(({ data, error }) => {
+        if (error) throw error
+        return new Set((data ?? []).map(r => (r as { id: number }).id))
+      })
+      .catch(e => {
+        publishedIdsPromise = null
+        throw e
+      })
+  }
+  return publishedIdsPromise
+}
