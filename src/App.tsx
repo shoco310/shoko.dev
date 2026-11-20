@@ -22,7 +22,6 @@ import JoinPage from './pages/JoinPage'
 import IssuesPage from './pages/IssuesPage'
 import IssueDetailPage from './pages/IssueDetailPage'
 import ChangesPage from './pages/ChangesPage'
-import EventsPage from './pages/EventsPage'
 import ReportPage from './pages/ReportPage'
 import UpcomingEventsSection from './components/UpcomingEventsSection'
 import TakePartSection from './components/TakePartSection'
@@ -37,12 +36,12 @@ const pageTitles: Partial<Record<Route['name'], string>> = {
   vision: 'V2MOM（目指す未来）',
   policies: '4つの重点政策',
   data: '数字で見る宇部',
-  activity: '活動・調査の状況',
+  activity: '活動',
   about: 'このサイトについて',
   privacy: 'プライバシーポリシー',
   voice: '困りごと・ご意見を送る',
   join: '一緒に活動する',
-  issues: 'みんなの声から見えた課題',
+  issues: '市民の声',
   changes: '政策の変更履歴',
   events: '活動予定',
   report: '活動報告',
@@ -157,7 +156,7 @@ function renderPage(route: Route, policy: Policy | undefined) {
     case 'changes':
       return <ChangesPage />
     case 'events':
-      return <EventsPage />
+      return <ActivityPage initialFilter="events" />
     case 'report':
       return <ReportPage slug={route.slug} />
     case 'issue':

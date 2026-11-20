@@ -1191,3 +1191,110 @@ section[id] {
   gap: 0 var(--space-4);
   margin: var(--space-5) 0 0;
 }
+
+/* ===== Activity page ===== */
+.activity-page {
+  padding-block: var(--space-5) var(--section-gap);
+}
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-6);
+}
+.filter-bar__button {
+  min-height: var(--tap);
+  padding: 8px 20px;
+  border: var(--line-w) solid var(--line-soft);
+  border-radius: var(--radius-full);
+  background: var(--white);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 800;
+}
+.filter-bar__button:hover {
+  border-color: var(--pink);
+  color: var(--pink-dark);
+}
+.filter-bar__button[aria-pressed="true"] {
+  background: var(--pink-dark);
+  border-color: var(--pink-dark);
+  color: var(--white);
+}
+.activity-block + .activity-block {
+  margin-top: var(--space-8);
+}
+.activity-block__more {
+  margin: var(--space-3) 0 0;
+}
+.activity-block__more a,
+.activity-block .ui-notice a {
+  color: var(--pink-dark);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.activity-page .activity-grid--page {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+/* ===== 市民の声 (#/issues) ===== */
+.issues-cta {
+  margin: var(--space-3) 0 var(--space-6);
+}
+.issues-summary {
+  margin-bottom: var(--space-6);
+}
+.issues-summary__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.issues-summary__list li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+.issues-summary__label {
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  color: var(--gray);
+}
+.issues-summary__count {
+  font-family: var(--font-en);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--pink-dark);
+  line-height: 1.2;
+}
+.issues-summary__count small {
+  margin-left: 2px;
+  font-family: var(--font-jp);
+  font-size: var(--fs-sm);
+  color: var(--ink);
+}
+.issues-loop {
+  margin-top: var(--section-gap);
+}
+.issues-loop .participate__intro,
+.issues-loop .participate__loop,
+.issues-loop .participate__note {
+  text-align: left;
+  margin-inline: 0;
+}
+.issues-loop .participate__intro {
+  margin-top: 0;
+}
+.issues-loop .participate__step {
+  padding: 24px 20px;
+}
+.issues-loop .participate__desc {
+  font-size: var(--fs-sm);
+  line-height: 1.8;
+}

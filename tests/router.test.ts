@@ -39,3 +39,13 @@ describe('router', () => {
     expect(parseHash('#/join')).toEqual({ name: 'join' })
   })
 })
+
+describe('activity filter in the URL', async () => {
+  const { filterFromHash } = await import('../src/pages/ActivityPage')
+  it('reads ?type= and ignores unknown values', () => {
+    expect(parseHash('#/activity?type=events')).toEqual({ name: 'activity' })
+    expect(filterFromHash('#/activity?type=research')).toBe('research')
+    expect(filterFromHash('#/activity?type=x')).toBeNull()
+    expect(filterFromHash('#/activity')).toBeNull()
+  })
+})
