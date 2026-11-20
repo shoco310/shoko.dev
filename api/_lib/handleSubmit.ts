@@ -43,9 +43,26 @@ export function clientIp(request: Request): string | null {
   return request.headers.get('x-real-ip')
 }
 
+/**
+ * The unit a rate limit applies to. IPv4: the address. IPv6: the /64
+ * network, because one household or phone rotates through many addresses
+ * inside its /64 (privacy extensions), so counting full addresses would make
+ * the limit meaningless for IPv6 users.
+ */
+export function rateLimitKey(ip: string): string {
+  const v4 = ip.replace(/^::ffff:/i, '')
+  if (!v4.includes(':')) return v4
+  const [head, tail = ''] = v4.toLowerCase().split('::')
+  const headParts = head ? head.split(':') : []
+  const tailParts = tail ? tail.split(':') : []
+  const missing = 8 - headParts.length - tailParts.length
+  const full = v4.includes('::') ? [...headParts, ...Array(Math.max(missing, 0)).fill('0'), ...tailParts] : headParts
+  return full.slice(0, 4).map(p => p.replace(/^0+(?=.)/, '')).join(':') + '::/64'
+}
+
 export function hashIp(ip: string | null, salt: string): string | null {
   if (!ip) return null
-  return createHmac('sha256', salt).update(ip).digest('hex')
+  return createHmac('sha256', salt).update(rateLimitKey(ip)).digest('hex')
 }
 
 function isSameOrigin(request: Request): boolean {
@@ -113,6 +130,8 @@ export async function handleSubmit(request: Request, deps: SubmitDeps): Promise<
 
   if (result.receipt) return json({ ok: true, receiptNo: result.receipt }, 200)
   if (result.error === 'rate_limited') return fail('rate_limited', 429)
+  if (result.error === 'busy') return fail('busy', 503)
+  if (result.error === 'duplicate') return fail('duplicate', 409)
   if (result.error === 'invalid_email') return fail('invalid', 400, ['email'])
   log(`db_error:${result.error ?? 'unknown'}`)
   return fail('server_error', 500)

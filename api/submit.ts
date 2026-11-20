@@ -29,7 +29,7 @@ export async function POST(request: Request): Promise<Response> {
     callSubmitVoice: async args => {
       const { data, error } = await supabase.rpc('submit_voice', args)
       if (error) {
-        const known = ['rate_limited', 'invalid_email'].find(code => error.message === code)
+        const known = ['rate_limited', 'busy', 'duplicate', 'invalid_email'].find(code => error.message === code)
         return { error: known ?? error.code ?? 'unknown' }
       }
       return { receipt: data as string }
