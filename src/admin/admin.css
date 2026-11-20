@@ -488,3 +488,72 @@ body {
 .issue-editor .issue-card {
   pointer-events: none;
 }
+
+.admin-pad {
+  padding: 24px;
+}
+.ev-field {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+.ev-field label {
+  font-weight: 800;
+  font-size: 1rem;
+}
+.ev-field input,
+.ev-field select,
+.ev-field textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 1rem;
+  padding: 12px;
+  min-height: 48px;
+  border: 1.5px solid #bdbdbd;
+  border-radius: var(--radius-sm);
+  background: var(--white);
+}
+.ev-field [aria-invalid='true'] {
+  border-color: var(--pink-dark);
+}
+.ev-hint,
+.ev-error {
+  margin: 0;
+}
+.ev-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 12px;
+}
+.ev-preview .event-card {
+  pointer-events: none;
+}
+.ev-actions .admin-actions {
+  flex-wrap: wrap;
+}
+.ev-actions .btn {
+  min-height: 48px;
+}
+.ev-delete {
+  justify-self: start;
+  color: var(--pink-deep);
+  min-height: 44px;
+}
+@media (max-width: 720px) {
+  .ev-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .ev-row .ev-field:first-child {
+    grid-column: 1 / -1;
+  }
+  .ev-actions .btn {
+    width: 100%;
+  }
+  .admin-views {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+  .admin-view {
+    white-space: nowrap;
+  }
+}

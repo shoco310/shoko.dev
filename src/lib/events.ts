@@ -1,5 +1,5 @@
 import { activities } from '../data/activity'
-import { events, type EventItem } from '../data/events'
+import type { EventItem } from '../shared/events'
 
 /**
  * Event status and ordering. All dates and times in the data are Japan time
@@ -38,11 +38,13 @@ export const stateLabels: Record<EventState, string> = {
 
 /**
  * Upcoming: not yet ended (soonest first). Cancelled / postponed events stay
- * here, labelled, until their date passes. Past: ended (newest first).
+ * here, labelled, until their date passes. Past: ended by time or marked
+ * ended by hand (newest first).
  */
-export function splitEvents(list: EventItem[] = events, now = Date.now()) {
-  const upcoming = list.filter(e => now < endsAt(e)).sort((a, b) => startsAt(a) - startsAt(b))
-  const past = list.filter(e => now >= endsAt(e)).sort((a, b) => startsAt(b) - startsAt(a))
+export function splitEvents(list: EventItem[], now = Date.now()) {
+  const isPast = (e: EventItem) => e.status === 'ended' || now >= endsAt(e)
+  const upcoming = list.filter(e => !isPast(e)).sort((a, b) => startsAt(a) - startsAt(b))
+  const past = list.filter(isPast).sort((a, b) => startsAt(b) - startsAt(a))
   return { upcoming, past }
 }
 

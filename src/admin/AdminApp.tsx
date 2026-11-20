@@ -4,6 +4,7 @@ import { supabase, supabaseConfigured } from './supabase'
 import Dashboard from './Dashboard'
 import VolunteerDashboard from './VolunteerDashboard'
 import IssuesDashboard, { type PendingSource } from './IssuesDashboard'
+import EventsAdmin from './EventsAdmin'
 
 type Phase =
   | { name: 'loading' }
@@ -207,7 +208,7 @@ function Mfa({
 }
 
 function AdminShell({ displayName, isAdmin, onSignOut }: { displayName: string; isAdmin: boolean; onSignOut: () => void }) {
-  const [view, setView] = useState<'voices' | 'issues' | 'volunteers'>('voices')
+  const [view, setView] = useState<'voices' | 'issues' | 'volunteers' | 'events'>('voices')
   const [pendingSource, setPendingSource] = useState<PendingSource | null>(null)
   return (
     <div className="admin">
@@ -226,6 +227,9 @@ function AdminShell({ displayName, isAdmin, onSignOut }: { displayName: string; 
             onClick={() => setView('volunteers')}
           >
             ボランティア（後援会）
+          </button>
+          <button className={`admin-view${view === 'events' ? ' is-active' : ''}`} aria-pressed={view === 'events'} onClick={() => setView('events')}>
+            活動予定
           </button>
         </nav>
         <div className="admin-header__user">
@@ -247,6 +251,7 @@ function AdminShell({ displayName, isAdmin, onSignOut }: { displayName: string; 
         <IssuesDashboard isAdmin={isAdmin} pendingSource={pendingSource} onPendingUsed={() => setPendingSource(null)} />
       )}
       {view === 'volunteers' && <VolunteerDashboard />}
+      {view === 'events' && <EventsAdmin isAdmin={isAdmin} />}
     </div>
   )
 }
