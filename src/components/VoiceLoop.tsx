@@ -26,7 +26,10 @@ const steps = [
     num: '03',
     title: '活動を公開する',
     desc: '調査がどこまで進んだか、どんな活動をしたかを報告します。そしてまた、新しい声を集めます。',
-    links: [{ href: routeHref({ name: 'activity' }), label: '活動を見る', primary: false }],
+    links: [
+      { href: routeHref({ name: 'research' }), label: '政策調査を見る', primary: false },
+      { href: routeHref({ name: 'activity' }), label: '活動を見る', primary: false },
+    ],
   },
 ]
 
