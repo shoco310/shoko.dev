@@ -3,20 +3,19 @@ import { voiceEnabled } from '../data/features'
 
 /**
  * 声が政策になるまで: gather voices → improve policy → report activity →
- * gather again. Moved from the top page's 「声を届ける」 section (wording
- * unchanged; links now point to the new pages).
+ * gather again. Step texts as written by the operator (2026-11-21).
  */
 const steps = [
   {
     num: '01',
     title: '声を集める',
-    desc: '暮らしの中の困りごとや、政策へのご意見をフォームから送れます。内容は公開されず、佐藤祥子が一つひとつ読みます。',
+    desc: '暮らしの中で感じる困りごとや、宇部市の政策へのご意見・アイデアをお寄せください。いただいた声は公開せず、一つひとつ大切に読み、今後の政策づくりに活かします。',
     links: voiceEnabled ? [{ href: routeHref({ name: 'voice' }), label: '困りごと・ご意見を送る', primary: true }] : [],
   },
   {
     num: '02',
     title: '政策を改善する',
-    desc: 'いただいた声と、宇部市の公式な資料やデータを照らし合わせて政策を見直します。見直した内容は「政策の変更履歴」で公開します。',
+    desc: '宇部市の課題に向き合うため、4つの政策を掲げています。市民の皆さんの声や、公式資料・データをもとに政策調査を進め、よりよい政策へと改善していきます。',
     links: [
       { href: routeHref({ name: 'policies' }), label: '4つの政策を見る', primary: false },
       { href: routeHref({ name: 'research' }), label: '政策調査を見る', primary: false },
@@ -25,7 +24,7 @@ const steps = [
   {
     num: '03',
     title: '活動を公開する',
-    desc: '調査がどこまで進んだか、どんな活動をしたかを報告します。そしてまた、新しい声を集めます。',
+    desc: '政策の見直しや調査の進捗は「政策の変更履歴」で公開します。また、日々どのような活動をしているのかも発信し、取り組みの過程を見えるようにします。',
     links: [
       { href: routeHref({ name: 'changes' }), label: '政策の変更履歴', primary: false },
       { href: routeHref({ name: 'activity' }), label: '活動を見る', primary: false },
