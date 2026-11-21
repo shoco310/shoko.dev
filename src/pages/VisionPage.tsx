@@ -222,6 +222,9 @@ export default function VisionPage() {
               市民の声を届ける
             </ButtonLink>
           )}
+          <ButtonLink href={routeHref({ name: 'research' })} variant="secondary" size="lg">
+            政策調査を見る
+          </ButtonLink>
           <ButtonLink href={routeHref({ name: 'activity' })} variant="secondary" size="lg">
             活動の進捗を見る
           </ButtonLink>
