@@ -86,6 +86,25 @@ export default function PolicyDetail({ policy }: { policy: Policy }) {
           {policy.background.map((p, i) => (
             <p key={i}>{p}</p>
           ))}
+          {policy.stance && (
+            <div className="policy-detail__sub policy-stance">
+              <h3 className="policy-detail__subheading">{policy.stance.heading}</h3>
+              <p className="policy-stance__title">{policy.stance.title}</p>
+              {policy.stance.body.map((t, i) => (
+                <p key={i} className="policy-stance__body">
+                  {t}
+                </p>
+              ))}
+              <ul className="policy-stance__items">
+                {policy.stance.items.map(it => (
+                  <li key={it.label}>
+                    <span className="policy-stance__label">{it.label}</span>
+                    <span className="policy-stance__text">{it.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </Block>
 
         <Block id="current" n={2} title="現状と課題">

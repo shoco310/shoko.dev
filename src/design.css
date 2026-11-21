@@ -1704,3 +1704,157 @@ a.profile-award:hover {
   color: var(--pink-dark);
   text-decoration: underline;
 }
+
+/* ===== V2MOM: 15px explanatory text (2026-11-21) ===== */
+#values .v2mom-value p,
+#obstacles .v2mom-obstacles dd,
+#measures .v2mom-layers dd,
+#measures .v2mom-measures,
+#measures .v2mom-details li {
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.75;
+}
+#values p.v2mom-value__question {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.7;
+}
+/* Methods: name / catchphrase / description, one row per policy */
+.v2mom-method {
+  grid-template-rows: auto auto auto;
+  align-items: start;
+  row-gap: 2px;
+}
+.v2mom-method__num {
+  grid-row: 1 / 4;
+  line-height: 1.6;
+}
+.v2mom-method__aim {
+  font-weight: 500;
+  color: var(--pink-dark);
+}
+.v2mom-method__desc {
+  margin-top: 4px;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--gray);
+}
+.v2mom-method {
+  padding: var(--space-3) var(--space-1);
+}
+/* Principles: number, name, bold message, explanation */
+.v2mom-principles {
+  max-width: none;
+}
+.v2mom-principles ol {
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line-soft);
+}
+.v2mom-principle {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-1);
+  border-bottom: 1px solid var(--line-soft);
+}
+.v2mom-principles li + li {
+  margin-top: 0;
+}
+.v2mom-principle__num {
+  font-family: var(--font-en);
+  font-weight: 600;
+  color: var(--pink);
+  line-height: 1.7;
+}
+.v2mom-principle__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.v2mom-principle__title {
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  line-height: 1.5;
+}
+.v2mom-principles .v2mom-principle__lead::after {
+  content: none;
+}
+.v2mom-principle__lead {
+  font-weight: 700;
+  color: var(--pink-dark);
+}
+.v2mom-principle__body {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: var(--gray);
+}
+.v2mom-measures td[lang="en"] {
+  font-family: var(--font-en);
+  font-weight: 600;
+  color: var(--pink-dark);
+  white-space: nowrap;
+}
+
+/* ===== Policy page: 市政運営の基本姿勢 ===== */
+.policy-stance__title {
+  margin: 0 0 var(--space-1) !important;
+  font-size: var(--fs-h3) !important;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.policy-detail__section .policy-stance__body {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  margin-bottom: 10px;
+}
+.policy-stance__items {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+}
+.policy-stance__items li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) var(--space-2);
+}
+.policy-stance__items li:first-child {
+  padding-left: 0;
+}
+.policy-stance__items li + li {
+  border-left: 1px solid var(--line-soft);
+}
+.policy-stance__label {
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  color: var(--pink-dark);
+}
+.policy-stance__text {
+  font-size: 0.9375rem;
+  color: var(--gray);
+}
+@media (max-width: 600px) {
+  .policy-stance__items {
+    grid-template-columns: 1fr;
+  }
+  .policy-stance__items li,
+  .policy-stance__items li:first-child {
+    padding: 12px 0;
+  }
+  .policy-stance__items li + li {
+    border-left: 0;
+    border-top: 1px solid var(--line-soft);
+  }
+}
+.v2mom-candidates-lead {
+  max-width: var(--measure);
+  margin: 0 0 var(--space-2);
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: var(--gray);
+}
