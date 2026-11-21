@@ -16,10 +16,10 @@ const steps = [
   {
     num: '02',
     title: '政策を改善する',
-    desc: 'いただいた声と、宇部市の公式な資料やデータを照らし合わせて政策を見直します。見直した内容は、各政策ページの「更新履歴」で公開します。',
+    desc: 'いただいた声と、宇部市の公式な資料やデータを照らし合わせて政策を見直します。見直した内容は「政策の変更履歴」で公開します。',
     links: [
       { href: routeHref({ name: 'policies' }), label: '4つの政策を見る', primary: false },
-      { href: routeHref({ name: 'data' }), label: '数字で見る宇部', primary: false },
+      { href: routeHref({ name: 'changes' }), label: '政策の変更履歴', primary: false },
     ],
   },
   {
