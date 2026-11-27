@@ -4,6 +4,7 @@ import { routeHref } from '../router'
 import { issuesEnabled, voiceEnabled } from '../data/features'
 import {
   fieldIndicators,
+  measureCandidates,
   measureLayers,
   measures,
   measuresNote,
@@ -100,6 +101,7 @@ export default function VisionPage() {
                   <span className="v2mom-method__num" aria-hidden="true">{p?.number}</span>
                   <span className="v2mom-method__field">{m.field}</span>
                   <span className="v2mom-method__aim">{m.aim}</span>
+                  <span className="v2mom-method__desc">{m.description}</span>
                 </a>
               </li>
             )
@@ -108,10 +110,16 @@ export default function VisionPage() {
         <div className="v2mom-principles">
           <h3>横断する行動原則</h3>
           <ol>
-            {principles.map(p => (
-              <li key={p.title}>
-                <strong>{p.title}</strong>
-                {p.body}
+            {principles.map((p, i) => (
+              <li key={p.title} className="v2mom-principle">
+                <span className="v2mom-principle__num" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span className="v2mom-principle__text">
+                  <span className="v2mom-principle__title">{p.title}</span>
+                  <strong className="v2mom-principle__lead">{p.lead}</strong>
+                  <span className="v2mom-principle__body">{p.body}</span>
+                </span>
               </li>
             ))}
           </ol>
@@ -202,6 +210,37 @@ export default function VisionPage() {
             ))}
           </ul>
         </details>
+        <h3 className="v2mom-h3">市政運営の基本姿勢についての指標（検討中）</h3>
+        <p className="v2mom-candidates-lead">
+          透明性・市民参加・データ活用の成果を確かめるため、次の指標を検討しています。新しい目標値はまだ設定していません。指標の定義と計測方法を整理してから設定します。
+        </p>
+        <div className="table-scroll">
+          <table className="v2mom-measures">
+            <caption className="visually-hidden">検討中の指標</caption>
+            <thead>
+              <tr>
+                <th scope="col">区分</th>
+                <th scope="col">指標の例</th>
+                <th scope="col">目標</th>
+              </tr>
+            </thead>
+            <tbody>
+              {measureCandidates.map(m => (
+                <tr key={m.label}>
+                  <td lang="en">{m.layer}</td>
+                  <th scope="row">{m.label}</th>
+                  <td>
+                    <span className="v2mom-measures__pending">検討中</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="v2mom-note">
+          ※議員個人の活動で実行できる指標と、市・議会全体で取り組む行政改革の成果指標は、区別して扱います。
+        </p>
+
         <details className="v2mom-details">
           <summary>分野別の成果指標候補</summary>
           <ul>

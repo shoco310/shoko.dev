@@ -101,6 +101,14 @@ export interface SourceItem {
   type: 'primary' | 'report' | 'reference'
 }
 
+/** A short block of principles shown under 目指す未来 (civic only for now). */
+export interface PolicyStance {
+  heading: string
+  title: string
+  body: string[]
+  items: { label: string; text: string }[]
+}
+
 export interface Policy {
   slug: string
   number: string
@@ -111,6 +119,8 @@ export interface Policy {
   /** Short summary shown on the top-page card — unchanged since Ver.1 */
   summary: string
   background: string[]
+  /** Shown under 目指す未来 after the background text */
+  stance?: PolicyStance
   initiatives: PolicyInitiative[]
   challenges: string[]
   existingSystems: string[]
@@ -474,6 +484,19 @@ export const policies: Policy[] = [
       '行政が一方的に決めるのではなく、市民一人ひとりの声が届き、まちづくりに反映されていく。そんな開かれた市政を目指したいと考えています。',
       '技術コミュニティの運営を通じて、多様な立場の人が対話しながら物事を進めていく場づくりに携わってきた経験を、行政と市民の対話にも活かしていきたいです。',
     ],
+    stance: {
+      heading: '市政運営の基本姿勢',
+      title: '見える・参加できる・改善し続ける市政へ',
+      body: [
+        '行政の情報や意思決定の過程をわかりやすく公開し、市民が政策づくりに参加できる機会を広げます。',
+        'データと現場の声の両方を大切にし、根拠に基づいて課題を捉え、政策の成果を検証しながら改善を続ける市政を目指します。',
+      ],
+      items: [
+        { label: '見える', text: '情報公開・透明性' },
+        { label: '参加できる', text: '市民参加・対話' },
+        { label: '改善する', text: 'データ活用・効果検証' },
+      ],
+    },
     initiatives: [
       {
         title: '若者からシニアまで幅広い世代の市民参加',
@@ -483,7 +506,7 @@ export const policies: Policy[] = [
       },
       {
         title: '予算、事業進捗、政策成果の可視化',
-        desc: '税金がどう使われ、事業がどのように進んでいるのか、市民が確認しやすい形での情報公開・可視化を進めます。',
+        desc: '税金がどう使われ、事業がどのように進んでいるのか、市民が確認しやすい形での情報公開・可視化を進めます。公開するだけでなく、政策ごとに目標と成果を確認できる仕組みを整えます。データと市民の声をもとに効果を検証し、必要に応じて施策を見直すことで、継続的な改善につなげます。',
         status: 'existing',
         statusNote: '予算・決算の公開、議会会議録検索システム',
       },

@@ -3,6 +3,8 @@
  * 理念・重点政策・成果指標（草案）」 (Notion, 政策・V2MOM草案 v1.0).
  *
  * Copy the manuscript's wording only — do not add to it or reword it here.
+ * Additions on 2026-11-21 (Methods descriptions, principles, Measures
+ * candidates) are the operator's own wording from the 改修指示書.
  * Not published on purpose (decided 2026-11-20): 実行ロードマップ（案）,
  * 政策調査・確認事項（未完了）, and links to internal Notion pages.
  *
@@ -54,18 +56,58 @@ export const values: Value[] = [
   },
 ]
 
-/** Methods: the manuscript's short field names and aims. Links go to the policy pages. */
-export const methods: { slug: string; field: string; aim: string }[] = [
-  { slug: 'education', field: '教育・人材育成', aim: '知らない未来を選べる未来へ' },
-  { slug: 'work', field: '仕事・産業', aim: '宇部にいても働き方を選べる' },
-  { slug: 'childcare', field: '女性・子育て', aim: 'ライフステージで可能性を狭めない' },
-  { slug: 'civic', field: '市民参加・行政改革', aim: 'まちの未来を市民が選べる' },
+/**
+ * Methods: field name, catchphrase and a short description for each policy.
+ * Links go to the policy pages.
+ */
+export const methods: { slug: string; field: string; aim: string; description: string }[] = [
+  {
+    slug: 'education',
+    field: '教育・人材育成',
+    aim: '知らない未来を、知って選べるまちへ',
+    description:
+      '子どもから大人まで、多様な仕事や生き方、学びの選択肢に触れられる機会を広げます。地域や世代を超えた人との出会いや学びを通じて、一人ひとりが自分の可能性を見つけられる環境を目指します。',
+  },
+  {
+    slug: 'work',
+    field: '仕事・産業',
+    aim: '宇部にいても、挑戦できるまちへ',
+    description:
+      '地域の企業や産業の強みを活かしながら、新しい働き方や仕事に挑戦できる機会を広げます。起業やキャリア形成、多様な働き方を支え、宇部に暮らしながら自分らしい仕事を選べる環境を目指します。',
+  },
+  {
+    slug: 'childcare',
+    field: '女性・子育て',
+    aim: 'ライフステージで可能性を諦めない',
+    description:
+      '妊娠・出産・子育て・介護など、ライフステージの変化によって、仕事や学び、挑戦の機会が制限されない社会を目指します。性別にかかわらず、一人ひとりが希望する生き方を選べる環境を整えます。',
+  },
+  {
+    slug: 'civic',
+    field: '市民参加・行政改革',
+    aim: 'まちの未来を、市民とともにつくる',
+    description:
+      '行政の情報や意思決定の過程をわかりやすく公開し、誰もが市政を知り、意見を届けられる環境を目指します。市民との対話とデータに基づいて政策を考え、成果を検証しながら改善し続ける市政を目指します。',
+  },
 ]
 
-export const principles: { title: string; body: string }[] = [
-  { title: '現場から始める', body: '多様な当事者の声とデータの両方を確認する。' },
-  { title: 'オープンである', body: '政策の根拠、活動、判断の過程を公開する。' },
-  { title: '行動し、改善し続ける', body: '小さく試し、測定し、結果に応じて見直す。' },
+/** 横断する行動原則: name, a short bold message, and the explanation. */
+export const principles: { title: string; lead: string; body: string }[] = [
+  {
+    title: '挑戦する姿勢',
+    lead: '自ら実践し、小さく始める',
+    body: 'まず自分で試し、実践から学ぶ。前例にとらわれず、新しい技術や仕組みを取り入れる。',
+  },
+  {
+    title: 'オープンである',
+    lead: '情報を開き、市民とともに考える',
+    body: '活動内容や意思決定の根拠をわかりやすく公開する。多様な市民の声を聞き、対話を通じて政策を考える。',
+  },
+  {
+    title: '行動し、改善し続ける',
+    lead: 'データと現場の声をもとに改善する',
+    body: '課題を客観的に捉え、実行した取り組みの成果を検証する。うまくいかなかったことも公開し、改善につなげる。',
+  },
 ]
 
 export const process = ['知る', 'つなぐ', '試す', '測る', '改善する']
@@ -120,4 +162,17 @@ export const fieldIndicators: { field: string; body: string }[] = [
   { field: '仕事', body: '支援制度を知り、相談・学習・起業準備へ進んだ割合。' },
   { field: '子育て', body: '支援制度の利用障壁の特定数、改善状況。' },
   { field: '市民参加', body: '意見受付数、対応状況公開率、参加者の多様性。' },
+]
+
+/**
+ * Indicators being considered for the 市政運営の基本姿勢 (transparency,
+ * participation, data). No targets yet: they are set only after the
+ * definition and measurement method are settled.
+ */
+export const measureCandidates: { layer: 'Output' | 'Outcome' | 'Impact'; label: string }[] = [
+  { layer: 'Output', label: '活動報告・政策検討資料の公開件数' },
+  { layer: 'Output', label: '市民対話・意見交換の実施回数' },
+  { layer: 'Outcome', label: '市民から寄せられた意見への回答率' },
+  { layer: 'Outcome', label: '市民の意見を政策提案に反映した件数' },
+  { layer: 'Impact', label: '市政への理解度や参加機会の変化' },
 ]
