@@ -8,15 +8,14 @@ import { issuesEnabled } from '../data/features'
 import { formatJaDate } from '../lib/inPage'
 import { routeHref } from '../router'
 
-/** Link to one policy's research on #/research ('#/research?policy=education'). */
+/** Link to one policy's research ('/research?policy=education'). */
 export function researchHref(slug?: string) {
   return slug ? `${routeHref({ name: 'research' })}?policy=${encodeURIComponent(slug)}` : routeHref({ name: 'research' })
 }
 
-/** Read ?policy= from the hash. */
-export function policyFromHash(hash: string): string | null {
-  const q = hash.split('?')[1]
-  const slug = q ? new URLSearchParams(q).get('policy') : null
+/** Read ?policy= from the query string. */
+export function policyFromSearch(search: string): string | null {
+  const slug = new URLSearchParams(search).get('policy')
   return slug && policies.some(p => p.slug === slug) ? slug : null
 }
 
@@ -37,7 +36,7 @@ const groupHeading: Record<ResearchStatus, string> = {
  * record.
  */
 export default function ResearchPage() {
-  const target = policyFromHash(window.location.hash)
+  const target = policyFromSearch(window.location.search)
 
   useEffect(() => {
     if (!target) return

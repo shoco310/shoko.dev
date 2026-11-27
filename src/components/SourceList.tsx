@@ -6,7 +6,7 @@ export const sourceTypeLabel: Record<SourceItem['type'], string> = {
   reference: '参考・他自治体事例',
 }
 
-/** 関連資料・出典 list, shared by the policy pages and #/research (data: policy.ts sourceList). */
+/** 関連資料・出典 list, shared by the policy pages and /research (data: policy.ts sourceList). */
 export function SourceList({ sources }: { sources: SourceItem[] }) {
   return (
     <ul className="policy-detail__sources">

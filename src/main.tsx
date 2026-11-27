@@ -5,7 +5,11 @@ import './styles.css'
 import './ui.css'
 import './design.css'
 import { initAnalytics } from './analytics'
+import { installLinkInterceptor, upgradeLegacyHash } from './router'
 
+// Old '#/…' links become paths before anything reads the URL.
+upgradeLegacyHash()
+installLinkInterceptor()
 // Before React renders, so GA is never loaded when landing on the submission page.
 initAnalytics()
 

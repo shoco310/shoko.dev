@@ -24,7 +24,7 @@ import { formatJaDate, jumpTo as jump } from '../lib/inPage'
 /**
  * V2MOM 2027: Vision, Values, Methods, Obstacles, Measures — in the order the
  * manuscript asks for. Methods only introduces the four policies; their
- * details live on #/policies and the policy pages.
+ * details live on /policies and the policy pages.
  */
 export default function VisionPage() {
   return (

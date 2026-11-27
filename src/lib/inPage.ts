@@ -1,8 +1,8 @@
 import type { MouseEvent } from 'react'
 
 /**
- * Handler for in-page links (tables of contents). The URL hash holds the
- * route, so scroll to the target and move focus there without touching it.
+ * Handler for in-page links (tables of contents): scroll to the target and
+ * move focus there, without adding a history entry for each jump.
  */
 export function jumpTo(id: string) {
   return (e: MouseEvent) => {

@@ -7,7 +7,7 @@
  *    `window['ga-disable-<ID>'] = true` flag until they leave it.
  * The privacy policy (src/pages/PrivacyPage.tsx) states this behaviour.
  */
-import { parseHash } from './router'
+import { currentRoute, parseLocation, ROUTE_CHANGE, ROUTE_WILL_CHANGE } from './router'
 
 const GA_ID = 'G-5PK8VTS383'
 const disableKey = `ga-disable-${GA_ID}`
@@ -52,7 +52,13 @@ export function setAnalyticsAllowed(allowed: boolean) {
 export function initAnalytics() {
   // No analytics on pages with forms that collect personal information.
   const noAnalytics = new Set(['voice', 'join'])
-  const sync = () => setAnalyticsAllowed(!noAnalytics.has(parseHash(window.location.hash).name))
+  const sync = () => setAnalyticsAllowed(!noAnalytics.has(currentRoute().name))
+  // Before the URL changes, so the flag is set before GA sees the new page.
+  window.addEventListener(ROUTE_WILL_CHANGE, e => {
+    const url = (e as CustomEvent<URL>).detail
+    setAnalyticsAllowed(!noAnalytics.has(parseLocation(url.pathname, url.hash).name))
+  })
+  window.addEventListener(ROUTE_CHANGE, sync)
   window.addEventListener('popstate', sync)
   window.addEventListener('hashchange', sync)
   sync()

@@ -46,5 +46,5 @@ export const REPORT_KIND_LABELS: Record<ReportKind, string> = {
 /** Where a report card links: the external post if any, else the report page on this site. */
 export function reportHref(r: Pick<ReportRow, 'slug' | 'external_url' | 'body'>): string {
   if (r.external_url) return r.external_url
-  return `#/reports/${r.slug}`
+  return `/reports/${r.slug}`
 }

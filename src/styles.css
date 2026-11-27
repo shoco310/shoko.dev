@@ -2214,7 +2214,7 @@ button {
   align-self: flex-start;
 }
 
-/* ===== Volunteer page (#/join) ===== */
+/* ===== Volunteer page (/join) ===== */
 .join-intro {
   margin-bottom: clamp(48px, 6vw, 72px);
 }
@@ -2306,7 +2306,7 @@ button {
   }
 }
 
-/* ===== Public issues (#/issues) ===== */
+/* ===== Public issues (/issues) ===== */
 .page__body .page__muted {
   color: var(--gray);
   font-size: 1rem;

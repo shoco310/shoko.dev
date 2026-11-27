@@ -12,7 +12,7 @@ function formatDate(iso: string) {
   return `${y}年${m}月${d}日`
 }
 
-/** One activity report written on this site (#/reports/<slug>). */
+/** One activity report written on this site (/reports/<slug>). */
 export default function ReportPage({ slug }: { slug: string }) {
   const { data, error, loading } = useAsync(() => getPublishedReport(slug), [slug])
   const missing = !loading && !error && !data

@@ -1026,7 +1026,7 @@ section[id] {
   text-underline-offset: 3px;
 }
 
-/* ===== Policy list (#/policies) ===== */
+/* ===== Policy list (/policies) ===== */
 .ui-card__text .policy-card__tagline {
   font-weight: 800;
   color: var(--pink-dark);
@@ -1096,7 +1096,7 @@ section[id] {
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 }
 
-/* ===== 市民の声 (#/issues) ===== */
+/* ===== 市民の声 (/issues) ===== */
 .issues-cta {
   margin: var(--space-3) 0 var(--space-6);
 }

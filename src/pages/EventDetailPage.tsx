@@ -8,7 +8,7 @@ import { formatJaDate } from '../lib/inPage'
 import { routeHref } from '../router'
 
 /**
- * One event (#/events/<slug>): kept after it ends. Links to the reports
+ * One event (/events/<slug>): kept after it ends. Links to the reports
  * written about it (their 「関連するイベント」, or the event's own report link).
  */
 export default function EventDetailPage({ slug }: { slug: string }) {

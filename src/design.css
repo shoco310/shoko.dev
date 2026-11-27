@@ -889,7 +889,7 @@ body {
   border-color: var(--pink-dark);
 }
 
-/* ----- 4つの重点政策 (#/policies) ----- */
+/* ----- 4つの重点政策 (/policies) ----- */
 .policy-rows {
   margin: 0;
   padding: 0;
@@ -1048,7 +1048,7 @@ body {
   }
 }
 
-/* ===== 政策調査 (#/research) ===== */
+/* ===== 政策調査 (/research) ===== */
 .research-summary {
   display: flex;
   flex-wrap: wrap;

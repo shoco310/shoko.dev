@@ -23,7 +23,7 @@ export interface EventItem {
   applyUrl?: string
   /** Manual override; upcoming → ended is automatic */
   status?: EventStatusOverride
-  /** Link to the report written afterwards (external post or #/reports/<slug>) */
+  /** Link to the report written afterwards (external post or /reports/<slug>) */
   reportUrl?: string
 }
 
@@ -72,6 +72,6 @@ export function rowToEvent(r: EventRow): EventItem {
     howToJoin: opt(r.how_to_join),
     applyUrl: opt(r.apply_url),
     status: r.status_override ?? undefined,
-    reportUrl: opt(r.report_url) ?? (r.report ? r.report.external_url ?? `#/reports/${r.report.slug}` : undefined),
+    reportUrl: opt(r.report_url) ?? (r.report ? r.report.external_url ?? `/reports/${r.report.slug}` : undefined),
   }
 }

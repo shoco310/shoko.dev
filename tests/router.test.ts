@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { legacyAnchorTarget, parseHash, routeHref } from '../src/router'
+import { legacyAnchorTarget, legacyHashToPath, parseLocation, routeHref } from '../src/router'
+
+/** Old hash URLs still resolve: '#/vision' → the vision route. */
+const parseHash = (hash: string) => parseLocation('/', hash)
+const parsePath = (path: string) => parseLocation(path.split('#')[0], path.includes('#') ? '#' + path.split('#')[1] : '')
 
 describe('router', () => {
   it('keeps legacy and in-page URLs working', () => {
@@ -11,7 +15,7 @@ describe('router', () => {
   it('parses issue routes', () => {
     expect(parseHash('#/issues')).toEqual({ name: 'issues' })
     expect(parseHash('#/issues/12')).toEqual({ name: 'issue', id: 12 })
-    expect(routeHref({ name: 'issue', id: 12 })).toBe('#/issues/12')
+    expect(routeHref({ name: 'issue', id: 12 })).toBe('/issues/12')
   })
 
   it('rejects malformed issue numbers', () => {
@@ -29,9 +33,9 @@ describe('router', () => {
 
   it('sends the bare #/policy to the policy list', () => {
     expect(parseHash('#/policy')).toEqual({ name: 'policies' })
-    expect(routeHref({ name: 'policies' })).toBe('#/policies')
-    expect(routeHref({ name: 'vision' })).toBe('#/vision')
-    expect(routeHref({ name: 'profile' })).toBe('#/profile')
+    expect(routeHref({ name: 'policies' })).toBe('/policies')
+    expect(routeHref({ name: 'vision' })).toBe('/vision')
+    expect(routeHref({ name: 'profile' })).toBe('/profile')
   })
 
   it('parses the form pages', () => {
@@ -41,22 +45,22 @@ describe('router', () => {
 })
 
 describe('activity and events URLs', async () => {
-  const { filterFromHash, filterReports } = await import('../src/pages/ActivityPage')
+  const { filterFromSearch, filterReports } = await import('../src/pages/ActivityPage')
   it('parses the events list and an event page', () => {
     expect(parseHash('#/events')).toEqual({ name: 'events' })
     expect(parseHash('#/events/2026-12-05-voice-meeting')).toEqual({ name: 'event', slug: '2026-12-05-voice-meeting' })
     expect(parseHash('#/events/x')).toEqual({ name: 'notFound' })
-    expect(routeHref({ name: 'event', slug: '2026-12-05-voice-meeting' })).toBe('#/events/2026-12-05-voice-meeting')
+    expect(routeHref({ name: 'event', slug: '2026-12-05-voice-meeting' })).toBe('/events/2026-12-05-voice-meeting')
   })
   it('reads ?category= and sends old ?type= links to the new pages', () => {
     expect(parseHash('#/activity?category=media')).toEqual({ name: 'activity' })
-    expect(filterFromHash('#/activity?category=media')).toBe('media')
-    expect(filterFromHash('#/activity?category=x')).toBeNull()
-    expect(filterFromHash('#/activity?category=volunteer')).toBe('political')
-    expect(filterFromHash('#/activity')).toBeNull()
-    expect(filterFromHash('#/activity?type=events')).toEqual({ redirect: '#/events' })
-    expect(filterFromHash('#/activity?type=research')).toEqual({ redirect: '#/research' })
-    expect(filterFromHash('#/activity?type=reports')).toBeNull()
+    expect(filterFromSearch('?category=media')).toBe('media')
+    expect(filterFromSearch('?category=x')).toBeNull()
+    expect(filterFromSearch('?category=volunteer')).toBe('political')
+    expect(filterFromSearch('')).toBeNull()
+    expect(filterFromSearch('?type=events')).toEqual({ redirect: '/events' })
+    expect(filterFromSearch('?type=research')).toEqual({ redirect: '/research' })
+    expect(filterFromSearch('?type=reports')).toBeNull()
   })
   it('shows uncategorised reports under すべて only', () => {
     const list = [{ category: null }, { category: 'media' as const }, { category: 'event' as const }]
@@ -67,12 +71,39 @@ describe('activity and events URLs', async () => {
 })
 
 describe('research page links', async () => {
-  const { researchHref, policyFromHash } = await import('../src/pages/ResearchPage')
+  const { researchHref, policyFromSearch } = await import('../src/pages/ResearchPage')
   it('links to one policy and reads it back', () => {
-    expect(researchHref()).toBe('#/research')
-    expect(researchHref('civic')).toBe('#/research?policy=civic')
+    expect(researchHref()).toBe('/research')
+    expect(researchHref('civic')).toBe('/research?policy=civic')
     expect(parseHash('#/research?policy=civic')).toEqual({ name: 'research' })
-    expect(policyFromHash('#/research?policy=civic')).toBe('civic')
-    expect(policyFromHash('#/research?policy=nope')).toBeNull()
+    expect(policyFromSearch('?policy=civic')).toBe('civic')
+    expect(policyFromSearch('?policy=nope')).toBeNull()
+  })
+})
+
+describe('path URLs', () => {
+  it('parses paths', () => {
+    expect(parsePath('/')).toEqual({ name: 'home', anchor: null })
+    expect(parsePath('/index.html')).toEqual({ name: 'home', anchor: null })
+    expect(parsePath('/#policy')).toEqual({ name: 'home', anchor: 'policy' })
+    expect(parsePath('/policy/education')).toEqual({ name: 'policy', slug: 'education' })
+    expect(parsePath('/vision#methods')).toEqual({ name: 'vision' })
+    expect(parsePath('/events/2026-12-05-voice-meeting')).toEqual({ name: 'event', slug: '2026-12-05-voice-meeting' })
+    expect(parsePath('/issues/12')).toEqual({ name: 'issue', id: 12 })
+    expect(parsePath('/nope')).toEqual({ name: 'notFound' })
+    expect(parsePath('/%E0%A4%A')).toEqual({ name: 'notFound' })
+  })
+  it('builds paths', () => {
+    expect(routeHref({ name: 'home', anchor: null })).toBe('/')
+    expect(routeHref({ name: 'home', anchor: 'policy' })).toBe('/#policy')
+    expect(routeHref({ name: 'policy', slug: 'education' })).toBe('/policy/education')
+    expect(routeHref({ name: 'report', slug: '2026-11-01-x' })).toBe('/reports/2026-11-01-x')
+  })
+  it('turns old hash URLs into paths', () => {
+    expect(legacyHashToPath('#/policy/education')).toBe('/policy/education')
+    expect(legacyHashToPath('#/activity?category=media')).toBe('/activity?category=media')
+    expect(legacyHashToPath('#/')).toBe('/')
+    // A '#/…' hash wins over the path it is attached to.
+    expect(parseLocation('/activity', '#/vision')).toEqual({ name: 'vision' })
   })
 })

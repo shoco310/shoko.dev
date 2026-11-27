@@ -17,7 +17,7 @@ import { researchHref } from './ResearchPage'
 /**
  * One policy, in five blocks shared by all four pages:
  * 目指す未来 / 現状と課題 / 具体的な政策・提案 / 根拠となるデータや資料 /
- * 調査・検討状況, then a link to the full change history (#/changes).
+ * 調査・検討状況, then a link to the full change history (/changes).
  * The text itself comes unchanged from
  * src/data/policy.ts; only the order and block headings are shared.
  */

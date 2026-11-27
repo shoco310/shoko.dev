@@ -7,7 +7,7 @@ import { formatEventDate, splitEvents } from '../lib/events'
 import { useAsync } from '../lib/useAsync'
 import { REPORT_CATEGORIES, REPORT_CATEGORY_LABELS, type ReportCategory } from '../shared/reports'
 import { socialLinks } from '../data/social'
-import { routeHref } from '../router'
+import { navigate, routeHref } from '../router'
 
 export type ActivityFilter = 'all' | ReportCategory
 
@@ -17,12 +17,12 @@ const filters: { key: ActivityFilter; label: string }[] = [
 ]
 
 /**
- * What the URL asks for: '#/activity?category=media' → 'media'. Old links
+ * What the URL asks for: '/activity?category=media' → 'media'. Old links
  * from before the split: ?type=events → the events page, ?type=research →
  * the research page, ?type=reports → everything.
  */
-export function filterFromHash(hash: string): ActivityFilter | { redirect: string } | null {
-  const q = new URLSearchParams(hash.split('?')[1] ?? '')
+export function filterFromSearch(search: string): ActivityFilter | { redirect: string } | null {
+  const q = new URLSearchParams(search)
   const type = q.get('type')
   if (type === 'events') return { redirect: routeHref({ name: 'events' }) }
   if (type === 'research') return { redirect: routeHref({ name: 'research' }) }
@@ -42,10 +42,10 @@ export function filterReports<T extends { category: ReportCategory | null }>(lis
  * the event itself stays on its own page.
  */
 export default function ActivityPage() {
-  const fromUrl = filterFromHash(window.location.hash)
+  const fromUrl = filterFromSearch(window.location.search)
   const [filter, setFilter] = useState<ActivityFilter>(() => (typeof fromUrl === 'string' ? fromUrl : 'all'))
   useEffect(() => {
-    if (fromUrl && typeof fromUrl === 'object') window.location.replace(fromUrl.redirect)
+    if (fromUrl && typeof fromUrl === 'object') navigate(fromUrl.redirect, { replace: true })
   }, [fromUrl])
 
   const reports = useAsync(listPublishedReports, [])
@@ -55,7 +55,7 @@ export default function ActivityPage() {
 
   const choose = (key: ActivityFilter) => {
     setFilter(key)
-    history.replaceState(null, '', key === 'all' ? '#/activity' : `#/activity?category=${key}`)
+    history.replaceState(null, '', key === 'all' ? '/activity' : `/activity?category=${key}`)
   }
 
   return (

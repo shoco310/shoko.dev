@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { ROUTE_CHANGE } from '../router'
 
 /**
  * Open/close state for a button-controlled panel (dropdown, menu).
@@ -29,11 +30,15 @@ export function useDisclosure<W extends HTMLElement = HTMLDivElement>() {
     document.addEventListener('pointerdown', onOutside)
     document.addEventListener('focusin', onOutside)
     window.addEventListener('hashchange', onHash)
+    window.addEventListener('popstate', onHash)
+    window.addEventListener(ROUTE_CHANGE, onHash)
     return () => {
       document.removeEventListener('keydown', onKey)
       document.removeEventListener('pointerdown', onOutside)
       document.removeEventListener('focusin', onOutside)
       window.removeEventListener('hashchange', onHash)
+      window.removeEventListener('popstate', onHash)
+      window.removeEventListener(ROUTE_CHANGE, onHash)
     }
   }, [open, close])
 

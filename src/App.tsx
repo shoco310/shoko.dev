@@ -26,7 +26,7 @@ import TakePartSection from './components/TakePartSection'
 import { ActivityTeaser, PolicyTeaser, VisionTeaser } from './components/HomeSections'
 import { issuesEnabled, voiceEnabled, volunteerEnabled } from './data/features'
 import { getPolicyBySlug, type Policy } from './data/policy'
-import { legacyAnchorTarget, routeHref, routeKey, useRoute, type Route } from './router'
+import { legacyAnchorTarget, navigate, routeHref, routeKey, useRoute, type Route } from './router'
 
 const SITE_TITLE = 'さとうしょうこ | 誰もが挑戦できる宇部へ'
 
@@ -89,7 +89,7 @@ export default function App() {
       // to a page or a different section.
       const legacy = legacyAnchorTarget(route.anchor, { volunteerEnabled })
       if (legacy && 'route' in legacy) {
-        window.location.replace(routeHref(legacy.route))
+        navigate(routeHref(legacy.route), { replace: true })
         return
       }
       const id = legacy?.anchor ?? route.anchor
@@ -116,6 +116,13 @@ export default function App() {
       }, 5000)
       return
     }
+    // '/vision#methods': the section, once the page has rendered.
+    const hashId = window.location.hash.length > 1 ? decodeURIComponent(window.location.hash.slice(1)) : null
+    if (hashId) {
+      requestAnimationFrame(() => document.getElementById(hashId)?.scrollIntoView())
+      if (!first) mainRef.current?.focus({ preventScroll: true })
+      return
+    }
     if (first) return
     window.scrollTo({ top: 0, behavior: 'instant' })
     mainRef.current?.focus({ preventScroll: true })
@@ -123,7 +130,7 @@ export default function App() {
 
   return (
     <MotionConfig reducedMotion="user">
-      {/* Hash routing: move focus instead of following '#…', which would change the route. */}
+      {/* Move focus to <main> rather than adding '#main-content' to the URL. */}
       <a
         className="skip-link"
         href="#main-content"
