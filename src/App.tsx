@@ -26,24 +26,11 @@ import TakePartSection from './components/TakePartSection'
 import { ActivityTeaser, PolicyTeaser, VisionTeaser } from './components/HomeSections'
 import { issuesEnabled, voiceEnabled, volunteerEnabled } from './data/features'
 import { getPolicyBySlug, type Policy } from './data/policy'
+import { SITE_TITLE, staticPages } from './data/pageMeta'
 import { legacyAnchorTarget, navigate, routeHref, routeKey, useRoute, type Route } from './router'
 
-const SITE_TITLE = 'さとうしょうこ | 誰もが挑戦できる宇部へ'
-
 const pageTitles: Partial<Record<Route['name'], string>> = {
-  profile: '私について',
-  vision: 'V2MOM（目指す未来）',
-  policies: '4つの重点政策',
-  research: '政策調査',
-  data: '数字で見る宇部',
-  activity: 'これまでの活動',
-  about: 'このサイトについて',
-  privacy: 'プライバシーポリシー',
-  voice: '困りごと・ご意見を送る',
-  join: '一緒に活動する',
-  issues: '市民の声',
-  changes: '政策の変更履歴',
-  events: 'イベント・活動予定',
+  ...Object.fromEntries(Object.entries(staticPages).map(([name, m]) => [name, m.title])),
   event: 'イベント',
   report: '活動報告',
   issue: '課題',

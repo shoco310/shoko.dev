@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'node:path'
+import { writePages } from './scripts/pageHtml'
 
 /**
  * Dev only: serve the Vercel Functions in api/ from the Vite dev server so
@@ -48,12 +49,28 @@ function devApi(): Plugin {
   }
 }
 
+/** Build only: per-page HTML (title, description, OGP), sitemap.xml, robots.txt. */
+function pageFiles(): Plugin {
+  return {
+    name: 'page-files',
+    apply: 'build',
+    writeBundle(options) {
+      const on = (key: string) => process.env[key] === 'true'
+      writePages(options.dir ?? resolve(__dirname, 'dist'), {
+        voice: on('VITE_VOICE_ENABLED'),
+        volunteer: on('VITE_VOLUNTEER_ENABLED'),
+        issues: on('VITE_ISSUES_ENABLED'),
+      })
+    },
+  }
+}
+
 export default defineConfig(({ mode }) => {
   // Expose server-only variables (no VITE_ prefix) to the dev API handlers.
   Object.assign(process.env, loadEnv(mode, process.cwd(), ''))
 
   return {
-    plugins: [react(), devApi()],
+    plugins: [react(), devApi(), pageFiles()],
     build: {
       rollupOptions: {
         input: {
