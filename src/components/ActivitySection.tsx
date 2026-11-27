@@ -1,6 +1,9 @@
 import './ActivitySection.css'
 import { REPORT_CATEGORY_LABELS, REPORT_KIND_LABELS, reportHref, type ReportRow } from '../shared/reports'
 import { formatJaDate } from '../lib/inPage'
+import type { EventItem } from '../shared/events'
+import type { ActivityItem } from '../lib/activityFeed'
+import { routeHref } from '../router'
 
 const LINK_LABELS: Record<ReportRow['kind'], string> = {
   note: 'note で読む',
@@ -46,5 +49,36 @@ export function ActivityCard({ item, compact = false }: { item: ReportRow; compa
         </span>
       </a>
     </article>
+  )
+}
+
+/** An event that has ended, shown in the same row style as a report. */
+export function EventActivityRow({ event, compact = false }: { event: EventItem; compact?: boolean }) {
+  return (
+    <article className={`activity-row${compact ? ' activity-row--compact' : ''}`}>
+      <a href={routeHref({ name: 'event', slug: event.id })} className="activity-row__link">
+        <span className="activity-row__meta">
+          <time dateTime={event.date}>{formatJaDate(event.date)}</time>
+          <span className="activity-row__category">{REPORT_CATEGORY_LABELS.event}</span>
+        </span>
+        <span className="activity-row__main">
+          <span className="activity-row__title">{event.title}</span>
+          {!compact && event.description && <span className="activity-row__summary">{event.description}</span>}
+          {!compact && <span className="activity-row__more">詳細を見る</span>}
+        </span>
+        <span className="activity-row__arrow" aria-hidden="true">
+          →
+        </span>
+      </a>
+    </article>
+  )
+}
+
+/** A row of これまでの活動, whichever kind it is. */
+export function ActivityFeedRow({ item, compact = false }: { item: ActivityItem; compact?: boolean }) {
+  return item.type === 'report' ? (
+    <ActivityCard item={item.report} compact={compact} />
+  ) : (
+    <EventActivityRow event={item.event} compact={compact} />
   )
 }
