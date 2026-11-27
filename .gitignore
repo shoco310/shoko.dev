@@ -13,3 +13,4 @@ dist/
 
 # Internal operations runbook (kept local only, never pushed)
 docs/platform/operations.md
+*.tsbuildinfo
