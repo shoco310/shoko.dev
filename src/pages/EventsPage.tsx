@@ -13,8 +13,9 @@ export type EventsView = 'list'
 
 /**
  * イベント・活動予定: events that have not ended yet (judged by their end
- * time, Japan time), grouped by month. Ended events move to
- * 「これまでの活動」 automatically and keep their detail page.
+ * time, Japan time), grouped by month. Ended events drop off automatically;
+ * they keep their detail page, and what happened is told in a report on
+ * 「これまでの活動」.
  */
 export default function EventsPage({ view = 'list' }: { view?: EventsView }) {
   const { data, error, loading } = useAsync(listPublishedEvents, [])
@@ -61,7 +62,7 @@ export default function EventsPage({ view = 'list' }: { view?: EventsView }) {
           </p>
         )}
         <p>
-          終わったイベントは<a href={routeHref({ name: 'activity' })}>これまでの活動</a>に移ります。
+          終わったイベントの様子は<a href={routeHref({ name: 'activity' })}>これまでの活動</a>でお伝えしています。
         </p>
       </div>
     </PageLayout>

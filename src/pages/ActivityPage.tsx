@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import PageLayout from '../components/PageLayout'
-import { ActivityFeedRow } from '../components/ActivitySection'
-import { activityFeed } from '../lib/activityFeed'
+import { ActivityCard } from '../components/ActivitySection'
 import { listPublishedReports } from '../lib/publicContent'
 import { listPublishedEvents } from '../lib/publicEvents'
 import { formatEventDate, splitEvents } from '../lib/events'
@@ -38,9 +37,9 @@ export function filterReports<T extends { category: ReportCategory | null }>(lis
 }
 
 /**
- * これまでの活動: published activity reports and events that have ended,
- * newest first, filterable by category. An ended event is replaced by its
- * report once one is published (see activityFeed).
+ * これまでの活動: published activity reports, newest first, filterable by
+ * category. An event shows up here once a report about it is published —
+ * the event itself stays on its own page.
  */
 export default function ActivityPage() {
   const fromUrl = filterFromHash(window.location.hash)
@@ -52,8 +51,7 @@ export default function ActivityPage() {
   const reports = useAsync(listPublishedReports, [])
   const events = useAsync(listPublishedEvents, [])
   const upcoming = splitEvents(events.data ?? []).upcoming
-  const feed = activityFeed(reports.data ?? [], events.data ?? [])
-  const shown = filterReports(feed, filter)
+  const shown = filterReports(reports.data ?? [], filter)
 
   const choose = (key: ActivityFilter) => {
     setFilter(key)
@@ -91,17 +89,17 @@ export default function ActivityPage() {
           {reports.error && <p className="page__muted">活動報告を読み込めませんでした。時間をおいて、もう一度お試しください。</p>}
           {reports.data && (
             <p className="page__muted activity-count">
-              {shown.length}件{filter !== 'all' && `（全${feed.length}件）`}
+              {shown.length}件{filter !== 'all' && `（全${reports.data.length}件）`}
             </p>
           )}
         </div>
 
         {reports.data && shown.length === 0 && (
-          <p className="activity-empty">このカテゴリの活動は、まだありません。</p>
+          <p className="activity-empty">このカテゴリの活動報告は、まだありません。</p>
         )}
         <div className="activity-list">
           {shown.map(item => (
-            <ActivityFeedRow key={item.key} item={item} />
+            <ActivityCard key={item.id} item={item} />
           ))}
         </div>
 

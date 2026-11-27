@@ -1,6 +1,5 @@
 import { ButtonLink, Section, SectionHeading } from './ui'
-import { ActivityFeedRow } from './ActivitySection'
-import { activityFeed } from '../lib/activityFeed'
+import { ActivityCard } from './ActivitySection'
 import { policies } from '../data/policy'
 import { values, vision } from '../data/v2mom'
 import { eventState, formatEventDate, splitEvents } from '../lib/events'
@@ -82,12 +81,12 @@ export function PolicyTeaser() {
   )
 }
 
-/** ACTIVITY: the next event (if any) and the five latest activities (reports and ended events) */
+/** ACTIVITY: the next event (if any) and the five latest reports, as a list */
 export function ActivityTeaser() {
   const events = useAsync(listPublishedEvents, [])
   const reports = useAsync(listPublishedReports, [])
   const next = splitEvents(events.data ?? []).upcoming[0]
-  const latest = activityFeed(reports.data ?? [], events.data ?? []).slice(0, 5)
+  const latest = (reports.data ?? []).slice(0, 5)
   return (
     <Section id="activity" labelledBy="home-activity-h">
       <SectionHeading
@@ -114,7 +113,7 @@ export function ActivityTeaser() {
       )}
       <div className="activity-list">
         {latest.map(item => (
-          <ActivityFeedRow key={item.key} item={item} compact />
+          <ActivityCard key={item.id} item={item} compact />
         ))}
       </div>
     </Section>
