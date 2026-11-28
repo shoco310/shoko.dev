@@ -740,19 +740,24 @@ body {
 .data-card {
   padding: var(--space-3);
 }
-/* Cards on a light grey block (no outline) so each statistic stands out;
-   bar tracks and inner rules turn white against it. Same grey as the
-   知る・選ぶ・実現する blocks on the top page. */
+/* Grey outline; on hover the card turns pale pink, so the one being read
+   stands out. (Cards are not links — the change is kept soft.) */
 .data-card {
-  border-color: transparent;
-  background: #f3f4f6;
+  border: 1px solid var(--line);
+  background: var(--white);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
-.data-card .data-card__bar {
+.data-card:hover {
+  border-color: #f5c6dc;
+  background: var(--pink-pale);
+}
+.data-card:hover .data-card__bar {
   background: var(--white);
 }
-.data-card .data-card__source,
-.data-card .data-card__breakdown {
-  border-top-color: var(--white);
+@media (prefers-reduced-motion: reduce) {
+  .data-card {
+    transition: none;
+  }
 }
 .data-card__figure,
 .data-card__value {
