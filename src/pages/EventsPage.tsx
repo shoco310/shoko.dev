@@ -2,7 +2,9 @@ import PageLayout from '../components/PageLayout'
 import EventCard from '../components/EventCard'
 import { Notice } from '../components/ui'
 import { volunteerEnabled } from '../data/features'
-import { lineUrl } from '../data/social'
+import { associationFormUrl, lineUrl } from '../data/social'
+import ActivityPhotos from '../components/ActivityPhotos'
+import { listPublishedReports } from '../lib/publicContent'
 import { groupByMonth, splitEvents } from '../lib/events'
 import { listPublishedEvents } from '../lib/publicEvents'
 import { useAsync } from '../lib/useAsync'
@@ -21,6 +23,7 @@ export default function EventsPage({ view = 'list' }: { view?: EventsView }) {
   const { data, error, loading } = useAsync(listPublishedEvents, [])
   const { upcoming } = splitEvents(data ?? [])
   const months = groupByMonth(upcoming)
+  const reports = useAsync(listPublishedReports, [])
 
   return (
     <PageLayout
@@ -55,16 +58,33 @@ export default function EventsPage({ view = 'list' }: { view?: EventsView }) {
           </section>
         ))}
 
-      <div className="events-footer">
-        {volunteerEnabled && (
-          <p>
-            運営のお手伝いも募集しています。<a href={routeHref({ name: 'join' })}>一緒に活動する →</a>
+      <section className="events-join" aria-labelledby="events-join-h">
+        <h2 id="events-join-h" className="events-section__title">運営のお手伝いも募集しています</h2>
+        <div className="events-join__btns">
+          {volunteerEnabled && (
+            <a href={routeHref({ name: 'join' })} className="btn btn--primary">
+              一緒に活動する
+            </a>
+          )}
+          <a href={associationFormUrl} target="_blank" rel="noopener noreferrer" className="btn btn--secondary">
+            後援会に入会する
+            <span className="visually-hidden">（入会フォーム・新しいタブで開きます）</span>
+          </a>
+        </div>
+      </section>
+
+      {reports.data && reports.data.some(r => r.photo_url) && (
+        <section className="events-past" aria-labelledby="events-past-h">
+          <h2 id="events-past-h" className="events-section__title">これまでの活動</h2>
+          <p className="events-past__lead">終わったイベントや地域での活動の様子を、新しい順に紹介しています。</p>
+          <ActivityPhotos reports={reports.data} />
+          <p className="events-past__more">
+            <a href={routeHref({ name: 'activity' })} className="btn btn--secondary">
+              これまでの活動をすべて見る →
+            </a>
           </p>
-        )}
-        <p>
-          終わったイベントの様子は<a href={routeHref({ name: 'activity' })}>これまでの活動</a>でお伝えしています。
-        </p>
-      </div>
+        </section>
+      )}
     </PageLayout>
   )
 }

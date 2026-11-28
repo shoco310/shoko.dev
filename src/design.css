@@ -1891,3 +1891,37 @@ a.profile-award:hover {
 .mobile-nav {
   border-top: 0;
 }
+
+/* イベント・活動予定: join buttons and the activity photo strip */
+.events-join,
+.events-past {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line-soft);
+}
+.events-section__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-h3, 1.125rem);
+  font-weight: 700;
+}
+.events-join__btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.events-past__lead {
+  margin: 0;
+  color: var(--gray);
+  font-size: var(--fs-sm);
+}
+.events-past .photo-strip__controls {
+  margin-top: -36px;
+}
+.events-past__more {
+  margin: var(--space-3) 0 0;
+}
+@media (max-width: 760px) {
+  .events-past .photo-strip__controls {
+    margin-top: var(--space-2);
+  }
+}
