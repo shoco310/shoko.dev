@@ -95,3 +95,18 @@
     margin-top: 0;
   }
 }
+.event-row__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+.event-row__tags .event-state {
+  margin-top: 0;
+}
+@media (max-width: 760px) {
+  .event-row__tags {
+    flex-basis: 100%;
+    margin-top: 0;
+  }
+}
