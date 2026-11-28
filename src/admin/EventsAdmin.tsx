@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import EventCard from '../components/EventCard'
+import { REPORT_CATEGORIES, REPORT_CATEGORY_LABELS, type ReportCategory } from '../shared/reports'
 import { eventState, splitEvents, stateLabels } from '../lib/events'
 import { PUBLIC_EVENT_COLUMNS, rowToEvent, type EventRow, type EventStatusOverride } from '../shared/events'
 import { supabase } from './supabase'
@@ -16,6 +17,8 @@ const tabLabels: Record<Tab, string> = { upcoming: 'これから', past: '終了
 
 interface Form {
   title: string
+  /** '' = 未設定（イベントとして表示） */
+  category: ReportCategory | ''
   event_date: string
   start_time: string
   end_time: string
@@ -32,6 +35,7 @@ interface Form {
 
 const emptyForm: Form = {
   title: '',
+  category: '',
   event_date: '',
   start_time: '',
   end_time: '',
@@ -48,6 +52,7 @@ const emptyForm: Form = {
 
 const rowToForm = (r: EventRow): Form => ({
   title: r.title,
+  category: r.category ?? '',
   event_date: r.event_date,
   start_time: r.start_time?.slice(0, 5) ?? '',
   end_time: r.end_time?.slice(0, 5) ?? '',
@@ -96,6 +101,7 @@ const nullIfEmpty = (s: string) => (s.trim() ? s.trim() : null)
 function formToPayload(f: Form) {
   return {
     title: f.title.trim(),
+    category: f.category || null,
     event_date: f.event_date,
     start_time: f.start_time || null,
     end_time: f.end_time || null,
@@ -359,6 +365,19 @@ function EventEditor({ row, onDone }: { row: EventRow | null; onDone: (id: strin
 
       <div className="admin-panel">
         {field('title', 'イベント名（必須）', <input className="admin-input" maxLength={100} {...textProps('title')} />)}
+        {field(
+          'category',
+          'カテゴリ',
+          <select id="ev-category" value={form.category} onChange={e => set('category', e.target.value as Form['category'])}>
+            <option value="">未設定（イベントとして表示）</option>
+            {REPORT_CATEGORIES.map(c => (
+              <option key={c} value={c}>
+                {REPORT_CATEGORY_LABELS[c]}
+              </option>
+            ))}
+          </select>,
+          '公開ページの予定に表示するタグです。ラジオ出演などは「メディア出演」に。未設定のときは「イベント」と表示します。',
+        )}
         <div className="ev-row">
           {field('event_date', '開催日（必須）', <input className="admin-input" type="date" {...textProps('event_date')} />)}
           {field('start_time', '開始時刻', <input className="admin-input" type="time" step={300} {...textProps('start_time')} />)}

@@ -1,5 +1,5 @@
 import './EventCard.css'
-import type { EventItem } from '../shared/events'
+import { eventCategoryLabel, type EventItem } from '../shared/events'
 import { eventState, formatEventDate, reportLink, stateLabels } from '../lib/events'
 import { routeHref } from '../router'
 
@@ -31,7 +31,10 @@ export default function EventCard({
           {day}
         </time>
         {time && <span className="event-row__time">{time}</span>}
-        <span className={`event-state event-state--${state}`}>{stateLabels[state]}</span>
+        <span className="event-row__tags">
+          <span className={`event-state event-state--${state}`}>{stateLabels[state]}</span>
+          <span className="category-tag">{eventCategoryLabel(event)}</span>
+        </span>
       </div>
       <div className="event-row__body">
         <Heading className={`event-row__title${inactive ? ' is-inactive' : ''}`}>

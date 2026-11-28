@@ -3,6 +3,7 @@ import PageLayout from '../components/PageLayout'
 import NotFoundPage from './NotFoundPage'
 import { eventState, formatEventDate, stateLabels } from '../lib/events'
 import { getPublishedEvent } from '../lib/publicEvents'
+import { eventCategoryLabel } from '../shared/events'
 import { useAsync } from '../lib/useAsync'
 import { formatJaDate } from '../lib/inPage'
 import { routeHref } from '../router'
@@ -43,6 +44,7 @@ export default function EventDetailPage({ slug }: { slug: string }) {
     <PageLayout en="EVENT" title={event.title} breadcrumb={crumbs}>
       <p className="report-meta">
         <span className={`event-state event-state--${state}`}>{stateLabels[state]}</span>
+        <span className="category-tag">{eventCategoryLabel(event)}</span>
       </p>
       <dl className="info-list event-detail">
         <div>
