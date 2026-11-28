@@ -1923,3 +1923,42 @@ a.profile-award:hover {
     margin-top: var(--space-2);
   }
 }
+
+/* ===== Top page: rules kept to a minimum =====
+   Sections are separated by space alone; only the rows inside the policy
+   and activity lists keep a thin rule between them. */
+.home-hero {
+  border-bottom: 0;
+}
+#vision-summary.ui-section,
+#policy.ui-section,
+#activity.ui-section {
+  border-top: 0;
+}
+#vision-summary .ui-heading,
+#policy .ui-heading,
+#activity .ui-heading,
+#take-part .ui-heading {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+#vision-summary .columns-3 {
+  gap: var(--space-4);
+  border-top: 0;
+  border-bottom: 0;
+}
+#vision-summary .columns-3 > li {
+  padding: var(--space-2) 0 0;
+}
+#vision-summary .columns-3 > li + li {
+  border-left: 0;
+  border-top: 0;
+}
+#policy .row-list,
+#activity .activity-list {
+  border-top: 0;
+}
+#policy .row-list > li:last-child,
+#activity .activity-row:last-child {
+  border-bottom: 0;
+}
