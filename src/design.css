@@ -1934,6 +1934,14 @@ a.profile-award:hover {
 #policy.ui-section,
 #activity.ui-section {
   border-top: 0;
+  /* Closer together than other pages: about 110px between sections on PC. */
+  padding-block: clamp(32px, 1.5rem + 3vw, 56px);
+}
+.home-hero {
+  padding-bottom: var(--space-5);
+}
+#activity.ui-section {
+  padding-bottom: clamp(48px, 2rem + 4vw, 80px);
 }
 #vision-summary .ui-heading,
 #policy .ui-heading,
