@@ -77,7 +77,11 @@ body {
 }
 
 /* ----- Links ----- */
-.ui-textlink {
+/* One rule under the text (the border); '.page__body a' would add a second
+   one as text-decoration, hence the extra selector. */
+.ui-textlink,
+.page__body a.ui-textlink,
+.policies-related a.ui-textlink {
   font-weight: 600;
   text-decoration: none;
   border-bottom: 1px solid currentColor;
@@ -735,6 +739,20 @@ body {
 /* ----- 数字で見る宇部 ----- */
 .data-card {
   padding: var(--space-3);
+}
+/* Cards on a light grey block (no outline) so each statistic stands out;
+   bar tracks and inner rules turn white against it. Same grey as the
+   知る・選ぶ・実現する blocks on the top page. */
+.data-card {
+  border-color: transparent;
+  background: #f3f4f6;
+}
+.data-card .data-card__bar {
+  background: var(--white);
+}
+.data-card .data-card__source,
+.data-card .data-card__breakdown {
+  border-top-color: var(--white);
 }
 .data-card__figure,
 .data-card__value {
