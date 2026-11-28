@@ -2027,3 +2027,58 @@ a.profile-award:hover {
 #activity.ui-section {
   padding-bottom: clamp(48px, 2rem + 4vw, 80px);
 }
+
+/* ===== 政策調査: grey blocks instead of rules =====
+   Same grey as the data cards and the top page's 知る・選ぶ・実現する. */
+.research-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+  border: 0;
+}
+.research-summary li,
+.research-summary li + li {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: 8px;
+  background: #f3f4f6;
+}
+.research-summary__n {
+  font-size: 1.75rem;
+  line-height: 1.2;
+}
+.research-block {
+  padding: var(--space-2) var(--space-3);
+  border-radius: 8px;
+  background: #f3f4f6;
+}
+.research-block + .research-block {
+  margin-top: var(--space-2);
+}
+.research-block__title {
+  margin-bottom: 0;
+}
+.research-items__row {
+  border-bottom-color: var(--white);
+}
+.research-sources {
+  margin-top: var(--space-2);
+}
+@media (max-width: 600px) {
+  .research-summary {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+  .research-summary li,
+  .research-summary li + li {
+    flex-direction: row;
+    align-items: center;
+    padding: 12px var(--space-2);
+  }
+  .research-block {
+    padding: var(--space-2);
+  }
+}
