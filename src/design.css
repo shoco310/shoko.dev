@@ -77,7 +77,11 @@ body {
 }
 
 /* ----- Links ----- */
-.ui-textlink {
+/* One rule under the text (the border); '.page__body a' would add a second
+   one as text-decoration, hence the extra selector. */
+.ui-textlink,
+.page__body a.ui-textlink,
+.policies-related a.ui-textlink {
   font-weight: 600;
   text-decoration: none;
   border-bottom: 1px solid currentColor;
@@ -731,13 +735,29 @@ body {
 .note-card {
   padding: var(--space-2) var(--space-3);
 }
-#message.section--tint {
-  border-top: 1px solid var(--line-soft);
-}
 
 /* ----- 数字で見る宇部 ----- */
 .data-card {
   padding: var(--space-3);
+}
+/* Grey outline; on hover the card turns pale pink, so the one being read
+   stands out. (Cards are not links — the change is kept soft.) */
+.data-card {
+  border: 1px solid var(--line);
+  background: var(--white);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.data-card:hover {
+  border-color: #f5c6dc;
+  background: var(--pink-pale);
+}
+.data-card:hover .data-card__bar {
+  background: var(--white);
+}
+@media (prefers-reduced-motion: reduce) {
+  .data-card {
+    transition: none;
+  }
 }
 .data-card__figure,
 .data-card__value {
@@ -1890,4 +1910,180 @@ a.profile-award:hover {
 }
 .mobile-nav {
   border-top: 0;
+}
+
+/* イベント・活動予定: join buttons and the activity photo strip */
+.events-join,
+.events-past {
+  margin-top: var(--space-5);
+}
+.events-section__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-h3, 1.125rem);
+  font-weight: 700;
+}
+.events-join__btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.events-past__lead {
+  margin: 0;
+  color: var(--gray);
+  font-size: var(--fs-sm);
+}
+.events-past .photo-strip__controls {
+  margin-top: -36px;
+}
+.events-past__more {
+  margin: var(--space-3) 0 0;
+}
+@media (max-width: 760px) {
+  .events-past .photo-strip__controls {
+    margin-top: var(--space-2);
+  }
+}
+
+/* ===== Rules kept to a minimum (all pages) =====
+   Sections, page titles and headings are separated by space alone. A thin
+   rule is kept only between the rows of a list or table, never above the
+   first row or below the last. */
+.home-hero,
+.page__hero,
+.policy-detail__hero {
+  border-bottom: 0;
+}
+.ui-section + .ui-section,
+.ui-section--surface,
+.section--tint,
+.policy-detail__others,
+.policy-detail__others-grid,
+.research-related,
+.activity-links {
+  border-top: 0;
+}
+.ui-heading,
+.policy-detail__heading {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+/* Outer edges of lists */
+.row-list,
+.activity-list,
+.event-list,
+.policy-rows,
+.research-items,
+.info-list,
+.v2mom-obstacles,
+.v2mom-methods,
+.v2mom-principles > ol {
+  border-top: 0;
+}
+.v2mom-values,
+.research-summary,
+.policy-stance__items {
+  border-top: 0;
+  border-bottom: 0;
+}
+.row-list > li:last-child,
+.activity-row:last-child,
+.event-row:last-child,
+.policy-rows > li:last-child,
+.story-list > li:last-child,
+.research-items__row:last-child,
+.research-related li:last-child,
+.policy-detail__sources > li:last-child,
+.policy-detail__initiatives > li:last-child,
+.v2mom-methods > li:last-child,
+.v2mom-principle:last-child,
+.info-list > div:last-child,
+.v2mom-layers > div:last-child,
+.v2mom-obstacles > div:last-child,
+.greeting__vision-item:last-child {
+  border-bottom: 0;
+}
+
+/* ===== Top page ===== */
+/* 知る・選ぶ・実現する: each one a soft tinted block instead of rules. */
+#vision-summary .columns-3 {
+  gap: var(--space-2);
+  border-top: 0;
+  border-bottom: 0;
+}
+#vision-summary .columns-3 > li,
+#vision-summary .columns-3 > li:first-child {
+  padding: var(--space-3);
+  border-radius: 8px;
+  background: #f3f4f6;
+}
+#vision-summary .columns-3 > li + li {
+  border-left: 0;
+  border-top: 0;
+}
+/* Closer together than other pages: about 110px between sections on PC. */
+#vision-summary.ui-section,
+#policy.ui-section,
+#activity.ui-section {
+  padding-block: clamp(32px, 1.5rem + 3vw, 56px);
+}
+.home-hero {
+  padding-bottom: var(--space-5);
+}
+#activity.ui-section {
+  padding-bottom: clamp(48px, 2rem + 4vw, 80px);
+}
+
+/* ===== 政策調査: grey blocks instead of rules =====
+   Same grey as the data cards and the top page's 知る・選ぶ・実現する. */
+.research-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+  border: 0;
+}
+.research-summary li,
+.research-summary li + li {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: 8px;
+  background: #f3f4f6;
+}
+.research-summary__n {
+  font-size: 1.75rem;
+  line-height: 1.2;
+}
+.research-block {
+  padding: var(--space-2) var(--space-3);
+  border-radius: 8px;
+  background: #f3f4f6;
+}
+.research-block + .research-block {
+  margin-top: var(--space-2);
+}
+.research-block__title {
+  margin-bottom: 0;
+}
+.research-items__row {
+  border-bottom-color: var(--white);
+}
+.research-sources {
+  margin-top: var(--space-2);
+}
+@media (max-width: 600px) {
+  .research-summary {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+  .research-summary li,
+  .research-summary li + li {
+    flex-direction: row;
+    align-items: center;
+    padding: 12px var(--space-2);
+  }
+  .research-block {
+    padding: var(--space-2);
+  }
 }
