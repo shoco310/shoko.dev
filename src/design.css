@@ -1896,8 +1896,6 @@ a.profile-award:hover {
 .events-join,
 .events-past {
   margin-top: var(--space-5);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--line-soft);
 }
 .events-section__title {
   margin: 0 0 var(--space-2);
